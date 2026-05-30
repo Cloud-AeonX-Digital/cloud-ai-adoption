@@ -128,3 +128,21 @@ This document is developed **section by section, iteratively** with the team. Ea
 - Branch naming: `phase/<number>-<short-title>`
 - Each phase gets its own PR for team review
 - See [CLAUDE.md](./CLAUDE.md) for AI session context and working instructions
+- See [PROGRESS.md](./PROGRESS.md) for phase-by-phase summaries and handoff context
+
+---
+
+## 🤖 Sharing AI Context with the Team
+
+Choose the method that fits your workflow. All options are compatible with this repo.
+
+| # | Method | How | Best For |
+|---|--------|-----|----------|
+| 1 | **Kiro Steering file** | `.kiro/steering/your-feature.md` | Auto-loaded rules/conventions for everyone on every session |
+| 2 | **Kiro Custom agent** | `.kiro/agents/your-feature.json` | Full workflow with tools, hooks, and prompts for a specific task |
+| 3 | **Kiro Skill file** | `.kiro/skills/your-feature.md` | On-demand reference material loaded when relevant |
+| 4 | **Kiro Hook scripts** | Committed alongside an agent config | Automation triggered at specific points (e.g., on file save, on commit) |
+| 5 | **KIRO_HOME shared directory** | Point `KIRO_HOME` env var to a shared path | One repo manages global agents/steering/skills for the whole team |
+| 6 | **GitHub versioned `.md` file** | Standalone doc in this repo | Teammates read and apply manually; no Kiro required |
+
+**Current approach for this project:** Option 6 (versioned `.md` files) as the baseline — `CLAUDE.md` for session config, `PROGRESS.md` for phase handoffs. Kiro steering/agent files will be added as phases mature.

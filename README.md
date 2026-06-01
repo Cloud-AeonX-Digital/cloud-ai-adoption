@@ -1,148 +1,398 @@
-# Cloud AI Adoption Strategy — SRE & DevOps Operations
+# AeonX AI Ops Agent — Cloud Monitoring, Support & Deployment Automation
 
-> AI-driven monitoring, incident response, and support operations across AWS and GCP.
+> Autonomous AI agent for monitoring, incident response, and operations across AWS and GCP.
+> Human intervention only where required.
 
 ---
 
 ## 🎯 Objective
 
-Design a complete AI adoption strategy to reduce alert fatigue, accelerate RCA, and automate incident response for a production cloud infrastructure team operating across **AWS and GCP**.
+Build a production-grade AI agent that autonomously handles monitoring alerts, incident triage, root cause analysis, ticket creation, and safe auto-remediation across all AeonX client environments (AWS + GCP) — with human escalation only for edge cases.
 
-**Pain points being addressed:**
-- High alert volume with manual triaging
-- Slow root cause analysis (RCA)
-- Repetitive support tickets and escalations
-- No intelligent correlation between metrics, logs, and traces
-- On-call fatigue
+**Pain points being solved:**
+- 706 monitored hosts across ~90 client accounts — all alerts routed to a single email inbox
+- Manual triage, troubleshooting, and server restarts for every alert
+- No correlation between alerts, logs, and past incidents
+- On-call fatigue across a 20–25 person team
+- Repetitive client communication after every incident
 
 **Target outcomes:**
-- AI-assisted alert triaging
-- Automated incident summarization
-- Intelligent log analysis and anomaly detection
-- Root cause suggestions (RCA hints)
-- Ticket auto-classification and routing
-- ChatOps integration (Slack/Teams)
-- Reduced manual on-call workload
+- AI classifies and triages every Zabbix/CloudWatch alert automatically
+- Known patterns (website down, high memory, service stopped) auto-remediated without human touch
+- ManageEngine ticket auto-created, updated, and closed per incident
+- Incident summary auto-sent via SES to team + client
+- Human paged only for unknown/high-risk situations
+- Full audit trail of every action taken
 
 ---
 
-## 📋 Phases Overview
+## 🏗️ Final Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  SIGNAL SOURCES                                                      │
+│                                                                      │
+│  Zabbix (706 hosts, self-hosted AWS)                                │
+│  └── "Gen-AI" action → HTTP webhook                                 │
+│                                                                      │
+│  CloudWatch Alarms (per client AWS account)          [future]       │
+│  └── SNS → Lambda trigger                                           │
+│                                                                      │
+│  Client Chat GUI                                     [future]       │
+│  └── HTTPS → AI Agent API                                           │
+└──────────────────────────┬──────────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  AI AGENT CORE                                                       │
+│                                                                      │
+│  Lambda 1 — Alert Ingestor  (AWS Lambda, ap-south-1)                │
+│  ├── Receives Zabbix webhook POST                                    │
+│  ├── Normalizes to standard schema                                   │
+│  └── HTTP POST → EC2 AI Agent Service                               │
+│                                                                      │
+│  EC2 — AI Decision Engine  (t3.small, ap-south-1)                   │
+│  FastAPI / Python                                                    │
+│  ├── POST /alert  — classify, decide, act                           │
+│  └── POST /chat   — client self-service Q&A          [future]       │
+└──────┬──────────────────────────────┬───────────────────────────────┘
+       │                              │
+       ▼                              ▼
+┌──────────────────┐       ┌──────────────────────────┐
+│  GCP             │       │  NOTIFICATIONS            │
+│                  │       │                           │
+│  Vertex AI       │       │  AWS SES                  │
+│  (Gemini)        │       │  → awsalerts@aeonx.digital│
+│  ├── Classify    │       │    (ops team)             │
+│  ├── Summarize   │       │  → client email [future]  │
+│  └── Q&A [fut.]  │       └──────────────────────────┘
+└──────────────────┘                  │
+       │                              ▼
+       │                   ┌──────────────────────────┐
+       │                   │  TICKETING    [Phase 4]   │
+       │                   │                           │
+       │                   │  ManageEngine             │
+       │                   │  ServiceDesk Plus         │
+       │                   │  auto create/update/close │
+       │                   └──────────────────────────┘
+       │                              │
+       └──────────────┬───────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  CLOUD INTEGRATIONS                                  [Phase 3]       │
+│                                                                      │
+│  AWS                                                                 │
+│  ├── EC2 restart (tag-gated: auto-restart=true)                     │
+│  ├── SSM Run Command (service restart)                              │
+│  └── Cross-account via Aeonx-L2-Role (×158 client accounts)        │
+│                                                                      │
+│  GCP                                                                 │
+│  └── GCP VM restart (allowlist-gated)                               │
+└─────────────────────────────────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  AUDIT & MEMORY                                                      │
+│                                                                      │
+│  S3: aeonx-ai-agent-incidents/  — full incident log (JSON)         │
+│  SSM Parameter Store            — all secrets + config              │
+│  CloudWatch Logs                — Lambda + EC2 agent logs           │
+└─────────────────────────────────────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  CLIENT-FACING GUI                                       [future]    │
+│                                                                      │
+│  Option A: Chat widget → POST /chat on AI Agent Service             │
+│  └── "Is my server up?" → agent queries S3 + Zabbix API            │
+│                                                                      │
+│  Option B: Full self-service portal (ECS Fargate)        [later]    │
+│  └── Per-client auth, incident history, ticket status, chat        │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  CI/CD                                                               │
+│  GitHub Actions (Cloud-AeonX-Digital / AI-Adoption-Team)           │
+│  └── Deploy Lambda + EC2 agent + infra changes via Terraform        │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🧩 Component Summaries
+
+### Signal Sources
+Alerts enter the system from two sources today, with a third planned:
+- **Zabbix** — self-hosted on AWS, monitors 706 hosts across ~90 client accounts. The existing "Gen-AI" action (already configured) fires on Average/High/Disaster severity and will be pointed at Lambda 1 instead of email.
+- **CloudWatch** *(future)* — per-client AWS account alarms routed via SNS into the same Lambda ingestor.
+- **Client Chat GUI** *(future)* — clients send questions directly to the agent via a chat widget.
+
+### Lambda 1 — Alert Ingestor
+Thin, stateless AWS Lambda function. Receives the raw Zabbix webhook POST, normalizes it into a standard JSON schema (source, host, client, alert type, severity), and forwards it to the EC2 AI Agent Service. Costs nothing when idle.
+
+### EC2 AI Decision Engine
+Persistent FastAPI/Python service running on a `t3.small` EC2 in `ap-south-1`. This is the brain of the agent — it receives normalized alerts, calls Vertex AI (Gemini) for classification and decision, then routes the outcome to notifications, ticketing, or remediation. The `/chat` endpoint will serve the client-facing GUI in a future phase without any new infrastructure.
+
+### GCP — Vertex AI (Gemini)
+The AI/LLM layer. The EC2 agent calls Gemini with the alert context and receives a structured decision: `{action, severity, category, summary, confidence}`. If confidence is below threshold, the agent always escalates to human rather than acting autonomously.
+
+### Notifications — AWS SES
+Every alert processed by the agent triggers an email summary to `awsalerts@aeonx.digital` via AWS SES (`email-smtp.ap-south-1.amazonaws.com`). Summary includes: what happened, which client/host, AI-assessed severity, and what action was taken or recommended.
+
+### Ticketing — ManageEngine ServiceDesk Plus *(Phase 4)*
+Auto-creates a ticket when the agent decides human review is needed or when auto-remediation is attempted. Updates the ticket with action taken. Closes it when the issue is verified resolved. Runs on AeonX's self-hosted ManageEngine instance via REST API.
+
+### Cloud Integrations — AWS + GCP *(Phase 3)*
+Safe, gated automated actions:
+- **EC2 restart** — only on instances tagged `auto-restart=true`
+- **SSM Run Command** — service restarts on allowlisted instances
+- **Cross-account** — agent assumes `Aeonx-L2-Role` in each of the 158 client accounts to act within their environment
+- **GCP VM restart** — allowlist-gated, same safety model as EC2
+
+### Audit & Memory
+Every alert, AI decision, and action taken is written to S3 as a structured JSON record. SSM Parameter Store holds all secrets (API keys, GCP service account). CloudWatch captures all Lambda and EC2 agent logs. This store feeds the RAG layer in Phase 5 so the agent learns from past incidents.
+
+### Client-Facing GUI *(future)*
+- **Option A** (first): A chat widget where clients ask questions like "Is my server up?" or "What happened last night?" — the agent answers from S3 incident history and live Zabbix data via the `/chat` endpoint on the existing EC2 service.
+- **Option B** (later): Full self-service portal on ECS Fargate with per-client authentication, incident history, ticket status, and chat.
+
+### CI/CD
+GitHub Actions pipelines under `Cloud-AeonX-Digital / AI-Adoption-Team` handle all deployments — Lambda code updates, EC2 agent deployments, and Terraform infrastructure changes. No manual deployments.
+
+---
+
+## 📋 Build Phases
 
 | Phase | Title | Status |
 |-------|-------|--------|
-| [Phase 1](#phase-1--current-state-analysis) | Current State Analysis | 🔲 Pending |
-| [Phase 2](#phase-2--ai-use-cases-for-sre--devops) | AI Use Cases for SRE / DevOps | 🔲 Pending |
-| [Phase 3](#phase-3--architecture-design) | Architecture Design | 🔲 Pending |
-| [Phase 4](#phase-4--ai-system-design) | AI System Design | 🔲 Pending |
-| [Phase 5](#phase-5--automation-workflows) | Automation Workflows | 🔲 Pending |
-| [Phase 6](#phase-6--tooling-recommendations) | Tooling Recommendations | 🔲 Pending |
-| [Phase 7](#phase-7--implementation-roadmap) | Implementation Roadmap | 🔲 Pending |
+| [Phase 1](#phase-1--foundation--signal-ingestion) | Foundation & Signal Ingestion | 🔄 In Progress |
+| [Phase 2](#phase-2--ai-classification--decision-engine) | AI Classification & Decision Engine | 🔲 Pending |
+| [Phase 3](#phase-3--auto-remediation-layer) | Auto-Remediation Layer | 🔲 Pending |
+| [Phase 4](#phase-4--ticketing--notification) | Ticketing & Notification | 🔲 Pending |
+| [Phase 5](#phase-5--memory--rag-layer) | Memory & RAG Layer | 🔲 Pending |
+| [Phase 6](#phase-6--cicd--deployment-ops) | CI/CD & Deployment Ops | 🔲 Pending |
+| [Phase 7](#phase-7--observability--audit) | Observability & Audit | 🔲 Pending |
 | [Phase 8](#phase-8--risks--guardrails) | Risks & Guardrails | 🔲 Pending |
 
 ---
 
-## Phase 1 — Current State Analysis
+## Phase 1 — Foundation & Signal Ingestion
 
-> Mapping the existing monitoring stack and identifying where human intervention is required today.
+**Goal:** Wire Zabbix alerts into Lambda 1 (normalizer) → EC2 AI Agent Service. No AI yet — just reliable signal capture and forwarding.
 
-*Content coming soon — being developed iteratively.*
+**Components:**
+- Lambda 1: receives Zabbix webhook, normalizes to standard schema, POSTs to EC2
+- EC2 t3.small: FastAPI skeleton with `/alert` endpoint
+- Zabbix "Gen-AI" action: change operation from email → webhook URL (Lambda 1)
 
----
+**Status:** 🔄 In Progress
 
-## Phase 2 — AI Use Cases for SRE / DevOps
-
-> Breaking down AI opportunities across: alert noise reduction, incident summarization, log clustering, RCA prediction, auto-remediation, and ticket automation.
-
-*Content coming soon — being developed iteratively.*
-
----
-
-## Phase 3 — Architecture Design
-
-> Reference architecture covering: AWS + GCP data ingestion, observability pipeline, AI/LLM layer, event routing, and storage/indexing.
-
-*Content coming soon — being developed iteratively.*
+**Blockers:**
+- ⏳ IAM role `aeonx-ai-agent-role` — policy files ready in `iam/`
+- ⏳ GCP project ID for Vertex AI
+- ⏳ ManageEngine API key
 
 ---
 
-## Phase 4 — AI System Design
+## Phase 2 — AI Classification & Decision Engine
 
-> How LLMs will be used (RAG, classification, summarization), prompt strategies, context building from logs + metrics, and historical incident learning.
+**Goal:** EC2 agent calls Vertex AI (Gemini) per alert and returns a structured decision.
 
-*Content coming soon — being developed iteratively.*
+**Components:**
+- GCP project + Vertex AI API enabled
+- GCP service account key in SSM
+- Gemini prompt template per alert category
+- Decision schema: `{action, severity, category, summary, confidence}`
+- SES email with AI-generated summary on every alert
 
----
-
-## Phase 5 — Automation Workflows
-
-> Step-by-step workflows:
-> - Alert → AI triage → severity classification → Slack summary
-> - Incident → log aggregation → RCA suggestion → escalation decision
-> - Ticket → AI classification → auto-routing to team
-
-*Content coming soon — being developed iteratively.*
+**Status:** 🔲 Pending (blocked on GCP project)
 
 ---
 
-## Phase 6 — Tooling Recommendations
+## Phase 3 — Auto-Remediation Layer
 
-> AWS native, GCP native, open-source, and AI/LLM integration tools — compared and recommended.
+**Goal:** Execute safe, tag-gated automated fixes for known alert patterns.
 
-*Content coming soon — being developed iteratively.*
+**Auto-resolvable patterns (from live Zabbix data):**
+| Alert | Frequency | Action |
+|-------|-----------|--------|
+| Website Down | 19x/week | Health check → EC2/VM restart |
+| High Memory >90% Linux/Windows | 29x/week | Restart if critical |
+| AWS Replication Service not running | 9x/week | SSM Run Command service restart |
+| Zabbix agent not available | 6x/week | EC2/VM restart |
+
+**Safety:** EC2/VM restart only for instances tagged `auto-restart=true`. Cross-account via `Aeonx-L2-Role`.
+
+**Status:** 🔲 Pending
 
 ---
 
-## Phase 7 — Implementation Roadmap
+## Phase 4 — Ticketing & Notification
 
-> Phased rollout:
-> - **Phase A:** Observability foundation
-> - **Phase B:** AI-assisted insights
-> - **Phase C:** Semi-automation
-> - **Phase D:** Full autonomous remediation (where safe)
+**Goal:** Auto-create, update, and close ManageEngine tickets. Send SES summaries.
 
-*Content coming soon — being developed iteratively.*
+**Status:** 🔲 Pending (blocked on ManageEngine API key)
+
+---
+
+## Phase 5 — Memory & RAG Layer
+
+**Goal:** Index every incident + resolution. Feed into Gemini context for improving classification over time.
+
+**Status:** 🔲 Pending
+
+---
+
+## Phase 6 — CI/CD & Deployment Ops
+
+**Goal:** GitHub Actions pipelines for agent deployment and client infra operations.
+
+**Status:** 🔲 Pending
+
+---
+
+## Phase 7 — Observability & Audit
+
+**Goal:** CloudWatch dashboard, audit log, weekly digest email.
+
+**Status:** 🔲 Pending
 
 ---
 
 ## Phase 8 — Risks & Guardrails
 
-> Covering: hallucination risks in AI RCA, false automation risks, security and access control, production safety constraints.
+**Goal:** Ensure the agent cannot cause more damage than it prevents.
 
-*Content coming soon — being developed iteratively.*
+**Key guardrails:**
+- EC2/VM restart: tag-gated (`auto-restart=true`) — opt-in per instance
+- AI confidence threshold: actions below threshold always escalate
+- No destructive actions (terminate, delete, scale-down) — ever
+- All actions logged and reversible
+
+**Status:** 🔲 Pending
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Tool |
+|-------|------|
+| Monitoring | Zabbix (self-hosted, AWS) + CloudWatch |
+| Alert ingestor | AWS Lambda (ap-south-1) |
+| AI Decision Engine | EC2 t3.small — FastAPI/Python (ap-south-1) |
+| AI/LLM | GCP Vertex AI — Gemini |
+| Ticketing | ManageEngine ServiceDesk Plus (self-hosted, AWS) |
+| Notifications | AWS SES (email-smtp.ap-south-1.amazonaws.com) |
+| Secrets | AWS SSM Parameter Store |
+| Audit storage | AWS S3 |
+| IaC | Terraform |
+| CI/CD | GitHub Actions |
+| IAM | `aeonx-ai-agent-role` (ap-south-1, account 761685920937) |
+
+---
+
+## ✅ Master To-Do List
+
+> See [GAPS.md](./GAPS.md) for known gaps and loopholes with fix details.
+
+### Infrastructure Setup
+1. Create GCP project + enable Vertex AI API
+4. Create GCP service account with `Vertex AI User` role → download JSON key
+5. Create second GCP service account with `Compute Instance Admin` role (for Phase 3 GCP VM restart) (Gap #9)
+6. Store Vertex AI GCP key in SSM: `/aeonx/ai-agent/gcp-service-account-key`
+7. Create IAM role `aeonx-ai-agent-role` using `iam/trust-policy.json` + `iam/agent-permission-policy.json`
+8. Launch EC2 t3.small in ap-south-1 (private subnet, same VPC as Zabbix), assign `aeonx-ai-agent-role`
+9. Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy + versioning (Gap #6)
+
+### Phase 1 — Signal Ingestion
+10. Add webhook secret validation to Lambda 1 design (Gap #1)
+11. Write Lambda 1 (alert ingestor + normalizer) — place in same VPC as EC2
+12. Deploy Lambda 1 via GitHub Actions
+13. Write FastAPI skeleton on EC2 (`POST /alert` endpoint)
+14. Configure systemd service for FastAPI agent on EC2 (Gap #4)
+15. Add alert deduplication logic: `trigger_id + host + 30-min window` (Gap #8)
+16. Update Zabbix "Gen-AI" action: change operation from email → Lambda 1 webhook URL
+17. Test: trigger a test alert in Zabbix → verify Lambda 1 receives + normalizes it
+
+### Phase 2 — AI Classification
+18. Write Gemini prompt template for alert classification
+19. Wire EC2 agent `/alert` → Vertex AI call → structured decision
+20. Write SES email formatter (AI summary → team email)
+21. Test end-to-end: Zabbix alert → Lambda → EC2 → Gemini → SES email
+
+### Phase 3 — Auto-Remediation
+22. Add `auto-restart=true` tag to allowlisted EC2 instances
+23. Write EC2 restart executor (tag check → stop → start → health verify → 30-min cooldown)
+24. Write SSM Run Command executor (service restart)
+25. Add trust policy to `Aeonx-L2-Role` in client accounts (script for all 158)
+26. Wire GCP Compute service account for GCP VM restart
+27. Test: simulate "Website Down" alert → verify auto-restart fires only on tagged instances
+
+### Phase 4 — Ticketing
+28. Obtain ManageEngine API key
+29. Write ManageEngine ticket create/update/close integration
+30. Add duplicate ticket check: query open tickets for same host+alert before creating (Gap #11)
+31. Wire: AI decision → ticket created → remediation result → ticket closed
+32. Test: full flow with real ManageEngine ticket
+
+### Phase 5 — Memory & RAG
+33. Set up S3 incident log writer (JSON per event)
+34. Set up vector index on GCS for past incidents
+35. Wire RAG context into Gemini prompt
+
+### Phase 6 — CI/CD
+36. GitHub Actions: Lambda deploy pipeline
+37. GitHub Actions: EC2 agent deploy pipeline
+38. GitHub Actions: Terraform plan/apply pipeline
+
+### Phase 7 — Observability & Audit
+39. CloudWatch dashboard: alert volumes, auto-remediation rate, agent health
+40. Audit log: every action with timestamp, alert ID, decision, outcome
+41. Weekly digest email via SES
+
+### Phase 8 — Risks & Guardrails
+42. Document and enforce all guardrails (confidence threshold, tag-gate, no destructive actions)
+43. Load test: simulate burst of 50 alerts → verify no duplicate processing
+
+### Phase 9 — Client GUI (Option A)
+44. Design client identity + data scoping for `/chat` endpoint (Gap #10)
+45. Add `POST /chat` endpoint to EC2 agent
+46. Build simple chat widget (HTML/JS)
+47. Wire: client question → Gemini + S3 incident history → answer
 
 ---
 
 ## 📌 Constraints
 
-- Production-grade cloud environments (AWS + GCP)
-- Reliability and safety over automation speed
-- Incremental adoption — no "big bang" changes
-- Cross-team collaboration via this repo
+- Payer AWS account (`761685920937`) — minimal IAM footprint
+- EC2/VM auto-restart: allowlist only, tag-gated (`auto-restart=true`)
+- GCP Vertex AI: preferred LLM provider
+- No "big bang" — each phase independently deployable and rollback-safe
+- All secrets via SSM Parameter Store — never hardcoded
 
 ---
 
 ## 🤝 Contributing
 
-This document is developed **section by section, iteratively** with the team. Each phase will be fleshed out in sequence, reviewed, and merged via PRs.
-
-- Branch naming: `phase/<number>-<short-title>`
-- Each phase gets its own PR for team review
-- See [CLAUDE.md](./CLAUDE.md) for AI session context and working instructions
-- See [PROGRESS.md](./PROGRESS.md) for phase-by-phase summaries and handoff context
+- Working branch: `mrinal-dev`
+- Branch naming for phases: `phase/<number>-<short-title>`
+- Each phase gets its own PR into `main`
+- See [CLAUDE.md](./CLAUDE.md) for AI session resume instructions
+- See [PROGRESS.md](./PROGRESS.md) for phase handoff context
+- See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed system design
 
 ---
 
 ## 🤖 Sharing AI Context with the Team
 
-Choose the method that fits your workflow. All options are compatible with this repo.
-
 | # | Method | How | Best For |
 |---|--------|-----|----------|
-| 1 | **Kiro Steering file** | `.kiro/steering/your-feature.md` | Auto-loaded rules/conventions for everyone on every session |
-| 2 | **Kiro Custom agent** | `.kiro/agents/your-feature.json` | Full workflow with tools, hooks, and prompts for a specific task |
-| 3 | **Kiro Skill file** | `.kiro/skills/your-feature.md` | On-demand reference material loaded when relevant |
-| 4 | **Kiro Hook scripts** | Committed alongside an agent config | Automation triggered at specific points (e.g., on file save, on commit) |
-| 5 | **KIRO_HOME shared directory** | Point `KIRO_HOME` env var to a shared path | One repo manages global agents/steering/skills for the whole team |
-| 6 | **GitHub versioned `.md` file** | Standalone doc in this repo | Teammates read and apply manually; no Kiro required |
+| 1 | **Kiro Steering file** | `.kiro/steering/your-feature.md` | Auto-loaded rules/conventions for everyone |
+| 2 | **Kiro Custom agent** | `.kiro/agents/your-feature.json` | Full workflow with tools, hooks, prompts |
+| 3 | **Kiro Skill file** | `.kiro/skills/your-feature.md` | On-demand reference material |
+| 4 | **Kiro Hook scripts** | Committed alongside agent config | Automation at trigger points |
+| 5 | **KIRO_HOME shared directory** | Point `KIRO_HOME` env var to shared path | Global agents/steering for whole team |
+| 6 | **GitHub versioned `.md` file** | Standalone doc in this repo | Manual reference; no Kiro required |
 
-**Current approach for this project:** Option 6 (versioned `.md` files) as the baseline — `CLAUDE.md` for session config, `PROGRESS.md` for phase handoffs. Kiro steering/agent files will be added as phases mature.
+**Current approach:** Option 6 — `CLAUDE.md` for session config, `PROGRESS.md` for phase handoffs. Kiro steering/agent files added as phases mature.

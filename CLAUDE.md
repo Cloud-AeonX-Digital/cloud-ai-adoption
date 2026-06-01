@@ -1,97 +1,111 @@
-# CLAUDE.md — AI Session Context & Working Instructions
+# CLAUDE.md — AI Session Context & Resume Instructions
 
-> This file configures AI assistant sessions (Claude/Kiro) for this project.
-> Anyone picking up this repo can resume work with full context.
+> Load this file at the start of every AI session on this project.
+> Contains confirmed stack, decisions, and exact resume instructions.
 
 ---
 
-## 🧠 Project Context
+## 🧠 Project
 
 **Repo:** `Cloud-AeonX-Digital/cloud-ai-adoption`
-**Owner:** Mrinal-AeonX
-**Goal:** Design a complete AI adoption strategy for SRE & DevOps operations across AWS and GCP.
+**Team:** `AI-Adoption-Team`
+**Working branch:** `mrinal-dev`
+**Owner:** Mrinal-AeonX (mrinal.jani@aeonx.digital)
 
-The strategy is being built **iteratively, section by section**, with each phase reviewed before moving to the next.
+**What we're building:** Autonomous AI ops agent — monitors 706 hosts across ~90 AWS/GCP client accounts via Zabbix, classifies alerts with Vertex AI (Gemini), auto-remediates known patterns, creates ManageEngine tickets, sends SES summaries. Human escalation only for unknown/high-risk situations.
 
 ---
 
-## 📍 Current Status
+## ✅ Confirmed Stack (locked in — do not re-ask)
+
+| Layer | Tool | Details |
+|-------|------|---------|
+| Monitoring | Zabbix (self-hosted) | AWS, 706 hosts, ~90 client groups, ap-south-1 |
+| Alert ingestor | AWS Lambda | Lambda 1 — thin normalizer, ap-south-1 |
+| AI Decision Engine | EC2 t3.small | FastAPI/Python, ap-south-1, persistent service |
+| AI/LLM | GCP Vertex AI (Gemini) | Called over HTTPS from EC2 |
+| Ticketing | ManageEngine ServiceDesk Plus | Self-hosted AWS, REST API |
+| Notifications | AWS SES | email-smtp.ap-south-1.amazonaws.com → awsalerts@aeonx.digital |
+| Secrets | AWS SSM Parameter Store | /aeonx/ai-agent/* |
+| Audit | AWS S3 | aeonx-ai-agent-incidents/ |
+| IaC | Terraform | Phase 6 |
+| CI/CD | GitHub Actions | Cloud-AeonX-Digital / AI-Adoption-Team |
+| AWS Account | 761685920937 (Aeonx payer) | Region: ap-south-1 |
+| IAM Role | aeonx-ai-agent-role | Files in iam/ |
+| Client accounts | 158 accounts | Aeonx-L2-Role exists in each |
+
+**Not in scope:** PagerDuty, Opsgenie, Datadog, Grafana, Prometheus, Slack
+
+---
+
+## 🏗️ Architecture Decision: Lambda + EC2 (not Lambda-only)
+
+- **Lambda 1** = thin ingestor only (receive Zabbix webhook → normalize → forward to EC2)
+- **EC2 t3.small** = persistent AI agent service (FastAPI) — handles AI calls, remediation, and future client GUI `/chat` endpoint
+- This avoids Lambda timeout limits for AI calls and gives a single service that grows with every phase
+
+---
+
+## 📍 Phase Status
 
 | Phase | Title | Status |
 |-------|-------|--------|
-| Phase 1 | Current State Analysis | 🔲 Pending |
-| Phase 2 | AI Use Cases for SRE / DevOps | 🔲 Pending |
-| Phase 3 | Architecture Design | 🔲 Pending |
-| Phase 4 | AI System Design | 🔲 Pending |
-| Phase 5 | Automation Workflows | 🔲 Pending |
-| Phase 6 | Tooling Recommendations | 🔲 Pending |
-| Phase 7 | Implementation Roadmap | 🔲 Pending |
+| Phase 1 | Foundation & Signal Ingestion | 🔄 In Progress |
+| Phase 2 | AI Classification & Decision Engine | 🔲 Pending |
+| Phase 3 | Auto-Remediation Layer | 🔲 Pending |
+| Phase 4 | Ticketing & Notification | 🔲 Pending |
+| Phase 5 | Memory & RAG Layer | 🔲 Pending |
+| Phase 6 | CI/CD & Deployment Ops | 🔲 Pending |
+| Phase 7 | Observability & Audit | 🔲 Pending |
 | Phase 8 | Risks & Guardrails | 🔲 Pending |
-
-Update this table as phases are completed.
 
 ---
 
-## 🎯 Problem Statement
+## 🚧 Current Blockers
 
-Production cloud team (AWS + GCP) facing:
-- High alert volume, manual triaging
-- Slow RCA
-- Repetitive tickets and escalations
-- No intelligent signal correlation
-- On-call fatigue
+| Blocker | Status |
+|---------|--------|
+| Create IAM role `aeonx-ai-agent-role` | ⏳ Policy files ready in `iam/` |
+| GCP project ID + Vertex AI enabled | ⏳ Project not yet created |
+| ManageEngine API key | ⏳ Read-only creds being created |
+
+---
+
+## 🔑 Zabbix (already queried — do not re-query)
+
+- API: `https://cloud-monitor.aeonx.support/api_jsonrpc.php`
+- 706 hosts, ~90 client host groups
+- "Gen-AI" action (actionid: 14): fires Average/High/Disaster, currently sends email
+- **Phase 1 change:** update action operation → HTTP POST to Lambda 1 URL
+- Top auto-resolvable alerts: Website Down (19x/wk), High Memory (29x/wk), Service not running (9x/wk)
 
 ---
 
 ## 🤖 AI Working Instructions
 
-When resuming this session, the AI assistant should:
-
-1. **Read `README.md`** to understand current phase status
-2. **Work one phase at a time** — do not jump ahead
-3. **Ask for validation** after each phase before proceeding
-4. **Output format:** Clear sections, ASCII architecture diagrams where needed, actionable content
-5. **Tone:** Senior SRE / Cloud Architect — technical, precise, production-aware
-6. **Constraints to always respect:**
-   - Must work across both AWS and GCP
-   - Reliability and safety over automation speed
-   - Prefer incremental adoption over "big bang" changes
-   - Production-grade assumptions throughout
+1. Read `PROGRESS.md` for current phase status and blockers
+2. Do not re-ask questions already answered above
+3. Build one phase at a time — validate before moving forward
+4. All secrets → SSM Parameter Store, never hardcoded
+5. EC2/VM restart → always check `auto-restart=true` tag first
+6. Confidence < 0.75 → always escalate, never auto-act
+7. Tone: Senior SRE / Cloud Architect — technical, concise
 
 ---
 
-## 🌿 Branch & PR Convention
+## 🌿 Branch Convention
 
-- Branch naming: `phase/<number>-<short-title>`
-  - e.g., `phase/1-current-state-analysis`
-- One PR per phase
-- PR description should summarize: what was added, key decisions made, open questions
-
----
-
-## 🛠️ Stack Assumptions (to be validated per phase)
-
-- **Monitoring:** AWS CloudWatch, GCP Cloud Monitoring, Prometheus, Grafana, Datadog
-- **Alerting:** PagerDuty / Opsgenie
-- **ChatOps:** Slack
-- **AI/LLM:** AWS Bedrock, GCP Vertex AI, OpenAI API
-- **Storage/Indexing:** OpenSearch, BigQuery, Elastic
-- **IaC:** Terraform
+- Day-to-day: `mrinal-dev`
+- Per phase: `phase/<number>-<short-title>`
+- Each phase → PR → reviewed → merged to `main`
 
 ---
 
-## 👥 Team
-
-- **Repo Owner:** Mrinal-AeonX
-- **Org:** Cloud-AeonX-Digital
-- **Collaboration:** All team members work via PRs against `main`
-
----
-
-## 📝 Session Resume Prompt
-
-To resume this project in a new AI session, use:
+## 📝 Resume Prompt
 
 ```
-Read CLAUDE.md and README.md in this repo. We are building a Cloud AI Adoption Strategy for SRE/DevOps operations across AWS and GCP, iteratively phase by phase. Check the current status table in CLAUDE.md and continue from the next pending phase.
+Read CLAUDE.md in Cloud-AeonX-Digital/cloud-ai-adoption.
+We are building an autonomous AI ops agent for AeonX (706 hosts, AWS+GCP).
+Stack and decisions are confirmed in CLAUDE.md — do not re-ask.
+Check PROGRESS.md for current phase status and blockers, then continue.
 ```

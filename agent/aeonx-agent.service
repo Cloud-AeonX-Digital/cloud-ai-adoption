@@ -1,0 +1,25 @@
+[Unit]
+Description=AeonX AI Ops Agent
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/opt/aeonx-agent
+ExecStart=/opt/aeonx-agent/venv/bin/uvicorn agent.app.main:app --host 0.0.0.0 --port 8000 --workers 2
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Environment — non-secret config only; secrets come from SSM at runtime
+Environment=GCP_PROJECT_ID=REPLACE_WITH_GCP_PROJECT_ID
+Environment=GCP_LOCATION=us-central1
+Environment=CONFIDENCE_THRESHOLD=0.75
+Environment=SES_FROM=awsalerts@aeonx.digital
+Environment=SES_TO=awsalerts@aeonx.digital
+Environment=S3_INCIDENT_BUCKET=aeonx-ai-agent-incidents
+
+[Install]
+WantedBy=multi-user.target

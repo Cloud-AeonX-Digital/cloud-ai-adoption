@@ -1,0 +1,3 @@
+{
+  "body": "{\"trigger_id\":\"41654\",\"trigger_name\":\"Linux: High memory utilization (>90% for 5m)\",\"trigger_severity\":\"Average\",\"trigger_status\":\"PROBLEM\",\"host_name\":\"BioStadt - SAP PRD APP 1\",\"host_ip\":\"10.0.1.50\",\"host_id\":\"11819\",\"event_id\":\"7868744\",\"event_time\":\"15:30:08\",\"event_date\":\"2026.06.01\",\"item_value\":\"94.2 %\"}"
+}

@@ -50,24 +50,30 @@
 
 | Phase | Title | Status |
 |-------|-------|--------|
-| Phase 1 | Foundation & Signal Ingestion | 🔄 In Progress |
-| Phase 2 | AI Classification & Decision Engine | 🔲 Pending |
+| Phase 1 | Foundation & Signal Ingestion | ✅ Code complete — pending infra deployment |
+| Phase 2 | AI Classification & Decision Engine | ✅ Code complete — pending GCP setup |
 | Phase 3 | Auto-Remediation Layer | 🔲 Pending |
 | Phase 4 | Ticketing & Notification | 🔲 Pending |
 | Phase 5 | Memory & RAG Layer | 🔲 Pending |
 | Phase 6 | CI/CD & Deployment Ops | 🔲 Pending |
 | Phase 7 | Observability & Audit | 🔲 Pending |
 | Phase 8 | Risks & Guardrails | 🔲 Pending |
+| Phase 9 | Client-Facing GUI (Option A) | 🔲 Pending |
 
 ---
 
-## 🚧 Current Blockers
+## 🚧 Current Blockers (infrastructure — code is ready)
 
-| Blocker | Status |
-|---------|--------|
-| Create IAM role `aeonx-ai-agent-role` | ⏳ Policy files ready in `iam/` |
-| GCP project ID + Vertex AI enabled | ⏳ Project not yet created |
-| ManageEngine API key | ⏳ Read-only creds being created |
+| Blocker | Action | Status |
+|---------|--------|--------|
+| IAM role `aeonx-ai-agent-role` | Create using `iam/` files | ⏳ Mrinal |
+| EC2 t3.small launch | Private subnet, assign role, run `agent/setup.sh` | ⏳ Mrinal |
+| S3 bucket `aeonx-ai-agent-incidents` | Create with versioning + lifecycle policy | ⏳ Mrinal |
+| Lambda 1 deploy | Run `lambda/alert-ingestor/deploy.sh` with SUBNET_ID + SG_ID | ⏳ After EC2 up |
+| Zabbix Gen-AI action update | Change operation → Lambda 1 webhook URL | ⏳ After Lambda deployed |
+| GCP project + Vertex AI | Create project, enable API, create service account | ⏳ Mrinal |
+| GCP service account key → SSM | Store JSON at `/aeonx/ai-agent/gcp-service-account-key` | ⏳ After GCP project |
+| ManageEngine API key | Admin → API → generate key | ⏳ Mrinal (Phase 4) |
 
 ---
 

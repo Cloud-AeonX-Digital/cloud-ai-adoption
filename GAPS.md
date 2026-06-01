@@ -24,8 +24,8 @@ Lambda 1 needs to reach the EC2 agent via HTTP POST. If EC2 is in a private subn
 
 **4. EC2 agent has no process manager**
 If the FastAPI app crashes, nothing restarts it automatically.
-- Fix: configure `systemd` service for the FastAPI app on EC2.
-- Phase: 1
+- **Resolution:** `agent/aeonx-agent.service` systemd unit created. Auto-restarts on crash with 5s delay. Installed via `agent/setup.sh`.
+- **Status:** ✅ Resolved in code (pending deployment)
 
 **5. IAM permission policy has duplicate permissions**
 `EC2RemediationAllowlist` and `EC2DescribeOnly` both included `ec2:DescribeInstances` and `ec2:DescribeInstanceStatus`. Redundant — creates confusion during audits.
@@ -44,8 +44,8 @@ The "Gen-AI" action exists but the exact payload Zabbix sends was never captured
 
 **8. No alert deduplication**
 Zabbix re-fires the same alert on escalation steps. The agent will process it multiple times — potentially restarting the same instance twice.
-- Fix: add deduplication logic using `trigger_id + host + time window` (e.g., 30-min window).
-- Phase: 1 / 2
+- **Resolution:** `agent/app/dedup.py` — in-memory TTL cache keyed on `trigger_id:host_name`, 30-min window, thread-safe. Single worker enforced to keep store globally consistent.
+- **Status:** ✅ Resolved in code (pending deployment)
 
 **9. GCP service account permission scope unclear**
 The GCP service account key is for Vertex AI (`Vertex AI User` role). GCP VM restart (Phase 3) needs `Compute Instance Admin` role — a different permission scope. One service account cannot safely hold both.
@@ -83,12 +83,12 @@ Phase 7 is labelled "Observability & Audit" in the phases table but "Client GUI 
 | — | 1 | Private network (same AWS account) | — | ✅ Resolved |
 | — | 2 | Private network (same AWS account) | — | ✅ Resolved |
 | — | 3 | SES already verified | — | ✅ Resolved |
+| — | 4 | systemd service in `agent/aeonx-agent.service` | — | ✅ Resolved in code |
 | — | 5 | Duplicate IAM permissions removed, `sts:AssumeRole` added | — | ✅ Resolved |
 | — | 7 | Zabbix payload documented in `zabbix-webhook-payload.md` | — | ✅ Resolved |
-| 3 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 | ⏳ |
-| 4 | 4 | Configure systemd for FastAPI agent on EC2 | Phase 1 | ⏳ |
-| 5 | 8 | Add alert deduplication (trigger_id + host + 30-min window) | Phase 1/2 | ⏳ |
-| 6 | 9 | Split GCP service accounts: Vertex AI vs Compute | Phase 2/3 | ⏳ |
-| 7 | 11 | Add duplicate ticket check in ManageEngine integration | Phase 4 | ⏳ |
-| 8 | 10 | Design client data isolation for `/chat` endpoint | Phase 9 | ⏳ |
-| 9 | 12 | Fix Phase 7 / Client GUI labelling in README | Documentation | ✅ Resolved |
+| — | 8 | Dedup in `agent/app/dedup.py` (30-min TTL, single worker) | — | ✅ Resolved in code |
+| — | 12 | Phase 7/GUI labelling fixed in README | — | ✅ Resolved |
+| 1 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 | ⏳ Infra task |
+| 2 | 9 | Create two GCP service accounts: Vertex AI + Compute (separate) | Phase 2/3 | ⏳ Infra task |
+| 3 | 11 | Add duplicate ticket check in ManageEngine integration | Phase 4 | ⏳ Code task |
+| 4 | 10 | Design client data isolation for `/chat` endpoint | Phase 9 | ⏳ Future |

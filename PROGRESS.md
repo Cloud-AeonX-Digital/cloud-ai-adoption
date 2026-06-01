@@ -48,44 +48,61 @@
 ---
 
 ### Phase 1 — Foundation & Signal Ingestion
-**Status:** 🔄 In Progress | **Branch:** mrinal-dev
+**Status:** ✅ Code Complete — Pending Deployment | **Branch:** mrinal-dev | **PR:** #3 merged to main
 
-**Goal:** Zabbix alert → Lambda 1 (normalize) → EC2 agent `/alert` endpoint. No AI yet.
+**Goal:** Zabbix alert → Lambda 1 (normalize) → EC2 agent `/alert` endpoint.
 
-**Key Findings:**
-- 706 hosts, ~90 client groups in Zabbix
-- Only active channel: AWS SES → awsalerts@aeonx.digital
-- "Gen-AI" action already exists — change target from email to Lambda 1 webhook
-- Top auto-resolvable patterns confirmed from live data (see CLAUDE.md)
+**Key Outputs:**
+- `lambda/alert-ingestor/handler.py` — receives Zabbix webhook, normalizes to standard schema, forwards to EC2
+- `lambda/alert-ingestor/deploy.sh` — one-command deploy, outputs webhook URL for Zabbix
+- `agent/app/main.py` — FastAPI service, `POST /alert` + `GET /health`
+- `agent/app/models.py` — Pydantic schemas matching Lambda output exactly
+- `agent/app/dedup.py` — 30-min TTL dedup (Gap #8 resolved)
+- `agent/aeonx-agent.service` — systemd unit, auto-restart (Gap #4 resolved)
+- `agent/setup.sh` — one-command EC2 setup
+- `zabbix-webhook-payload.md` — exact payload structure documented (Gap #7 resolved)
+- `iam/` — trust policy + permission policy (Gap #5 resolved, S3 permission added)
 
 **Decisions Made:**
 - AWS account: `761685920937`, region: `ap-south-1`
 - IAM role: `aeonx-ai-agent-role`, ExternalId: `aeonx-ai-agent-2026`
-- EC2 size: `t3.small` — sufficient for current load, resize later if needed
+- EC2 size: `t3.small`, single uvicorn worker (for dedup consistency)
 - Secrets path: `/aeonx/ai-agent/*` in SSM
 
-**Blockers:**
-- ⏳ Create `aeonx-ai-agent-role` (files in `iam/`)
-- ⏳ GCP project ID (Vertex AI)
-- ⏳ ManageEngine API key
+**Pending (infrastructure — not blocking code):**
+- ⏳ Create `aeonx-ai-agent-role` in AWS using `iam/` files
+- ⏳ Launch EC2 t3.small, assign role, run `agent/setup.sh`
+- ⏳ Create S3 bucket `aeonx-ai-agent-incidents` (Gap #6)
+- ⏳ Deploy Lambda 1 via `lambda/alert-ingestor/deploy.sh`
+- ⏳ Update Zabbix "Gen-AI" action → Lambda 1 webhook URL
 
-**Next Steps (once unblocked):**
-1. Create IAM role in AWS
-2. Launch EC2 t3.small, assign role
-3. Write + deploy Lambda 1 (alert ingestor)
-4. Write FastAPI skeleton on EC2 (`POST /alert`)
-5. Update Zabbix "Gen-AI" action → Lambda 1 URL
-6. Test: real Zabbix alert → Lambda → EC2
+**Handed to Phase 2:**
+- Normalized alert schema confirmed (see `agent/app/models.py`)
+- EC2 agent `/alert` endpoint ready to receive and process
+- GCP project ID + Vertex AI service account key needed in SSM before Phase 2 activates
 
 ---
 
 ### Phase 2 — AI Classification & Decision Engine
-**Status:** 🔲 Pending (blocked on GCP project)
+**Status:** ✅ Code Complete — Pending GCP Setup | **Branch:** mrinal-dev | **PR:** #3 merged to main
 
-**Inputs needed from Phase 1:**
-- Lambda 1 URL (deployed and tested)
-- EC2 agent running and reachable
-- GCP project ID + Vertex AI enabled + service account key in SSM
+**Key Outputs:**
+- `agent/app/classifier.py` — Gemini (Vertex AI) call, confidence threshold, safe fallback to escalate
+- `agent/app/notifier.py` — SES email with full incident + AI summary
+- `agent/app/logger.py` — S3 incident log writer (date-partitioned JSON)
+- `agent/requirements.txt` — pinned deps: fastapi, uvicorn, pydantic, boto3, google-auth
+
+**Decisions Made:**
+- Gemini model: `gemini-1.5-flash`
+- Confidence threshold: 0.75 (env var `CONFIDENCE_THRESHOLD`)
+- GCP location: `us-central1` (env var `GCP_LOCATION`)
+- Credential caching: service account token cached in memory, refreshed on expiry (no SSM re-fetch every hour)
+- All failures non-fatal: SES/S3 errors logged but don't crash the request
+
+**Pending (infrastructure):**
+- ⏳ Create GCP project + enable Vertex AI API
+- ⏳ Create GCP service account (`Vertex AI User` role) → store JSON key in SSM `/aeonx/ai-agent/gcp-service-account-key`
+- ⏳ Set `GCP_PROJECT_ID` in systemd service file before deploying
 
 ---
 

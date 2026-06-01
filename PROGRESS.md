@@ -1,125 +1,134 @@
 # PROGRESS.md — Phase Summaries & Handoff Context
 
-> This file tracks **only the essential output and decisions** from each phase.
-> It is the single source of truth for passing context between phases and team members.
-> Do NOT include troubleshooting steps, failed attempts, or exploratory notes here.
+> Essential decisions and outputs only. No troubleshooting notes or exploratory context.
+> Each phase reads only what it needs from previous phases.
 
 ---
 
-## How to Use This File
-
-- After completing a phase, add a summary block below following the template
-- The next phase should read only its **"Inputs from previous phases"** section — not the full history
-- Keep each summary tight: decisions made, key outputs, open questions handed forward
-
----
-
-## Phase Summary Template
+## Template
 
 ```
 ### Phase N — <Title>
-**Status:** ✅ Complete / 🔲 Pending / 🔄 In Progress
-**Branch:** phase/N-short-title
-**PR:** #<number>
+**Status:** ✅ Complete / 🔄 In Progress / 🔲 Pending
+**Branch:** phase/N-short-title | PR: #N
 
-**Key Outputs:**
-- <bullet: what was produced>
-
-**Decisions Made:**
-- <bullet: architectural or strategic choices locked in>
-
-**Assumptions Validated:**
-- <bullet: stack/tooling assumptions confirmed or changed>
-
-**Handed to Phase N+1:**
-- <bullet: only what the next phase needs to know>
-
-**Open Questions (if any):**
-- <bullet: unresolved items for future phases>
+**Key Outputs:** what was produced
+**Decisions Made:** architectural/strategic choices locked in
+**Handed to Phase N+1:** only what the next phase needs
+**Blockers:** unresolved items
 ```
 
 ---
 
 ## Phase Summaries
 
+---
+
 ### Phase 0 — Project Setup
-**Status:** ✅ Complete
-**Branch:** mrinal-dev
+**Status:** ✅ Complete | **Branch:** mrinal-dev
 
 **Key Outputs:**
-- Repo created: `Cloud-AeonX-Digital/cloud-ai-adoption`
-- Team assigned: `AI-Adoption-Team` (push access)
-- Working branch: `mrinal-dev`
-- `README.md` — full phase plan with contributing guide and AI sharing options
-- `CLAUDE.md` — AI session config with resume prompt, stack assumptions, branch conventions
-- `PROGRESS.md` — this file, for phase handoffs
+- Repo: `Cloud-AeonX-Digital/cloud-ai-adoption`, team `AI-Adoption-Team`, branch `mrinal-dev`
+- `README.md`, `CLAUDE.md`, `PROGRESS.md`, `ARCHITECTURE.md` committed
+- IAM policy files in `iam/`
 
 **Decisions Made:**
-- Iterative approach: one phase at a time, PR per phase
-- Baseline sharing method: GitHub versioned `.md` files (`CLAUDE.md` + `PROGRESS.md`)
-- Kiro steering/agent files to be added as phases mature
+- Pivot from "strategy document" to "actually building the agent"
+- Iterative build: one phase at a time, PR per phase into `main`
+- Sharing method: GitHub versioned `.md` files as baseline; Kiro steering files added as phases mature
 
 **Handed to Phase 1:**
-- Stack assumptions to validate: CloudWatch, GCP Monitoring, Prometheus, Grafana, Datadog, PagerDuty, Slack
-- Approach: map current state first, identify all human-intervention touchpoints before proposing AI solutions
+- Confirmed stack (see CLAUDE.md)
+- Zabbix API accessible, "Gen-AI" action exists and can be repurposed
+- IAM role policy files ready to deploy
 
 ---
 
-### Phase 1 — Current State Analysis
-**Status:** 🔄 In Progress
+### Phase 1 — Foundation & Signal Ingestion
+**Status:** 🔄 In Progress | **Branch:** mrinal-dev
 
-**Key Findings (Zabbix):**
-- 706 hosts across ~90 client groups (all AWS accounts, some GCP)
-- Only active alert channel: AWS SES Email → awsalerts@aeonx.digital
-- "Gen-AI" action already exists in Zabbix (Average/High/Disaster severity) — currently just sends email, no AI connected
-- Top repeating alerts (last 7 days): Website Down (19x), High Memory Linux/Windows (29x), Service not running (9x) — ~70% auto-resolvable
-- All other channels (Teams, ManageEngine webhook, Slack) are disabled
+**Goal:** Wire Zabbix + CloudWatch alerts into a unified Lambda normalizer. No AI yet — reliable signal capture only.
 
-**Pending — Blocked:**
-- ManageEngine API key (read-only creds being created by Mrinal)
-- GCP project ID (not yet created — Vertex AI will run here)
+**Key Findings:**
+- 706 hosts, ~90 client groups in Zabbix
+- Only active alert channel: AWS SES → awsalerts@aeonx.digital
+- Zabbix "Gen-AI" action (actionid: 14) already exists — fires on Average/High/Disaster
+  - Currently: sends email to 2 users
+  - Plan: change to webhook → Lambda (zero disruption to existing setup)
+- All other channels (Teams, ManageEngine webhook, Slack) are disabled — clean slate
+- Top auto-resolvable alert patterns confirmed from live data:
 
-**IAM Role (ready to create):**
-- Files: `iam/trust-policy.json` + `iam/agent-permission-policy.json`
-- Role name to use: `aeonx-ai-agent-role`
-- ExternalId: `aeonx-ai-agent-2026`
-- EC2 restart restricted to instances tagged `auto-restart=true`
-- Secrets stored via SSM Parameter Store under `/aeonx/ai-agent/*`
+| Alert | Weekly Frequency | Planned Action |
+|-------|-----------------|----------------|
+| Website Down | 19x | Health check → EC2/VM restart |
+| High Memory >90% (Linux + Windows) | 29x | Restart if critical |
+| AWS Replication Service not running | 9x | SSM Run Command service restart |
+| Zabbix agent not available | 6x | EC2/VM restart |
 
-**Next steps once unblocked:**
-1. Mrinal creates IAM role using the policy files above
-2. Mrinal provides ManageEngine API key
-3. Mrinal creates GCP project and shares project ID
-4. Begin Lambda + Zabbix webhook wiring
+**Decisions Made:**
+- Reuse existing "Gen-AI" Zabbix action — change operation target from email to webhook
+- EC2/VM restart gated on `auto-restart=true` tag — opt-in per instance
+- AWS account: `761685920937`, region: `ap-south-1`
+- IAM role: `aeonx-ai-agent-role`, ExternalId: `aeonx-ai-agent-2026`
+- Secrets path: `/aeonx/ai-agent/*` in SSM Parameter Store
+
+**IAM Files Ready:**
+- `iam/trust-policy.json` — allows Lambda + account 761685920937 to assume role
+- `iam/agent-permission-policy.json` — EC2 (tag-gated), SES, SSM, SNS, CloudWatch Logs
+
+**Blockers:**
+- ⏳ Mrinal to create `aeonx-ai-agent-role` using files in `iam/`
+- ⏳ ManageEngine API key (read-only creds being created)
+- ⏳ GCP project ID (Vertex AI — project not yet created)
+
+**Next Steps (once unblocked):**
+1. Create IAM role in AWS console/CLI using `iam/` policy files
+2. Provide ManageEngine API key
+3. Create GCP project → share project ID
+4. Build Lambda alert normalizer (Zabbix webhook + CloudWatch SNS → standard schema)
+5. Update Zabbix "Gen-AI" action: email → webhook URL
 
 ---
 
-### Phase 2 — AI Use Cases for SRE / DevOps
+### Phase 2 — AI Classification & Decision Engine
+**Status:** 🔲 Pending (blocked on GCP project)
+
+**Inputs needed from Phase 1:**
+- Lambda webhook URL (Zabbix → Lambda working)
+- Normalized alert schema confirmed
+- GCP project ID
+
+---
+
+### Phase 3 — Auto-Remediation Layer
+**Status:** 🔲 Pending
+
+**Inputs needed from Phase 2:**
+- AI decision output schema: `{action, severity, summary, confidence}`
+- Confidence threshold defined
+
+---
+
+### Phase 4 — Ticketing & Notification
+**Status:** 🔲 Pending (blocked on ManageEngine API key)
+
+**Inputs needed from Phase 3:**
+- Remediation action results (success/fail)
+- ManageEngine API key + base URL
+
+---
+
+### Phase 5 — Memory & RAG Layer
 **Status:** 🔲 Pending
 
 ---
 
-### Phase 3 — Architecture Design
+### Phase 6 — CI/CD & Deployment Ops
 **Status:** 🔲 Pending
 
 ---
 
-### Phase 4 — AI System Design
-**Status:** 🔲 Pending
-
----
-
-### Phase 5 — Automation Workflows
-**Status:** 🔲 Pending
-
----
-
-### Phase 6 — Tooling Recommendations
-**Status:** 🔲 Pending
-
----
-
-### Phase 7 — Implementation Roadmap
+### Phase 7 — Observability & Audit
 **Status:** 🔲 Pending
 
 ---

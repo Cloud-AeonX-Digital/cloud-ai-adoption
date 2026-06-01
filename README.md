@@ -1,148 +1,255 @@
-# Cloud AI Adoption Strategy — SRE & DevOps Operations
+# AeonX AI Ops Agent — Cloud Monitoring, Support & Deployment Automation
 
-> AI-driven monitoring, incident response, and support operations across AWS and GCP.
+> Autonomous AI agent for monitoring, incident response, and operations across AWS and GCP.
+> Human intervention only where required.
 
 ---
 
 ## 🎯 Objective
 
-Design a complete AI adoption strategy to reduce alert fatigue, accelerate RCA, and automate incident response for a production cloud infrastructure team operating across **AWS and GCP**.
+Build a production-grade AI agent that autonomously handles monitoring alerts, incident triage, root cause analysis, ticket creation, and safe auto-remediation across all AeonX client environments (AWS + GCP) — with human escalation only for edge cases.
 
-**Pain points being addressed:**
-- High alert volume with manual triaging
-- Slow root cause analysis (RCA)
-- Repetitive support tickets and escalations
-- No intelligent correlation between metrics, logs, and traces
-- On-call fatigue
+**Pain points being solved:**
+- 706 monitored hosts across ~90 client accounts — all alerts routed to a single email inbox
+- Manual triage, troubleshooting, and server restarts for every alert
+- No correlation between alerts, logs, and past incidents
+- On-call fatigue across a 20–25 person team
+- Repetitive client communication after every incident
 
 **Target outcomes:**
-- AI-assisted alert triaging
-- Automated incident summarization
-- Intelligent log analysis and anomaly detection
-- Root cause suggestions (RCA hints)
-- Ticket auto-classification and routing
-- ChatOps integration (Slack/Teams)
-- Reduced manual on-call workload
+- AI classifies and triages every Zabbix/CloudWatch alert automatically
+- Known patterns (website down, high memory, service stopped) auto-remediated without human touch
+- ManageEngine ticket auto-created, updated, and closed per incident
+- Incident summary auto-sent via SES to team + client
+- Human paged only for unknown/high-risk situations
+- Full audit trail of every action taken
 
 ---
 
-## 📋 Phases Overview
+## 🏗️ Agent Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     SIGNAL INGESTION                         │
+│                                                              │
+│  Zabbix (706 hosts) ──► Webhook ──► AWS Lambda              │
+│  CloudWatch Alarms  ──► SNS     ──► AWS Lambda              │
+│  Client email       ──► SES     ──► (future phase)          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │  normalized alert payload
+┌──────────────────────────▼──────────────────────────────────┐
+│                     AI AGENT CORE                            │
+│                                                              │
+│  GCP Vertex AI (Gemini)                                      │
+│  ├── Classify: alert type, severity, affected service        │
+│  ├── Match: known resolution pattern (RAG from past events)  │
+│  └── Decide: auto-remediate / create ticket / escalate       │
+└──────┬──────────────────────────┬───────────────────────────┘
+       │                          │
+┌──────▼──────┐          ┌────────▼────────────┐
+│ AUTO-ACTION │          │   HUMAN LOOP         │
+│             │          │                      │
+│ EC2 restart │          │ ManageEngine ticket  │
+│ GCP VM      │          │ auto-created         │
+│ restart     │          │                      │
+│ (allowlist  │          │ SES email summary    │
+│  tag-gated) │          │ → awsalerts@aeonx    │
+└──────┬──────┘          └────────┬─────────────┘
+       │                          │
+       └────────────┬─────────────┘
+                    │
+         ┌──────────▼──────────┐
+         │   AUDIT & MEMORY     │
+         │                      │
+         │  S3 — incident log   │
+         │  SSM — secrets/config│
+         │  RAG store — past    │
+         │  incidents for AI    │
+         └──────────────────────┘
+```
+
+---
+
+## 📋 Build Phases
 
 | Phase | Title | Status |
 |-------|-------|--------|
-| [Phase 1](#phase-1--current-state-analysis) | Current State Analysis | 🔲 Pending |
-| [Phase 2](#phase-2--ai-use-cases-for-sre--devops) | AI Use Cases for SRE / DevOps | 🔲 Pending |
-| [Phase 3](#phase-3--architecture-design) | Architecture Design | 🔲 Pending |
-| [Phase 4](#phase-4--ai-system-design) | AI System Design | 🔲 Pending |
-| [Phase 5](#phase-5--automation-workflows) | Automation Workflows | 🔲 Pending |
-| [Phase 6](#phase-6--tooling-recommendations) | Tooling Recommendations | 🔲 Pending |
-| [Phase 7](#phase-7--implementation-roadmap) | Implementation Roadmap | 🔲 Pending |
+| [Phase 1](#phase-1--foundation--signal-ingestion) | Foundation & Signal Ingestion | 🔄 In Progress |
+| [Phase 2](#phase-2--ai-classification--decision-engine) | AI Classification & Decision Engine | 🔲 Pending |
+| [Phase 3](#phase-3--auto-remediation-layer) | Auto-Remediation Layer | 🔲 Pending |
+| [Phase 4](#phase-4--ticketing--notification) | Ticketing & Notification | 🔲 Pending |
+| [Phase 5](#phase-5--memory--rag-layer) | Memory & RAG Layer | 🔲 Pending |
+| [Phase 6](#phase-6--cicd--deployment-ops) | CI/CD & Deployment Ops | 🔲 Pending |
+| [Phase 7](#phase-7--observability--audit) | Observability & Audit | 🔲 Pending |
 | [Phase 8](#phase-8--risks--guardrails) | Risks & Guardrails | 🔲 Pending |
 
 ---
 
-## Phase 1 — Current State Analysis
+## Phase 1 — Foundation & Signal Ingestion
 
-> Mapping the existing monitoring stack and identifying where human intervention is required today.
+**Goal:** Wire Zabbix and CloudWatch alerts into a unified Lambda-based normalizer. No AI yet — just reliable signal capture.
 
-*Content coming soon — being developed iteratively.*
+**Components:**
+- Zabbix webhook → Lambda (reuse existing "Gen-AI" action, change target from email to webhook)
+- CloudWatch SNS → Lambda
+- Alert normalizer: maps both sources to a standard schema
+- Output: normalized JSON event to SQS queue for AI layer
 
----
+**Status:** 🔄 In Progress
 
-## Phase 2 — AI Use Cases for SRE / DevOps
-
-> Breaking down AI opportunities across: alert noise reduction, incident summarization, log clustering, RCA prediction, auto-remediation, and ticket automation.
-
-*Content coming soon — being developed iteratively.*
-
----
-
-## Phase 3 — Architecture Design
-
-> Reference architecture covering: AWS + GCP data ingestion, observability pipeline, AI/LLM layer, event routing, and storage/indexing.
-
-*Content coming soon — being developed iteratively.*
+**Blockers:**
+- ⏳ IAM role creation (`aeonx-ai-agent-role`) — policy files ready in `iam/`
+- ⏳ ManageEngine API key
+- ⏳ GCP project ID for Vertex AI
 
 ---
 
-## Phase 4 — AI System Design
+## Phase 2 — AI Classification & Decision Engine
 
-> How LLMs will be used (RAG, classification, summarization), prompt strategies, context building from logs + metrics, and historical incident learning.
+**Goal:** Vertex AI (Gemini) receives normalized alerts and returns: severity classification, alert category, recommended action (auto-fix / ticket / escalate).
 
-*Content coming soon — being developed iteratively.*
+**Components:**
+- GCP Cloud Function — Vertex AI Gemini call
+- Prompt template per alert category
+- Decision output schema: `{action, severity, summary, confidence}`
+- Fallback: if confidence < threshold → always escalate to human
 
----
-
-## Phase 5 — Automation Workflows
-
-> Step-by-step workflows:
-> - Alert → AI triage → severity classification → Slack summary
-> - Incident → log aggregation → RCA suggestion → escalation decision
-> - Ticket → AI classification → auto-routing to team
-
-*Content coming soon — being developed iteratively.*
+**Status:** 🔲 Pending (blocked on GCP project)
 
 ---
 
-## Phase 6 — Tooling Recommendations
+## Phase 3 — Auto-Remediation Layer
 
-> AWS native, GCP native, open-source, and AI/LLM integration tools — compared and recommended.
+**Goal:** Execute safe, tag-gated automated fixes for known alert patterns.
 
-*Content coming soon — being developed iteratively.*
+**Auto-resolvable patterns identified (from Zabbix data):**
+| Alert | Frequency | Action |
+|-------|-----------|--------|
+| Website Down | 19x/week | Health check → EC2/VM restart if needed |
+| High Memory >90% Linux/Windows | 29x/week | Alert + restart if critical |
+| AWS Replication Service not running | 9x/week | Service restart via SSM Run Command |
+| Zabbix agent not available | 6x/week | EC2/VM restart |
+
+**Safety constraint:** EC2/GCP VM restart only for instances tagged `auto-restart=true`
+
+**Status:** 🔲 Pending
 
 ---
 
-## Phase 7 — Implementation Roadmap
+## Phase 4 — Ticketing & Notification
 
-> Phased rollout:
-> - **Phase A:** Observability foundation
-> - **Phase B:** AI-assisted insights
-> - **Phase C:** Semi-automation
-> - **Phase D:** Full autonomous remediation (where safe)
+**Goal:** Auto-create, update, and close ManageEngine ServiceDesk Plus tickets. Send SES email summaries.
 
-*Content coming soon — being developed iteratively.*
+**Components:**
+- ManageEngine API integration (ticket create/update/close)
+- SES email: incident summary → awsalerts@aeonx.digital
+- Auto-close ticket when remediation verified successful
+
+**Status:** 🔲 Pending (blocked on ManageEngine API key)
+
+---
+
+## Phase 5 — Memory & RAG Layer
+
+**Goal:** Store every incident + resolution in a searchable store. Feed into AI context for better classification over time.
+
+**Components:**
+- S3 bucket: structured incident log (JSON per event)
+- Vector index: past incidents for RAG retrieval
+- Gemini uses past similar incidents as context when classifying new alerts
+
+**Status:** 🔲 Pending
+
+---
+
+## Phase 6 — CI/CD & Deployment Ops
+
+**Goal:** GitHub Actions pipelines for agent deployment and client infrastructure operations.
+
+**Components:**
+- GitHub Actions under `Cloud-AeonX-Digital` org, `AI-Adoption-Team`
+- Lambda deploy pipeline
+- Terraform plan/apply pipeline for client infra changes
+
+**Status:** 🔲 Pending
+
+---
+
+## Phase 7 — Observability & Audit
+
+**Goal:** Full visibility into what the agent is doing, why, and what it changed.
+
+**Components:**
+- CloudWatch dashboard: agent actions, alert volumes, auto-remediation rate
+- Audit log: every action with timestamp, alert ID, decision, outcome
+- Weekly digest email: summary of alerts handled, auto-resolved, escalated
+
+**Status:** 🔲 Pending
 
 ---
 
 ## Phase 8 — Risks & Guardrails
 
-> Covering: hallucination risks in AI RCA, false automation risks, security and access control, production safety constraints.
+**Goal:** Ensure the agent cannot cause more damage than it prevents.
 
-*Content coming soon — being developed iteratively.*
+**Key guardrails:**
+- EC2/VM restart: tag-gated (`auto-restart=true`) — opt-in per instance
+- AI confidence threshold: actions below threshold always escalate
+- No destructive actions (terminate, delete, scale-down) — ever
+- All actions logged and reversible
+- Human override: any ticket can be flagged to pause agent actions
+
+**Status:** 🔲 Pending
+
+---
+
+## 🛠️ Tech Stack (Confirmed)
+
+| Layer | Tool |
+|-------|------|
+| Monitoring | Zabbix (self-hosted, AWS) + CloudWatch |
+| Alert ingestion | AWS Lambda (ap-south-1) |
+| AI/LLM | GCP Vertex AI — Gemini |
+| Ticketing | ManageEngine ServiceDesk Plus (self-hosted, AWS) |
+| Notifications | AWS SES (email-smtp.ap-south-1.amazonaws.com) |
+| Secrets | AWS SSM Parameter Store |
+| Audit storage | AWS S3 |
+| IaC | Terraform |
+| CI/CD | GitHub Actions |
+| IAM | `aeonx-ai-agent-role` (ap-south-1, account 761685920937) |
 
 ---
 
 ## 📌 Constraints
 
-- Production-grade cloud environments (AWS + GCP)
-- Reliability and safety over automation speed
-- Incremental adoption — no "big bang" changes
-- Cross-team collaboration via this repo
+- Payer AWS account (`761685920937`) — minimal IAM footprint, no console access needed
+- EC2/VM auto-restart: allowlist only, tag-gated
+- GCP Vertex AI: preferred LLM provider
+- No "big bang" — each phase independently deployable and rollback-safe
+- All secrets via SSM Parameter Store — never hardcoded
 
 ---
 
 ## 🤝 Contributing
 
-This document is developed **section by section, iteratively** with the team. Each phase will be fleshed out in sequence, reviewed, and merged via PRs.
-
-- Branch naming: `phase/<number>-<short-title>`
-- Each phase gets its own PR for team review
-- See [CLAUDE.md](./CLAUDE.md) for AI session context and working instructions
-- See [PROGRESS.md](./PROGRESS.md) for phase-by-phase summaries and handoff context
+- Working branch: `mrinal-dev`
+- Branch naming for phases: `phase/<number>-<short-title>`
+- Each phase gets its own PR into `main`
+- See [CLAUDE.md](./CLAUDE.md) for AI session resume instructions
+- See [PROGRESS.md](./PROGRESS.md) for phase handoff context
+- See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed system design
 
 ---
 
 ## 🤖 Sharing AI Context with the Team
 
-Choose the method that fits your workflow. All options are compatible with this repo.
-
 | # | Method | How | Best For |
 |---|--------|-----|----------|
-| 1 | **Kiro Steering file** | `.kiro/steering/your-feature.md` | Auto-loaded rules/conventions for everyone on every session |
-| 2 | **Kiro Custom agent** | `.kiro/agents/your-feature.json` | Full workflow with tools, hooks, and prompts for a specific task |
-| 3 | **Kiro Skill file** | `.kiro/skills/your-feature.md` | On-demand reference material loaded when relevant |
-| 4 | **Kiro Hook scripts** | Committed alongside an agent config | Automation triggered at specific points (e.g., on file save, on commit) |
-| 5 | **KIRO_HOME shared directory** | Point `KIRO_HOME` env var to a shared path | One repo manages global agents/steering/skills for the whole team |
-| 6 | **GitHub versioned `.md` file** | Standalone doc in this repo | Teammates read and apply manually; no Kiro required |
+| 1 | **Kiro Steering file** | `.kiro/steering/your-feature.md` | Auto-loaded rules/conventions for everyone |
+| 2 | **Kiro Custom agent** | `.kiro/agents/your-feature.json` | Full workflow with tools, hooks, prompts |
+| 3 | **Kiro Skill file** | `.kiro/skills/your-feature.md` | On-demand reference material |
+| 4 | **Kiro Hook scripts** | Committed alongside agent config | Automation at trigger points |
+| 5 | **KIRO_HOME shared directory** | Point `KIRO_HOME` env var to shared path | Global agents/steering for whole team |
+| 6 | **GitHub versioned `.md` file** | Standalone doc in this repo | Manual reference; no Kiro required |
 
-**Current approach for this project:** Option 6 (versioned `.md` files) as the baseline — `CLAUDE.md` for session config, `PROGRESS.md` for phase handoffs. Kiro steering/agent files will be added as phases mature.
+**Current approach:** Option 6 — `CLAUDE.md` for session config, `PROGRESS.md` for phase handoffs. Kiro steering/agent files added as phases mature.

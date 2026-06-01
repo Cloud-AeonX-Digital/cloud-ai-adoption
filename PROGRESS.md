@@ -66,7 +66,31 @@
 ---
 
 ### Phase 1 — Current State Analysis
-**Status:** 🔲 Pending
+**Status:** 🔄 In Progress
+
+**Key Findings (Zabbix):**
+- 706 hosts across ~90 client groups (all AWS accounts, some GCP)
+- Only active alert channel: AWS SES Email → awsalerts@aeonx.digital
+- "Gen-AI" action already exists in Zabbix (Average/High/Disaster severity) — currently just sends email, no AI connected
+- Top repeating alerts (last 7 days): Website Down (19x), High Memory Linux/Windows (29x), Service not running (9x) — ~70% auto-resolvable
+- All other channels (Teams, ManageEngine webhook, Slack) are disabled
+
+**Pending — Blocked:**
+- ManageEngine API key (read-only creds being created by Mrinal)
+- GCP project ID (not yet created — Vertex AI will run here)
+
+**IAM Role (ready to create):**
+- Files: `iam/trust-policy.json` + `iam/agent-permission-policy.json`
+- Role name to use: `aeonx-ai-agent-role`
+- ExternalId: `aeonx-ai-agent-2026`
+- EC2 restart restricted to instances tagged `auto-restart=true`
+- Secrets stored via SSM Parameter Store under `/aeonx/ai-agent/*`
+
+**Next steps once unblocked:**
+1. Mrinal creates IAM role using the policy files above
+2. Mrinal provides ManageEngine API key
+3. Mrinal creates GCP project and shares project ID
+4. Begin Lambda + Zabbix webhook wiring
 
 ---
 

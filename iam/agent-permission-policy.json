@@ -68,6 +68,15 @@
       "Resource": "arn:aws:sns:ap-south-1:761685920937:aeonx-ai-agent*"
     },
     {
+      "Sid": "S3IncidentLog",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": "arn:aws:s3:::aeonx-ai-agent-incidents/*"
+    },
+    {
       "Sid": "STSAssumeClientRoles",
       "Effect": "Allow",
       "Action": "sts:AssumeRole",

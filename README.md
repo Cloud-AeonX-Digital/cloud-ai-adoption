@@ -299,73 +299,71 @@ GitHub Actions pipelines under `Cloud-AeonX-Digital / AI-Adoption-Team` handle a
 ### Pre-Build Fixes (before writing any code)
 1. Fix duplicate IAM permissions in `iam/agent-permission-policy.json` (Gap #5)
 2. Capture Zabbix webhook sample payload — needed to write Lambda 1 normalizer (Gap #7)
-3. Verify SES sender address `awsalerts@aeonx.digital` in AWS SES console (Gap #3)
 
 ### Infrastructure Setup
-4. Create GCP project + enable Vertex AI API
-5. Create GCP service account with `Vertex AI User` role → download JSON key
-6. Create second GCP service account with `Compute Instance Admin` role (for Phase 3 GCP VM restart) (Gap #9)
-7. Store Vertex AI GCP key in SSM: `/aeonx/ai-agent/gcp-service-account-key`
-8. Fix duplicate permissions in `iam/agent-permission-policy.json` then create IAM role `aeonx-ai-agent-role`
-9. Define VPC, subnet, and security group for EC2 agent (Gap #2)
-10. Launch EC2 t3.small in ap-south-1 (private subnet), assign `aeonx-ai-agent-role`
-11. Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy + versioning (Gap #6)
+3. Create GCP project + enable Vertex AI API
+4. Create GCP service account with `Vertex AI User` role → download JSON key
+5. Create second GCP service account with `Compute Instance Admin` role (for Phase 3 GCP VM restart) (Gap #9)
+6. Store Vertex AI GCP key in SSM: `/aeonx/ai-agent/gcp-service-account-key`
+7. Create IAM role `aeonx-ai-agent-role` using `iam/trust-policy.json` + `iam/agent-permission-policy.json`
+8. Launch EC2 t3.small in ap-south-1 (private subnet, same VPC as Zabbix), assign `aeonx-ai-agent-role`
+9. Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy + versioning (Gap #6)
 
 ### Phase 1 — Signal Ingestion
-12. Add webhook secret validation to Lambda 1 design (Gap #1)
-13. Write Lambda 1 (alert ingestor + normalizer) — place in same VPC as EC2
-14. Deploy Lambda 1 via GitHub Actions
-15. Write FastAPI skeleton on EC2 (`POST /alert` endpoint)
-16. Configure systemd service for FastAPI agent on EC2 (Gap #4)
-17. Add alert deduplication logic: `trigger_id + host + 30-min window` (Gap #8)
-18. Update Zabbix "Gen-AI" action: change operation from email → Lambda 1 webhook URL
-19. Test: trigger a test alert in Zabbix → verify Lambda 1 receives + normalizes it
+10. Add webhook secret validation to Lambda 1 design (Gap #1)
+11. Write Lambda 1 (alert ingestor + normalizer) — place in same VPC as EC2
+12. Deploy Lambda 1 via GitHub Actions
+13. Write FastAPI skeleton on EC2 (`POST /alert` endpoint)
+14. Configure systemd service for FastAPI agent on EC2 (Gap #4)
+15. Add alert deduplication logic: `trigger_id + host + 30-min window` (Gap #8)
+16. Update Zabbix "Gen-AI" action: change operation from email → Lambda 1 webhook URL
+17. Test: trigger a test alert in Zabbix → verify Lambda 1 receives + normalizes it
 
 ### Phase 2 — AI Classification
-20. Write Gemini prompt template for alert classification
-21. Wire EC2 agent `/alert` → Vertex AI call → structured decision
-22. Write SES email formatter (AI summary → team email)
-23. Test end-to-end: Zabbix alert → Lambda → EC2 → Gemini → SES email
+18. Write Gemini prompt template for alert classification
+19. Wire EC2 agent `/alert` → Vertex AI call → structured decision
+20. Write SES email formatter (AI summary → team email)
+21. Test end-to-end: Zabbix alert → Lambda → EC2 → Gemini → SES email
 
 ### Phase 3 — Auto-Remediation
-24. Add `auto-restart=true` tag to allowlisted EC2 instances
-25. Write EC2 restart executor (tag check → stop → start → health verify → 30-min cooldown)
-26. Write SSM Run Command executor (service restart)
-27. Add trust policy to `Aeonx-L2-Role` in client accounts (script for all 158)
-28. Wire GCP Compute service account for GCP VM restart
-29. Test: simulate "Website Down" alert → verify auto-restart fires only on tagged instances
+22. Add `auto-restart=true` tag to allowlisted EC2 instances
+23. Write EC2 restart executor (tag check → stop → start → health verify → 30-min cooldown)
+24. Write SSM Run Command executor (service restart)
+25. Add trust policy to `Aeonx-L2-Role` in client accounts (script for all 158)
+26. Wire GCP Compute service account for GCP VM restart
+27. Test: simulate "Website Down" alert → verify auto-restart fires only on tagged instances
 
 ### Phase 4 — Ticketing
-30. Obtain ManageEngine API key
-31. Write ManageEngine ticket create/update/close integration
-32. Add duplicate ticket check: query open tickets for same host+alert before creating (Gap #11)
-33. Wire: AI decision → ticket created → remediation result → ticket closed
-34. Test: full flow with real ManageEngine ticket
+28. Obtain ManageEngine API key
+29. Write ManageEngine ticket create/update/close integration
+30. Add duplicate ticket check: query open tickets for same host+alert before creating (Gap #11)
+31. Wire: AI decision → ticket created → remediation result → ticket closed
+32. Test: full flow with real ManageEngine ticket
 
 ### Phase 5 — Memory & RAG
-35. Set up S3 incident log writer (JSON per event)
-36. Set up vector index on GCS for past incidents
-37. Wire RAG context into Gemini prompt
+33. Set up S3 incident log writer (JSON per event)
+34. Set up vector index on GCS for past incidents
+35. Wire RAG context into Gemini prompt
 
 ### Phase 6 — CI/CD
-38. GitHub Actions: Lambda deploy pipeline
-39. GitHub Actions: EC2 agent deploy pipeline
-40. GitHub Actions: Terraform plan/apply pipeline
+36. GitHub Actions: Lambda deploy pipeline
+37. GitHub Actions: EC2 agent deploy pipeline
+38. GitHub Actions: Terraform plan/apply pipeline
 
 ### Phase 7 — Observability & Audit
-41. CloudWatch dashboard: alert volumes, auto-remediation rate, agent health
-42. Audit log: every action with timestamp, alert ID, decision, outcome
-43. Weekly digest email via SES
+39. CloudWatch dashboard: alert volumes, auto-remediation rate, agent health
+40. Audit log: every action with timestamp, alert ID, decision, outcome
+41. Weekly digest email via SES
 
 ### Phase 8 — Risks & Guardrails
-44. Document and enforce all guardrails (confidence threshold, tag-gate, no destructive actions)
-45. Load test: simulate burst of 50 alerts → verify no duplicate processing
+42. Document and enforce all guardrails (confidence threshold, tag-gate, no destructive actions)
+43. Load test: simulate burst of 50 alerts → verify no duplicate processing
 
 ### Phase 9 — Client GUI (Option A)
-46. Design client identity + data scoping for `/chat` endpoint (Gap #10)
-47. Add `POST /chat` endpoint to EC2 agent
-48. Build simple chat widget (HTML/JS)
-49. Wire: client question → Gemini + S3 incident history → answer
+44. Design client identity + data scoping for `/chat` endpoint (Gap #10)
+45. Add `POST /chat` endpoint to EC2 agent
+46. Build simple chat widget (HTML/JS)
+47. Wire: client question → Gemini + S3 incident history → answer
 
 ---
 

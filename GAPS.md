@@ -9,18 +9,18 @@
 
 **1. Lambda 1 webhook endpoint has no authentication**
 Zabbix POSTs to a public Lambda URL. Anyone who discovers the URL can flood it with fake alerts.
-- Fix: add a shared secret header that Zabbix sends and Lambda validates on every request.
-- Phase: 1
+- **Resolution:** Lambda 1, EC2 agent, and Zabbix server are all in the same AWS account (`761685920937`). Lambda URL is kept private — not exposed publicly. EC2 security group restricts inbound to Zabbix server IP only.
+- **Status:** ✅ Resolved
 
 **2. EC2 agent network placement not defined**
 Lambda 1 needs to reach the EC2 agent via HTTP POST. If EC2 is in a private subnet (recommended), Lambda must be in the same VPC or use a VPC endpoint. If EC2 is public-facing, that's a security risk.
-- Fix: define VPC, subnet, and security group for EC2 agent. Place Lambda 1 in same VPC.
-- Phase: 1
+- **Resolution:** All three components (Zabbix, Lambda 1, EC2 agent) in same AWS account and VPC. Private subnet, no public exposure.
+- **Status:** ✅ Resolved
 
 **3. SES sender address not verified**
 `awsalerts@aeonx.digital` must be verified in AWS SES before it can send emails. This is a required setup step not in the to-do list.
-- Fix: add SES sender verification as a to-do item before Phase 2 testing.
-- Phase: 1
+- **Resolution:** SES setup already exists in AWS account `761685920937`.
+- **Status:** ✅ Resolved
 
 **4. EC2 agent has no process manager**
 If the FastAPI app crashes, nothing restarts it automatically.
@@ -78,17 +78,17 @@ Phase 7 is labelled "Observability & Audit" in the phases table but "Client GUI 
 
 ## ✅ Fixes Needed (Priority Order)
 
-| Priority | Gap # | Fix | Phase |
-|----------|-------|-----|-------|
-| 1 | 5 | Remove duplicate IAM permissions from `agent-permission-policy.json` | Before role creation |
-| 2 | 7 | Capture Zabbix webhook sample payload | Phase 1 |
-| 3 | 3 | Verify SES sender `awsalerts@aeonx.digital` | Phase 1 |
-| 4 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 |
-| 5 | 2 | Define EC2 VPC/subnet/SG + Lambda VPC placement | Phase 1 |
-| 6 | 1 | Add webhook secret validation to Lambda 1 | Phase 1 |
-| 7 | 4 | Configure systemd for FastAPI agent on EC2 | Phase 1 |
-| 8 | 8 | Add alert deduplication (trigger_id + host + 30-min window) | Phase 1/2 |
-| 9 | 9 | Split GCP service accounts: Vertex AI vs Compute | Phase 2/3 |
-| 10 | 11 | Add duplicate ticket check in ManageEngine integration | Phase 4 |
-| 11 | 10 | Design client data isolation for `/chat` endpoint | Phase 7 |
-| 12 | 12 | Fix Phase 7 / Client GUI labelling in README | Documentation |
+| Priority | Gap # | Fix | Phase | Status |
+|----------|-------|-----|-------|--------|
+| — | 1 | Private network (same AWS account) | — | ✅ Resolved |
+| — | 2 | Private network (same AWS account) | — | ✅ Resolved |
+| — | 3 | SES already verified | — | ✅ Resolved |
+| 1 | 5 | Remove duplicate IAM permissions from `agent-permission-policy.json` | Before role creation | ⏳ |
+| 2 | 7 | Capture Zabbix webhook sample payload | Phase 1 | ⏳ |
+| 3 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 | ⏳ |
+| 4 | 4 | Configure systemd for FastAPI agent on EC2 | Phase 1 | ⏳ |
+| 5 | 8 | Add alert deduplication (trigger_id + host + 30-min window) | Phase 1/2 | ⏳ |
+| 6 | 9 | Split GCP service accounts: Vertex AI vs Compute | Phase 2/3 | ⏳ |
+| 7 | 11 | Add duplicate ticket check in ManageEngine integration | Phase 4 | ⏳ |
+| 8 | 10 | Design client data isolation for `/chat` endpoint | Phase 9 | ⏳ |
+| 9 | 12 | Fix Phase 7 / Client GUI labelling in README | Documentation | ✅ Resolved |

@@ -296,12 +296,8 @@ GitHub Actions pipelines under `Cloud-AeonX-Digital / AI-Adoption-Team` handle a
 
 > See [GAPS.md](./GAPS.md) for known gaps and loopholes with fix details.
 
-### Pre-Build Fixes (before writing any code)
-1. Fix duplicate IAM permissions in `iam/agent-permission-policy.json` (Gap #5)
-2. Capture Zabbix webhook sample payload — needed to write Lambda 1 normalizer (Gap #7)
-
 ### Infrastructure Setup
-3. Create GCP project + enable Vertex AI API
+1. Create GCP project + enable Vertex AI API
 4. Create GCP service account with `Vertex AI User` role → download JSON key
 5. Create second GCP service account with `Compute Instance Admin` role (for Phase 3 GCP VM restart) (Gap #9)
 6. Store Vertex AI GCP key in SSM: `/aeonx/ai-agent/gcp-service-account-key`

@@ -28,9 +28,9 @@ If the FastAPI app crashes, nothing restarts it automatically.
 - Phase: 1
 
 **5. IAM permission policy has duplicate permissions**
-`EC2RemediationAllowlist` and `EC2DescribeOnly` both include `ec2:DescribeInstances` and `ec2:DescribeInstanceStatus`. Redundant — creates confusion during audits.
-- Fix: remove duplicate describe actions from `EC2DescribeOnly` block.
-- Phase: 1 (before role creation)
+`EC2RemediationAllowlist` and `EC2DescribeOnly` both included `ec2:DescribeInstances` and `ec2:DescribeInstanceStatus`. Redundant — creates confusion during audits.
+- **Resolution:** Removed duplicate describe actions from remediation block. Also added `sts:AssumeRole` for `Aeonx-L2-Role` (needed Phase 3).
+- **Status:** ✅ Resolved
 
 **6. S3 incident log bucket not in to-do list**
 The audit log writes to `aeonx-ai-agent-incidents/` in S3 but creating the bucket, setting lifecycle policies, and enabling versioning is never listed as a task.
@@ -39,8 +39,8 @@ The audit log writes to `aeonx-ai-agent-incidents/` in S3 but creating the bucke
 
 **7. Zabbix webhook payload format unknown**
 The "Gen-AI" action exists but the exact payload Zabbix sends was never captured. Lambda 1 normalizer needs to parse it correctly.
-- Fix: capture a sample Zabbix webhook payload before writing Lambda 1 code.
-- Phase: 1
+- **Resolution:** Queried live Zabbix API. Gen-AI action uses `default_msg:1`. Documented exact payload structure and normalized schema in `zabbix-webhook-payload.md`.
+- **Status:** ✅ Resolved
 
 **8. No alert deduplication**
 Zabbix re-fires the same alert on escalation steps. The agent will process it multiple times — potentially restarting the same instance twice.
@@ -83,8 +83,8 @@ Phase 7 is labelled "Observability & Audit" in the phases table but "Client GUI 
 | — | 1 | Private network (same AWS account) | — | ✅ Resolved |
 | — | 2 | Private network (same AWS account) | — | ✅ Resolved |
 | — | 3 | SES already verified | — | ✅ Resolved |
-| 1 | 5 | Remove duplicate IAM permissions from `agent-permission-policy.json` | Before role creation | ⏳ |
-| 2 | 7 | Capture Zabbix webhook sample payload | Phase 1 | ⏳ |
+| — | 5 | Duplicate IAM permissions removed, `sts:AssumeRole` added | — | ✅ Resolved |
+| — | 7 | Zabbix payload documented in `zabbix-webhook-payload.md` | — | ✅ Resolved |
 | 3 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 | ⏳ |
 | 4 | 4 | Configure systemd for FastAPI agent on EC2 | Phase 1 | ⏳ |
 | 5 | 8 | Add alert deduplication (trigger_id + host + 30-min window) | Phase 1/2 | ⏳ |

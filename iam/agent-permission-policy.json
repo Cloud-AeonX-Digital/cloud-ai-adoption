@@ -50,7 +50,7 @@
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "arn:aws:logs:ap-south-1:*:log-group:/aws/lambda/aeonx-ai-agent*"
+      "Resource": "arn:aws:logs:ap-south-1:761685920937:log-group:/aws/lambda/aeonx-ai-agent*"
     },
     {
       "Sid": "SSMParameterStore",
@@ -59,7 +59,7 @@
         "ssm:GetParameter",
         "ssm:GetParameters"
       ],
-      "Resource": "arn:aws:ssm:ap-south-1:*:parameter/aeonx/ai-agent/*"
+      "Resource": "arn:aws:ssm:ap-south-1:761685920937:parameter/aeonx/ai-agent/*"
     },
     {
       "Sid": "SNSPublish",
@@ -67,7 +67,7 @@
       "Action": [
         "sns:Publish"
       ],
-      "Resource": "arn:aws:sns:ap-south-1:*:aeonx-ai-agent*"
+      "Resource": "arn:aws:sns:ap-south-1:761685920937:aeonx-ai-agent*"
     }
   ]
 }

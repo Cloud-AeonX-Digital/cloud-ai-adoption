@@ -1,0 +1,21 @@
+{
+  "FunctionName": "aeonx-ai-agent-alert-ingestor",
+  "Runtime": "python3.12",
+  "Role": "arn:aws:iam::761685920937:role/aeonx-ai-agent-role",
+  "Handler": "handler.lambda_handler",
+  "Timeout": 15,
+  "MemorySize": 128,
+  "Environment": {
+    "Variables": {
+      "AGENT_URL": "http://<EC2-PRIVATE-IP>:8000/alert"
+    }
+  },
+  "VpcConfig": {
+    "SubnetIds": ["<PRIVATE-SUBNET-ID>"],
+    "SecurityGroupIds": ["<LAMBDA-SG-ID>"]
+  },
+  "Tags": {
+    "Project": "aeonx-ai-agent",
+    "ManagedBy": "manual"
+  }
+}

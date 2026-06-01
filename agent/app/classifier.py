@@ -25,7 +25,8 @@ def _get_credentials():
     if _credentials and _credentials.valid:
         return _credentials
 
-    if _credentials and _credentials.expired and _credentials.refresh_token:
+    # Service account credentials refresh by re-signing a JWT — no refresh_token needed
+    if _credentials and _credentials.expired:
         _credentials.refresh(GoogleRequest())
         return _credentials
 

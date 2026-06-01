@@ -1,6 +1,6 @@
 # PROGRESS.md — Phase Summaries & Handoff Context
 
-> Essential decisions and outputs only. No troubleshooting notes or exploratory context.
+> Essential decisions and outputs only. No troubleshooting or exploratory notes.
 > Each phase reads only what it needs from previous phases.
 
 ---
@@ -29,64 +29,53 @@
 
 **Key Outputs:**
 - Repo: `Cloud-AeonX-Digital/cloud-ai-adoption`, team `AI-Adoption-Team`, branch `mrinal-dev`
-- `README.md`, `CLAUDE.md`, `PROGRESS.md`, `ARCHITECTURE.md` committed
-- IAM policy files in `iam/`
+- `README.md`, `CLAUDE.md`, `PROGRESS.md`, `ARCHITECTURE.md` — all current
+- IAM policy files: `iam/trust-policy.json` + `iam/agent-permission-policy.json`
 
 **Decisions Made:**
-- Pivot from "strategy document" to "actually building the agent"
-- Iterative build: one phase at a time, PR per phase into `main`
-- Sharing method: GitHub versioned `.md` files as baseline; Kiro steering files added as phases mature
+- Build the actual agent (not just a strategy doc)
+- Lambda 1 (thin ingestor) → EC2 t3.small (persistent FastAPI agent) — not Lambda-only
+- EC2 agent hosts both `/alert` (ops) and `/chat` (future client GUI) on same instance
+- GCP Vertex AI (Gemini) as LLM — called over HTTPS from EC2
+- 158 client accounts use existing `Aeonx-L2-Role` for cross-account remediation (Phase 3)
+- Iterative build: one phase at a time, PR per phase
 
 **Handed to Phase 1:**
-- Confirmed stack (see CLAUDE.md)
-- Zabbix API accessible, "Gen-AI" action exists and can be repurposed
+- Zabbix "Gen-AI" action (actionid: 14) exists — just needs operation changed to webhook
 - IAM role policy files ready to deploy
+- Confirmed alert patterns for auto-remediation (see CLAUDE.md)
 
 ---
 
 ### Phase 1 — Foundation & Signal Ingestion
 **Status:** 🔄 In Progress | **Branch:** mrinal-dev
 
-**Goal:** Wire Zabbix + CloudWatch alerts into a unified Lambda normalizer. No AI yet — reliable signal capture only.
+**Goal:** Zabbix alert → Lambda 1 (normalize) → EC2 agent `/alert` endpoint. No AI yet.
 
 **Key Findings:**
 - 706 hosts, ~90 client groups in Zabbix
-- Only active alert channel: AWS SES → awsalerts@aeonx.digital
-- Zabbix "Gen-AI" action (actionid: 14) already exists — fires on Average/High/Disaster
-  - Currently: sends email to 2 users
-  - Plan: change to webhook → Lambda (zero disruption to existing setup)
-- All other channels (Teams, ManageEngine webhook, Slack) are disabled — clean slate
-- Top auto-resolvable alert patterns confirmed from live data:
-
-| Alert | Weekly Frequency | Planned Action |
-|-------|-----------------|----------------|
-| Website Down | 19x | Health check → EC2/VM restart |
-| High Memory >90% (Linux + Windows) | 29x | Restart if critical |
-| AWS Replication Service not running | 9x | SSM Run Command service restart |
-| Zabbix agent not available | 6x | EC2/VM restart |
+- Only active channel: AWS SES → awsalerts@aeonx.digital
+- "Gen-AI" action already exists — change target from email to Lambda 1 webhook
+- Top auto-resolvable patterns confirmed from live data (see CLAUDE.md)
 
 **Decisions Made:**
-- Reuse existing "Gen-AI" Zabbix action — change operation target from email to webhook
-- EC2/VM restart gated on `auto-restart=true` tag — opt-in per instance
 - AWS account: `761685920937`, region: `ap-south-1`
 - IAM role: `aeonx-ai-agent-role`, ExternalId: `aeonx-ai-agent-2026`
-- Secrets path: `/aeonx/ai-agent/*` in SSM Parameter Store
-
-**IAM Files Ready:**
-- `iam/trust-policy.json` — allows Lambda + account 761685920937 to assume role
-- `iam/agent-permission-policy.json` — EC2 (tag-gated), SES, SSM, SNS, CloudWatch Logs
+- EC2 size: `t3.small` — sufficient for current load, resize later if needed
+- Secrets path: `/aeonx/ai-agent/*` in SSM
 
 **Blockers:**
-- ⏳ Mrinal to create `aeonx-ai-agent-role` using files in `iam/`
-- ⏳ ManageEngine API key (read-only creds being created)
-- ⏳ GCP project ID (Vertex AI — project not yet created)
+- ⏳ Create `aeonx-ai-agent-role` (files in `iam/`)
+- ⏳ GCP project ID (Vertex AI)
+- ⏳ ManageEngine API key
 
 **Next Steps (once unblocked):**
-1. Create IAM role in AWS console/CLI using `iam/` policy files
-2. Provide ManageEngine API key
-3. Create GCP project → share project ID
-4. Build Lambda alert normalizer (Zabbix webhook + CloudWatch SNS → standard schema)
-5. Update Zabbix "Gen-AI" action: email → webhook URL
+1. Create IAM role in AWS
+2. Launch EC2 t3.small, assign role
+3. Write + deploy Lambda 1 (alert ingestor)
+4. Write FastAPI skeleton on EC2 (`POST /alert`)
+5. Update Zabbix "Gen-AI" action → Lambda 1 URL
+6. Test: real Zabbix alert → Lambda → EC2
 
 ---
 
@@ -94,9 +83,9 @@
 **Status:** 🔲 Pending (blocked on GCP project)
 
 **Inputs needed from Phase 1:**
-- Lambda webhook URL (Zabbix → Lambda working)
-- Normalized alert schema confirmed
-- GCP project ID
+- Lambda 1 URL (deployed and tested)
+- EC2 agent running and reachable
+- GCP project ID + Vertex AI enabled + service account key in SSM
 
 ---
 
@@ -104,8 +93,9 @@
 **Status:** 🔲 Pending
 
 **Inputs needed from Phase 2:**
-- AI decision output schema: `{action, severity, summary, confidence}`
-- Confidence threshold defined
+- AI decision schema working: `{action, severity, category, summary, confidence}`
+- Confidence threshold defined (default: 0.75)
+- List of EC2 instances to tag `auto-restart=true`
 
 ---
 
@@ -114,7 +104,7 @@
 
 **Inputs needed from Phase 3:**
 - Remediation action results (success/fail)
-- ManageEngine API key + base URL
+- ManageEngine base URL + API key
 
 ---
 

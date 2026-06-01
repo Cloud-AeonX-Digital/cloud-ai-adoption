@@ -1,136 +1,46 @@
-# ARCHITECTURE.md — AeonX AI Ops Agent System Design
+# ARCHITECTURE.md — AeonX AI Ops Agent Detailed Design
 
-> Detailed technical architecture. Read alongside README.md.
-
----
-
-## System Overview
-
-The agent operates as an event-driven pipeline: alerts flow in from Zabbix and CloudWatch, get normalized, classified by Vertex AI, and routed to either auto-remediation or human escalation — with every action logged.
+> Technical reference. Read alongside README.md.
+> Updated: 2026-06-01
 
 ---
 
-## Component Map
+## Design Principles
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  SIGNAL SOURCES                                                   │
-│                                                                   │
-│  Zabbix (706 hosts, ~90 client groups)                           │
-│  └── "Gen-AI" action (actionid:14) → HTTP webhook                │
-│                                                                   │
-│  AWS CloudWatch Alarms                                            │
-│  └── SNS topic → Lambda subscription                             │
-└────────────────────────┬─────────────────────────────────────────┘
-                         │
-                         ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  INGESTION LAYER  (AWS Lambda, ap-south-1)                        │
-│                                                                   │
-│  aeonx-ai-agent-normalizer (Lambda)                              │
-│  ├── Accepts: Zabbix webhook POST + CloudWatch SNS event         │
-│  ├── Normalizes to standard schema (see below)                   │
-│  └── Publishes to SQS: aeonx-ai-agent-events                    │
-└────────────────────────┬─────────────────────────────────────────┘
-                         │
-              Normalized alert payload
-                         │
-                         ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  AI AGENT CORE  (GCP Cloud Function + Vertex AI Gemini)          │
-│                                                                   │
-│  Input: normalized alert JSON                                    │
-│  Context: RAG — similar past incidents from vector store         │
-│                                                                   │
-│  Output:                                                         │
-│  {                                                               │
-│    "action": "auto-remediate" | "create-ticket" | "escalate",   │
-│    "severity": "low" | "medium" | "high" | "critical",          │
-│    "category": "website-down" | "high-memory" | "service-down"  │
-│                  | "agent-unavailable" | "unknown",              │
-│    "summary": "<human-readable incident summary>",              │
-│    "confidence": 0.0–1.0,                                       │
-│    "suggested_action": "<what to do>"                           │
-│  }                                                               │
-│                                                                   │
-│  Rule: confidence < 0.75 → always escalate, never auto-act      │
-└──────┬──────────────────────────┬───────────────────────────────┘
-       │                          │
-       │ action=auto-remediate    │ action=create-ticket / escalate
-       ▼                          ▼
-┌──────────────┐        ┌─────────────────────────┐
-│ REMEDIATION  │        │  HUMAN LOOP              │
-│  (Lambda)    │        │                          │
-│              │        │  ManageEngine ticket     │
-│  EC2 restart │        │  auto-created with:      │
-│  → check tag │        │  - AI summary            │
-│    auto-     │        │  - severity              │
-│    restart=  │        │  - suggested action      │
-│    true      │        │                          │
-│              │        │  SES email →             │
-│  GCP VM      │        │  awsalerts@aeonx.digital │
-│  restart     │        │                          │
-│  → allowlist │        │  (escalate only):        │
-│    check     │        │  page on-call engineer   │
-│              │        └─────────────────────────┘
-│  SSM Run     │
-│  Command     │
-│  (service    │
-│   restart)   │
-└──────┬───────┘
-       │
-       │ post-action health check
-       ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  VERIFICATION                                                     │
-│  - EC2/VM: poll DescribeInstanceStatus until running             │
-│  - Website: HTTP health check (200 OK)                           │
-│  - Service: SSM Run Command status check                         │
-│  - On success: update/close ManageEngine ticket + SES resolved   │
-│  - On failure: escalate to human loop                            │
-└────────────────────────┬─────────────────────────────────────────┘
-                         │
-                         ▼
-┌──────────────────────────────────────────────────────────────────┐
-│  AUDIT & MEMORY                                                   │
-│                                                                   │
-│  S3: aeonx-ai-agent-incidents/                                   │
-│  └── {date}/{incident-id}.json  (full event + decision + outcome)│
-│                                                                   │
-│  SSM Parameter Store: /aeonx/ai-agent/*                         │
-│  └── API keys, config, thresholds                                │
-│                                                                   │
-│  Vector store (Phase 5): past incidents indexed for RAG          │
-└──────────────────────────────────────────────────────────────────┘
-```
+- **Lambda for ingestion** — stateless, event-driven, zero cost at idle
+- **EC2 for the agent brain** — persistent service, handles AI calls + future client GUI on same instance
+- **GCP Vertex AI (Gemini)** — LLM layer, called over HTTPS from EC2
+- **No cross-cloud complexity** — EC2 calls Gemini as a plain HTTPS API; no VPC peering needed
+- **Tag-gated remediation** — agent can only touch instances explicitly opted in
+- **All secrets in SSM** — never hardcoded, never in environment variables
 
 ---
 
 ## Normalized Alert Schema
 
-Every alert — regardless of source — is normalized to this schema before hitting the AI:
+Every alert — regardless of source (Zabbix or CloudWatch) — is normalized to this schema by Lambda 1 before reaching the EC2 agent:
 
 ```json
 {
-  "incident_id": "uuid",
-  "source": "zabbix" | "cloudwatch",
-  "timestamp": "ISO8601",
+  "incident_id": "uuid-v4",
+  "source": "zabbix",
+  "timestamp": "2026-06-01T08:30:00Z",
   "client": {
-    "name": "Ashapura Group",
+    "name": "Ashapura SAP PROD",
     "aws_account": "354594115710",
     "host_group_id": "23"
   },
   "host": {
-    "name": "hostname",
-    "ip": "x.x.x.x",
-    "cloud": "aws" | "gcp",
-    "instance_id": "i-xxxxxxxxx"
+    "name": "ashapura-sap-prod-01",
+    "ip": "10.0.1.50",
+    "cloud": "aws",
+    "instance_id": "i-0abc123def456"
   },
   "alert": {
     "name": "This Website is Down",
-    "severity": "average" | "high" | "disaster",
-    "status": "problem" | "resolved",
-    "trigger_id": "zabbix-trigger-id or cloudwatch-alarm-name"
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "12345"
   },
   "raw": {}
 }
@@ -138,54 +48,160 @@ Every alert — regardless of source — is normalized to this schema before hit
 
 ---
 
+## AI Decision Output Schema
+
+Gemini returns this structure for every alert:
+
+```json
+{
+  "action": "auto-remediate | create-ticket | escalate",
+  "severity": "low | medium | high | critical",
+  "category": "website-down | high-memory | service-down | agent-unavailable | unknown",
+  "summary": "Website on host ashapura-sap-prod-01 is unreachable. Likely cause: application crash or EC2 unresponsive.",
+  "confidence": 0.92,
+  "suggested_action": "Restart EC2 instance i-0abc123def456 after verifying no active transactions."
+}
+```
+
+**Rule:** `confidence < 0.75` → always `escalate`, never auto-act regardless of category.
+
+---
+
+## EC2 Agent API Endpoints
+
+```
+POST /alert
+  Input:  normalized alert JSON (from Lambda 1)
+  Action: call Gemini → route decision → SES email + ticket + remediation
+  Output: {incident_id, action_taken, ticket_id}
+
+POST /chat                          [Phase 7 — Client GUI]
+  Input:  {client_id, message}
+  Action: query S3 incident history + live Zabbix API → Gemini answer
+  Output: {response, sources}
+```
+
+---
+
 ## IAM Role
 
-**Role name:** `aeonx-ai-agent-role`
-**Account:** `761685920937`
+**Role:** `aeonx-ai-agent-role`
+**Account:** `761685920937` (Aeonx payer)
 **Region:** `ap-south-1`
 **ExternalId:** `aeonx-ai-agent-2026`
 
-**Permissions (minimal footprint):**
-- EC2: describe + stop/start/reboot — only on instances tagged `auto-restart=true`
-- SES: send email — only from `*@aeonx.digital`
-- SSM: get parameters — only under `/aeonx/ai-agent/*`
-- SNS: publish — only to `aeonx-ai-agent*` topics
-- CloudWatch Logs: write — only to `/aws/lambda/aeonx-ai-agent*`
+| Permission | Scope | Purpose |
+|-----------|-------|---------|
+| `ec2:Stop/StartInstances` | Tag: `auto-restart=true` only | Auto-remediation |
+| `ec2:Describe*` | All | Read instance state |
+| `ses:SendEmail` | From `*@aeonx.digital` only | Notifications |
+| `ssm:GetParameter` | `/aeonx/ai-agent/*` only | Read secrets |
+| `sns:Publish` | `aeonx-ai-agent*` topics only | Event routing |
+| `logs:PutLogEvents` | `/aws/lambda/aeonx-ai-agent*` | Lambda logs |
 
 Policy files: `iam/trust-policy.json` + `iam/agent-permission-policy.json`
+
+---
+
+## Cross-Account Remediation (Phase 3)
+
+For 158 client accounts, the agent uses a hub-and-spoke model:
+
+```
+aeonx-ai-agent-role (761685920937)
+    │
+    └── sts:AssumeRole → Aeonx-L2-Role (in each client account)
+                              │
+                              └── EC2 restart / SSM Run Command
+                                  (within that client's account)
+```
+
+`Aeonx-L2-Role` already exists in all 158 accounts. Phase 3 adds a trust policy entry to each, allowing `aeonx-ai-agent-role` to assume it. This is scripted — not done manually.
 
 ---
 
 ## Zabbix Integration
 
 **Existing "Gen-AI" action (actionid: 14):**
-- Fires on: severity Average, High, Disaster
-- Scoped to: host groups 11045, 11046 (to be expanded)
-- Current operation: send email to 2 users
-- **Change required:** update operation to HTTP webhook → Lambda URL
+- Fires on: Average, High, Disaster severity
+- Current operation: send email to 2 users via AWS SES
+- **Change for Phase 1:** update operation to HTTP POST → Lambda 1 URL
 
-No new Zabbix configuration needed beyond changing the action's operation target.
+No new Zabbix setup needed. One config change in the existing action.
 
 ---
 
-## Auto-Remediation Allowlist
+## Secrets in SSM Parameter Store
 
-EC2/VM restart is **opt-in only**. An instance is eligible only if:
-1. Tagged `auto-restart=true`
-2. Alert category matches a known auto-resolvable pattern
+| Parameter Path | Value |
+|---------------|-------|
+| `/aeonx/ai-agent/gcp-service-account-key` | GCP service account JSON (for Vertex AI) |
+| `/aeonx/ai-agent/manageengine-api-key` | ManageEngine API key |
+| `/aeonx/ai-agent/zabbix-api-token` | Zabbix read-only API token |
+| `/aeonx/ai-agent/ses-from-address` | `awsalerts@aeonx.digital` |
+| `/aeonx/ai-agent/ec2-agent-url` | Internal URL of EC2 agent service |
+
+---
+
+## Auto-Remediation Allowlist Logic
+
+An instance is eligible for auto-restart only when ALL conditions are true:
+
+1. Instance tagged `auto-restart=true`
+2. Alert category is a known auto-resolvable pattern
 3. AI confidence ≥ 0.75
+4. No other active incident on the same host in last 30 minutes (prevents restart loops)
 
-Instances without the tag are never touched — ticket created and human notified instead.
+If any condition fails → create ManageEngine ticket + SES escalation email.
 
 ---
 
-## Secrets Management
+## Data Flow — Full Incident Lifecycle
 
-All credentials stored in SSM Parameter Store. Never hardcoded.
+```
+1. Zabbix fires alert (severity: High)
+        │
+2. Lambda 1 receives webhook POST
+   └── normalizes → incident JSON
+        │
+3. Lambda 1 POSTs to EC2 agent /alert
+        │
+4. EC2 agent calls Vertex AI (Gemini)
+   └── returns: {action: auto-remediate, confidence: 0.91, ...}
+        │
+5a. confidence ≥ 0.75 + tag check passes
+    └── EC2 restart via AWS SDK
+    └── poll until running (max 5 min)
+    └── HTTP health check (website-down category)
+        │
+5b. confidence < 0.75 OR tag missing
+    └── create ManageEngine ticket
+    └── SES email to awsalerts@aeonx.digital
+        │
+6. Write incident record to S3
+   └── aeonx-ai-agent-incidents/{date}/{incident_id}.json
+        │
+7. On success: update/close ticket + send "resolved" SES email
+   On failure: escalate ticket + page on-call
+```
 
-| Parameter | Description |
-|-----------|-------------|
-| `/aeonx/ai-agent/manageengine-api-key` | ManageEngine ServiceDesk Plus API key |
-| `/aeonx/ai-agent/gcp-service-account-key` | GCP service account JSON for Vertex AI |
-| `/aeonx/ai-agent/zabbix-api-token` | Zabbix API token (read-only) |
-| `/aeonx/ai-agent/ses-from-address` | SES verified sender address |
+---
+
+## File Structure
+
+```
+cloud-ai-adoption/
+├── README.md               — project overview, architecture, phases, to-do
+├── ARCHITECTURE.md         — this file: detailed technical design
+├── CLAUDE.md               — AI session resume config
+├── PROGRESS.md             — phase handoff summaries
+├── initial-goal-prompt.md  — original problem statement
+├── iam/
+│   ├── trust-policy.json           — who can assume aeonx-ai-agent-role
+│   └── agent-permission-policy.json — what the role can do
+├── lambda/
+│   └── alert-ingestor/     — Lambda 1 code (Phase 1)
+├── agent/
+│   └── app/                — EC2 FastAPI agent code (Phase 1+)
+└── terraform/              — infrastructure as code (Phase 6)
+```

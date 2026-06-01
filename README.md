@@ -30,90 +30,90 @@ Build a production-grade AI agent that autonomously handles monitoring alerts, i
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│  SIGNAL SOURCES                                                      │
-│                                                                      │
+│  SIGNAL SOURCES                                                     │
+│                                                                     │
 │  Zabbix (706 hosts, self-hosted AWS)                                │
 │  └── "Gen-AI" action → HTTP webhook                                 │
-│                                                                      │
+│                                                                     │
 │  CloudWatch Alarms (per client AWS account)          [future]       │
 │  └── SNS → Lambda trigger                                           │
-│                                                                      │
+│                                                                     │
 │  Client Chat GUI                                     [future]       │
 │  └── HTTPS → AI Agent API                                           │
 └──────────────────────────┬──────────────────────────────────────────┘
                            │
                            ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  AI AGENT CORE                                                       │
-│                                                                      │
+│  AI AGENT CORE                                                      │
+│                                                                     │
 │  Lambda 1 — Alert Ingestor  (AWS Lambda, ap-south-1)                │
-│  ├── Receives Zabbix webhook POST                                    │
-│  ├── Normalizes to standard schema                                   │
+│  ├── Receives Zabbix webhook POST                                   │
+│  ├── Normalizes to standard schema                                  │
 │  └── HTTP POST → EC2 AI Agent Service                               │
-│                                                                      │
+│                                                                     │
 │  EC2 — AI Decision Engine  (t3.small, ap-south-1)                   │
-│  FastAPI / Python                                                    │
+│  FastAPI / Python                                                   │
 │  ├── POST /alert  — classify, decide, act                           │
 │  └── POST /chat   — client self-service Q&A          [future]       │
 └──────┬──────────────────────────────┬───────────────────────────────┘
        │                              │
        ▼                              ▼
-┌──────────────────┐       ┌──────────────────────────┐
-│  GCP             │       │  NOTIFICATIONS            │
-│                  │       │                           │
-│  Vertex AI       │       │  AWS SES                  │
-│  (Gemini)        │       │  → awsalerts@aeonx.digital│
-│  ├── Classify    │       │    (ops team)             │
-│  ├── Summarize   │       │  → client email [future]  │
-│  └── Q&A [fut.]  │       └──────────────────────────┘
+┌──────────────────┐       ┌────────────────────────────┐
+│  GCP             │       │  NOTIFICATIONS             │
+│                  │       │                            │
+│  Vertex AI       │       │  AWS SES                   │
+│  (Gemini)        │       │  → awsalerts@aeonx.digital │
+│  ├── Classify    │       │    (ops team)              │
+│  ├── Summarize   │       │  → client email [future]   │
+│  └── Q&A [fut.]  │       └────────────────────────────┘
 └──────────────────┘                  │
        │                              ▼
-       │                   ┌──────────────────────────┐
-       │                   │  TICKETING    [Phase 4]   │
-       │                   │                           │
-       │                   │  ManageEngine             │
-       │                   │  ServiceDesk Plus         │
-       │                   │  auto create/update/close │
-       │                   └──────────────────────────┘
+       │                   ┌────────────────────────────┐
+       │                   │  TICKETING    [Phase 4]    │
+       │                   │                            │
+       │                   │  ManageEngine              │
+       │                   │  ServiceDesk Plus          │
+       │                   │  auto create/update/close  │
+       │                   └────────────────────────────┘
        │                              │
        └──────────────┬───────────────┘
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  CLOUD INTEGRATIONS                                  [Phase 3]       │
-│                                                                      │
-│  AWS                                                                 │
+│  CLOUD INTEGRATIONS                                  [Phase 3]      │
+│                                                                     │
+│  AWS                                                                │
 │  ├── EC2 restart (tag-gated: auto-restart=true)                     │
 │  ├── SSM Run Command (service restart)                              │
-│  └── Cross-account via Aeonx-L2-Role (×158 client accounts)        │
-│                                                                      │
-│  GCP                                                                 │
+│  └── Cross-account via Aeonx-L2-Role (×158 client accounts)         │
+│                                                                     │
+│  GCP                                                                │
 │  └── GCP VM restart (allowlist-gated)                               │
 └─────────────────────────────────────────────────────────────────────┘
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  AUDIT & MEMORY                                                      │
-│                                                                      │
-│  S3: aeonx-ai-agent-incidents/  — full incident log (JSON)         │
+│  AUDIT & MEMORY                                                     │
+│                                                                     │
+│  S3: aeonx-ai-agent-incidents/  — full incident log (JSON)          │
 │  SSM Parameter Store            — all secrets + config              │
 │  CloudWatch Logs                — Lambda + EC2 agent logs           │
 └─────────────────────────────────────────────────────────────────────┘
                       │
                       ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│  CLIENT-FACING GUI                                       [future]    │
-│                                                                      │
+│  CLIENT-FACING GUI                                       [future]   │
+│                                                                     │
 │  Option A: Chat widget → POST /chat on AI Agent Service             │
-│  └── "Is my server up?" → agent queries S3 + Zabbix API            │
-│                                                                      │
+│  └── "Is my server up?" → agent queries S3 + Zabbix API             │
+│                                                                     │
 │  Option B: Full self-service portal (ECS Fargate)        [later]    │
-│  └── Per-client auth, incident history, ticket status, chat        │
+│  └── Per-client auth, incident history, ticket status, chat         │
 └─────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────┐
-│  CI/CD                                                               │
-│  GitHub Actions (Cloud-AeonX-Digital / AI-Adoption-Team)           │
+│  CI/CD                                                              │
+│  GitHub Actions (Cloud-AeonX-Digital / AI-Adoption-Team)            │
 │  └── Deploy Lambda + EC2 agent + infra changes via Terraform        │
 └─────────────────────────────────────────────────────────────────────┘
 ```

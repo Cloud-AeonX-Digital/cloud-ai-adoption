@@ -154,11 +154,11 @@ def resolve_ticket(ticket_id: str, resolution: str) -> bool:
         log.warning("Assign step failed for ticket %s: %s", ticket_id, r.get("response_status"))
         return False
 
-    # Step 2: In Progress (requires udf_pick_302)
+    # Step 2: In Progress (requires udf_pick_302 = "No" — confirmed from live tickets)
     r = _request("PUT", f"requests/{ticket_id}", {
         "request": {
             "status": {"name": "In Progress"},
-            "udf_fields": {"udf_pick_302": "Automation"},
+            "udf_fields": {"udf_pick_302": "No"},
             "status_change_comments": "AI agent started auto-remediation.",
         }
     })
@@ -166,19 +166,38 @@ def resolve_ticket(ticket_id: str, resolution: str) -> bool:
         log.warning("In Progress step failed for ticket %s: %s", ticket_id, r.get("response_status"))
         return False
 
-    # Step 3: Resolved (requires resolution + worklog)
+    # Step 3: Add worklog (required before Resolved transition)
+    _request("POST", f"requests/{ticket_id}/worklogs", {
+        "worklog": {
+            "description": resolution,
+            "technician": {"id": ai_technician_id},
+        }
+    })
+
+    # Step 4: Resolved (requires resolution.content — worklog already added above)
     r = _request("PUT", f"requests/{ticket_id}", {
         "request": {
             "status": {"name": "Resolved"},
-            "resolution": {"content": resolution},
+            "resolution": {"content": f"<div>{resolution}</div>"},
             "status_change_comments": "Issue resolved by AeonX AI Ops Agent.",
         }
     })
+    if r.get("response_status", {}).get("status") != "success":
+        log.error("Resolve step failed for ticket %s: %s", ticket_id, r.get("response_status"))
+        return False
+
+    # Step 5: Closed
+    r = _request("PUT", f"requests/{ticket_id}", {
+        "request": {
+            "status": {"name": "Closed"},
+            "status_change_comments": "Closed after resolution confirmed.",
+        }
+    })
     if r.get("response_status", {}).get("status") == "success":
-        log.info("Ticket %s resolved", ticket_id)
+        log.info("Ticket %s closed", ticket_id)
         return True
 
-    log.error("Resolve step failed for ticket %s: %s", ticket_id, r.get("response_status"))
+    log.error("Close step failed for ticket %s: %s", ticket_id, r.get("response_status"))
     return False
 
 

@@ -48,14 +48,14 @@ aws ssm get-parameter \
 # ManageEngine API key
 aws ssm put-parameter \
   --name "/aeonx/ai-agent/manageengine-api-key" \
-  --value "DDD251A1-B6B0-4801-A83E-C9200A12DF41" \
+  --value "<MANAGEENGINE-API-KEY>" \
   --type "SecureString" \
   --region "ap-south-1" --overwrite
 
 # Zabbix API token
 aws ssm put-parameter \
   --name "/aeonx/ai-agent/zabbix-api-token" \
-  --value "fb8474cd388e055411d55c473d307a41b512e034ec6f6a300e1569ed533f3e83" \
+  --value "<ZABBIX-API-TOKEN>" \
   --type "SecureString" \
   --region "ap-south-1" --overwrite
 

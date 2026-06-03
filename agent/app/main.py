@@ -6,6 +6,7 @@ from .dedup import is_duplicate, mark_seen
 from .classifier import classify
 from .notifier import send_email
 from .logger import log_incident
+from .ticketing import find_open_ticket, create_ticket, add_note
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -34,6 +35,14 @@ async def handle_alert(request: Request):
     decision = classify(incident)
     log.info("Decision: action=%s severity=%s confidence=%.2f", decision.action, decision.severity, decision.confidence)
 
+    # Ticketing — check for existing open ticket first (Gap #11)
+    ticket_id = find_open_ticket(incident)
+    if ticket_id:
+        add_note(ticket_id, f"Duplicate alert received. AI decision: {decision.action} (confidence: {decision.confidence:.0%}). {decision.summary}")
+        log.info("Updated existing ticket %s", ticket_id)
+    elif decision.action in ("create-ticket", "escalate"):
+        ticket_id = create_ticket(incident, decision)
+
     # Always send SES email summary
     send_email(incident, decision)
 
@@ -43,7 +52,7 @@ async def handle_alert(request: Request):
     return IncidentResponse(
         incident_id=incident.incident_id,
         action_taken=decision.action,
-        ticket_id=None,  # Phase 4
+        ticket_id=ticket_id,
     )
 
 

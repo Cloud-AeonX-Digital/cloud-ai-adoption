@@ -59,8 +59,8 @@ When a client asks "is my server up?", the `/chat` endpoint must only return dat
 
 **11. ManageEngine duplicate ticket prevention missing**
 If the same alert fires 3 times before resolution, 3 tickets get created for the same incident.
-- Fix: check for existing open ticket on same host+alert before creating a new one.
-- Phase: 4
+- **Resolution:** `agent/app/ticketing.py` — `find_open_ticket()` searches for open tickets with same subject+host before creating. If found, adds a note to existing ticket instead.
+- **Status:** ✅ Resolved in code
 
 **12. Phase 7 / Client GUI labelling mismatch**
 Phase 7 is labelled "Observability & Audit" in the phases table but "Client GUI (Option A)" in the to-do list. These are different things.
@@ -90,5 +90,5 @@ Phase 7 is labelled "Observability & Audit" in the phases table but "Client GUI 
 | — | 12 | Phase 7/GUI labelling fixed in README | — | ✅ Resolved |
 | 1 | 6 | Create S3 bucket `aeonx-ai-agent-incidents` with lifecycle policy | Phase 1 | ⏳ Infra task |
 | 2 | 9 | Create two GCP service accounts: Vertex AI + Compute (separate) | Phase 2/3 | ⏳ Infra task |
-| 3 | 11 | Add duplicate ticket check in ManageEngine integration | Phase 4 | ⏳ Code task |
+| — | 11 | Duplicate ticket check in `ticketing.py` `find_open_ticket()` | — | ✅ Resolved in code |
 | 4 | 10 | Design client data isolation for `/chat` endpoint | Phase 9 | ⏳ Future |

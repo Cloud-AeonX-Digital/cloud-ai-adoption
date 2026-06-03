@@ -117,11 +117,34 @@
 ---
 
 ### Phase 4 — Ticketing & Notification
-**Status:** 🔲 Pending (blocked on ManageEngine API key)
+**Status:** ✅ Code Complete — Pending SSM key storage | **Branch:** mrinal-dev
 
-**Inputs needed from Phase 3:**
-- Remediation action results (success/fail)
-- ManageEngine base URL + API key
+**Key Outputs:**
+- `agent/app/ticketing.py` — full ManageEngine integration:
+  - `find_open_ticket()` — duplicate prevention (Gap #11 resolved)
+  - `create_ticket()` — creates with correct mandatory fields (category, subcategory, request_type, group, udf_pick_307)
+  - `resolve_ticket()` — follows AeonX lifecycle: Open→Assigned→In Progress→Resolved
+  - `add_note()` — adds worklog note to existing ticket
+- `main.py` updated — ticketing wired into alert handling flow
+
+**Lifecycle discovered (AeonX Life Cycle id:2):**
+```
+Open → Assigned (needs technician+group+subcategory)
+     → In Progress (needs udf_pick_302)
+     → Resolved (needs resolution+worklog)
+     → Closed
+```
+
+**Field IDs confirmed from live API:**
+- category: 601 (AWS Support)
+- subcategory: 313 (Monitoring & Logging)
+- request_type: 303 (AWS Support Incident)
+- group: 615 (AWS Support Internal)
+- requester: aws.automation@aeonx.digital (id: 4511)
+
+**Pending:**
+- ⏳ Store ManageEngine API key in SSM: `aws ssm put-parameter --name /aeonx/ai-agent/manageengine-api-key --value DDD251A1-B6B0-4801-A83E-C9200A12DF41 --type SecureString --region ap-south-1`
+- ⏳ Confirm `udf_pick_302` valid values for In Progress transition
 
 ---
 

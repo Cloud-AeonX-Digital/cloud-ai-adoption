@@ -36,12 +36,17 @@ async def handle_alert(request: Request):
     log.info("Decision: action=%s severity=%s confidence=%.2f", decision.action, decision.severity, decision.confidence)
 
     # Ticketing — check for existing open ticket first (Gap #11)
-    ticket_id = find_open_ticket(incident)
-    if ticket_id:
-        add_note(ticket_id, f"Duplicate alert received. AI decision: {decision.action} (confidence: {decision.confidence:.0%}). {decision.summary}")
-        log.info("Updated existing ticket %s", ticket_id)
-    elif decision.action in ("create-ticket", "escalate"):
-        ticket_id = create_ticket(incident, decision)
+    ticket_id = None
+    try:
+        existing = find_open_ticket(incident)
+        if existing:
+            add_note(existing, f"Duplicate alert received. AI decision: {decision.action} (confidence: {decision.confidence:.0%}). {decision.summary}")
+            ticket_id = existing
+            log.info("Updated existing ticket %s", existing)
+        elif decision.action in ("create-ticket", "escalate"):
+            ticket_id = create_ticket(incident, decision)
+    except Exception as e:
+        log.error("Ticketing failed for %s: %s", incident.incident_id, e)
 
     # Always send SES email summary
     send_email(incident, decision)

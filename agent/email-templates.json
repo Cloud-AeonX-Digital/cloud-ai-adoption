@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "description": "Email templates for client communications. Variables: {host_name}, {host_ip}, {client_name}, {aws_account}, {alert_value}, {timestamp}, {incident_id}",
+    "last_updated": "2026-06-05"
+  },
+  "templates": {
+    "high_memory": {
+      "subject": "⚠️ High Memory Alert — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nWe have detected high memory utilization on one of your servers.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  Memory Use : {alert_value}\n  Time       : {timestamp}\n\nRecommended Actions:\n  1. Log in to the server and identify memory-intensive processes\n  2. Consider restarting the application service if a process is stuck\n  3. Review application logs for memory leaks\n  4. If this is recurring, consider increasing instance memory (instance type upgrade)\n\nOur team is monitoring this alert. If memory utilization does not reduce within 30 minutes, we will escalate for further investigation.\n\nFor questions, reply to this email or raise a support ticket at https://customer.aeonx.support\n\nRegards,\nAeonX Cloud Operations Team\n+91-XXXXXXXXXX | support@aeonx.digital"
+    },
+    "high_cpu": {
+      "subject": "⚠️ High CPU Alert — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nWe have detected high CPU utilization on one of your servers.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  CPU Value  : {alert_value}\n  Time       : {timestamp}\n\nRecommended Actions:\n  1. Log in to the server and check running processes (Task Manager / top)\n  2. Identify the process consuming high CPU\n  3. Restart the application if it appears to be stuck or looping\n  4. Check application logs for errors or runaway jobs\n\nOur team is monitoring the situation. Please let us know if you need immediate assistance.\n\nRegards,\nAeonX Cloud Operations Team\n+91-XXXXXXXXXX | support@aeonx.digital"
+    },
+    "disk_space": {
+      "subject": "🔴 Low Disk Space Alert — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nCritical: Low disk space detected on one of your servers.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  Disk Usage : {alert_value}\n  Time       : {timestamp}\n\nImmediate Actions Required:\n  1. Log in and identify large files/directories consuming space\n  2. Archive or delete unnecessary log files, temp files, or old backups\n  3. If disk usage remains critical, request volume expansion from our team\n\nThis is a time-sensitive alert. Servers running out of disk space can cause service outages.\nPlease take action or contact us at support@aeonx.digital immediately.\n\nRegards,\nAeonX Cloud Operations Team\n+91-XXXXXXXXXX | support@aeonx.digital"
+    },
+    "high_load": {
+      "subject": "⚠️ High Load Average Alert — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nHigh system load has been detected on one of your servers.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  Load Avg   : {alert_value}\n  Time       : {timestamp}\n\nRecommended Actions:\n  1. Check running processes and identify any stuck or high-CPU tasks\n  2. Review recent deployments or scheduled jobs that may have triggered the load\n  3. If load remains high, consider horizontal scaling or restarting services\n\nOur team is monitoring the situation.\n\nRegards,\nAeonX Cloud Operations Team\n+91-XXXXXXXXXX | support@aeonx.digital"
+    },
+    "host_restarted": {
+      "subject": "ℹ️ Server Restart Notification — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nThis is an informational notification that your server has been restarted.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  Time       : {timestamp}\n\nThe server is back online and operating normally. No action is required from your side.\n\nIf this restart was unexpected, please review your system logs for the cause.\nFor any concerns, contact us at support@aeonx.digital\n\nRegards,\nAeonX Cloud Operations Team\n+91-XXXXXXXXXX | support@aeonx.digital"
+    },
+    "ec2_terminated": {
+      "subject": "🔴 URGENT: EC2 Instance Terminated — {host_name} ({client_name})",
+      "body": "Dear {client_name} Team,\n\nUrgent: An EC2 instance in your environment has been terminated.\n\nDetails:\n  Host       : {host_name}\n  IP Address : {host_ip}\n  AWS Account: {aws_account}\n  Time       : {timestamp}\n\nThis is a critical event. A terminated EC2 instance cannot be restarted — a new instance must be launched.\n\nOur team has been alerted and is investigating immediately.\nExpect an update within 15 minutes.\n\nFor urgent assistance: contact@aeonx.digital or call +91-XXXXXXXXXX\n\nRegards,\nAeonX Cloud Operations Team"
+    },
+    "ops_summary": {
+      "subject": "{severity_emoji} [{severity}] {alert_name} — {host_name}",
+      "body": "AeonX AI Ops Agent — Incident Report\n{'='*60}\n\nINCIDENT ID : {incident_id}\nTIME        : {timestamp}\nSOURCE      : ZABBIX\n\nHOST        : {host_name}\nIP          : {host_ip}\nCLIENT      : {client_name}\nAWS ACCOUNT : {aws_account}\n\nALERT       : {alert_name}\nSEVERITY    : {severity}\nVALUE       : {alert_value}\n\n{'='*60}\nAI ASSESSMENT\n{'='*60}\n\nActionable  : {actionable}\nCategory    : {category}\nAI Severity : {ai_severity}\nConfidence  : {confidence}\nAction      : {action_taken}\nSolution ID : {solution_id}\n\nSummary:\n{summary}\n\nSolution Steps:\n{solution_steps}\n{'='*60}\nThis is an automated message from AeonX AI Ops Agent."
+    }
+  }
+}

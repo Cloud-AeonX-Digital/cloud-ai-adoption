@@ -50,10 +50,11 @@ Respond ONLY with a valid JSON object in this exact format:
 }}
 
 Rules:
-- Use "auto-remediate" only for website-down, high-memory, service-down, agent-unavailable with confidence >= {_CONFIDENCE_THRESHOLD}
-- Use "escalate" for unknown categories or confidence < {_CONFIDENCE_THRESHOLD}
-- Use "create-ticket" when human review is needed but not urgent
-- Return ONLY the JSON object, no explanation"""
+- Use "auto-remediate" only for: website-down, high-memory, service-down (stopped/not-running), agent-unavailable — AND confidence >= {_CONFIDENCE_THRESHOLD}
+- Use "escalate" for: terminated instances, unknown patterns, disaster severity without clear cause, or confidence < {_CONFIDENCE_THRESHOLD}
+- Use "create-ticket" when issue needs human review but is not urgent
+- "terminated" in item_value or alert name = escalate always (terminated EC2 cannot be restarted)
+- Return ONLY the JSON object, no explanation, no reasoning tags"""
 
 
 def classify(incident: AlertPayload) -> AIDecision:
@@ -78,6 +79,11 @@ def classify(incident: AlertPayload) -> AIDecision:
 
         # Extract text from response (OpenAI-compatible format via Bedrock)
         text = result["choices"][0]["message"]["content"].strip()
+
+        # gpt-oss-120b wraps responses in <reasoning>...</reasoning> — strip it
+        if "<reasoning>" in text:
+            import re
+            text = re.sub(r"<reasoning>.*?</reasoning>", "", text, flags=re.DOTALL).strip()
 
         # Strip markdown fences if present
         if text.startswith("```"):

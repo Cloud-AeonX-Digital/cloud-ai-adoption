@@ -35,12 +35,15 @@ class AlertPayload(BaseModel):
 
 
 class AIDecision(BaseModel):
-    action: str          # "auto-remediate" | "create-ticket" | "escalate"
-    severity: str        # "low" | "medium" | "high" | "critical"
-    category: str        # "website-down" | "high-memory" | "service-down" | "agent-unavailable" | "unknown"
+    actionable: bool                          # True = known pattern with defined solution
+    action: str                               # "auto-remediate" | "create-ticket" | "escalate"
+    severity: str                             # "critical" | "high" | "medium" | "low"
+    category: str                             # "website-down" | "high-memory" | "service-down" | etc.
     summary: str
     confidence: float
     suggested_action: str = ""
+    solution_id: Optional[str] = None        # KB entry ID e.g. "S001"
+    solution_steps: list[str] = []           # Step-by-step resolution from KB
 
 
 class IncidentResponse(BaseModel):

@@ -1,21 +1,37 @@
 """
-Dev classifier — uses AWS Bedrock gpt-oss-120b instead of GCP Vertex AI.
-Drop-in replacement for agent/app/classifier.py in dev environment.
+Dev classifier — knowledge-base-first classification with LLM fallback.
+
+Flow:
+1. Match alert name against known-solutions.json
+2. If match found: use KB entry (actionable/non-actionable, severity, solution)
+3. If no match: call Bedrock gpt-oss-120b for best-effort classification (non-actionable by default)
 """
 import json
 import os
+import re
 import logging
 import boto3
+from pathlib import Path
 
 from agent.app.models import AlertPayload, AIDecision
 
 log = logging.getLogger(__name__)
 
-_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "openai.gpt-oss-120b-v1")
+_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "openai.gpt-oss-120b-1:0")
 _REGION = os.environ.get("AWS_REGION", "ap-south-1")
-_CONFIDENCE_THRESHOLD = float(os.environ.get("CONFIDENCE_THRESHOLD", "0.75"))
+_KB_PATH = os.environ.get("SOLUTIONS_KB_PATH",
+    str(Path(__file__).parent.parent / "agent" / "known-solutions.json"))
 
+_kb: list | None = None
 _client = None
+
+
+def _load_kb() -> list:
+    global _kb
+    if _kb is None:
+        with open(_KB_PATH) as f:
+            _kb = json.load(f)["solutions"]
+    return _kb
 
 
 def _get_client():
@@ -28,89 +44,101 @@ def _get_client():
     return _client
 
 
-def _build_prompt(incident: AlertPayload) -> str:
-    return f"""You are an expert SRE analyzing a cloud infrastructure alert.
+def _match_kb(alert_name: str) -> dict | None:
+    """Return the first KB entry whose pattern matches the alert name."""
+    name_lower = alert_name.lower()
+    for entry in _load_kb():
+        pattern = entry["pattern"].lower()
+        if entry.get("match_type") == "contains" and pattern in name_lower:
+            return entry
+    return None
 
-Alert details:
-- Alert name: {incident.alert.name}
-- Severity: {incident.alert.severity}
-- Status: {incident.alert.status}
-- Host: {incident.host.name} (IP: {incident.host.ip})
-- Client: {incident.client.name}
-- Metric value: {incident.alert.item_value}
 
-Respond ONLY with a valid JSON object in this exact format:
+def _llm_classify(incident: AlertPayload) -> AIDecision:
+    """LLM fallback for unknown alerts — always non-actionable."""
+    prompt = f"""You are an SRE analyzing an unknown cloud alert that has NO defined solution.
+
+Alert: {incident.alert.name}
+Severity: {incident.alert.severity}
+Host: {incident.host.name}
+Value: {incident.alert.item_value}
+
+Classify this alert. Since no automated solution exists, action must be "escalate".
+
+Respond ONLY with valid JSON:
 {{
-  "action": "<auto-remediate|create-ticket|escalate>",
-  "severity": "<low|medium|high|critical>",
-  "category": "<website-down|high-memory|service-down|agent-unavailable|unknown>",
-  "summary": "<one sentence describing what happened and likely cause>",
-  "confidence": <0.0 to 1.0>,
-  "suggested_action": "<what should be done>"
-}}
+  "actionable": false,
+  "severity": "<critical|high|medium|low>",
+  "category": "<best guess category>",
+  "summary": "<one sentence: what happened and likely cause>",
+  "confidence": <0.0-1.0>,
+  "suggested_action": "<what a human should investigate>"
+}}"""
 
-Rules:
-- Use "auto-remediate" only for: website-down, high-memory, service-down (stopped/not-running), agent-unavailable — AND confidence >= {_CONFIDENCE_THRESHOLD}
-- Use "escalate" for: terminated instances, unknown patterns, disaster severity without clear cause, or confidence < {_CONFIDENCE_THRESHOLD}
-- Use "create-ticket" when issue needs human review but is not urgent
-- "terminated" in item_value or alert name = escalate always (terminated EC2 cannot be restarted)
-- Return ONLY the JSON object, no explanation, no reasoning tags"""
+    try:
+        response = _get_client().invoke_model(
+            modelId=_MODEL_ID,
+            body=json.dumps({"messages": [{"role": "user", "content": prompt}],
+                             "max_tokens": 300, "temperature": 0.1}),
+            contentType="application/json", accept="application/json",
+        )
+        text = json.loads(response["body"].read())["choices"][0]["message"]["content"]
+        if "<reasoning>" in text:
+            text = re.sub(r"<reasoning>.*?</reasoning>", "", text, flags=re.DOTALL)
+        if text.strip().startswith("```"):
+            text = text.strip().split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
+        data = json.loads(text.strip())
+        return AIDecision(
+            actionable=False,
+            action="escalate",
+            severity=data.get("severity", "medium"),
+            category=data.get("category", "unknown"),
+            summary=data.get("summary", "Unknown alert — manual review required."),
+            confidence=data.get("confidence", 0.5),
+            suggested_action=data.get("suggested_action", "Investigate manually."),
+            solution_id=None,
+            solution_steps=[],
+        )
+    except Exception as e:
+        log.error("[DEV] LLM fallback failed: %s", e)
+        return AIDecision(
+            actionable=False, action="escalate", severity="high",
+            category="unknown",
+            summary="Classification failed — manual review required.",
+            confidence=0.0, suggested_action="Review alert manually.",
+            solution_id=None, solution_steps=[],
+        )
 
 
 def classify(incident: AlertPayload) -> AIDecision:
-    try:
-        prompt = _build_prompt(incident)
-        client = _get_client()
+    alert_name = incident.alert.name
 
-        body = json.dumps({
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 512,
-            "temperature": 0.1,
-        })
+    # Step 1: Knowledge base lookup
+    match = _match_kb(alert_name)
 
-        response = client.invoke_model(
-            modelId=_MODEL_ID,
-            body=body,
-            contentType="application/json",
-            accept="application/json",
-        )
+    if match:
+        actionable = match["actionable"]
+        action = "auto-remediate" if actionable else "escalate"
+        if not actionable and match.get("action") == "notify_only":
+            action = "create-ticket"
 
-        result = json.loads(response["body"].read())
+        log.info("[DEV] KB match: %s → actionable=%s severity=%s [%s]",
+                 match["id"], actionable, match["severity"], match["category"])
 
-        # Extract text from response (OpenAI-compatible format via Bedrock)
-        text = result["choices"][0]["message"]["content"].strip()
-
-        # gpt-oss-120b wraps responses in <reasoning>...</reasoning> — strip it
-        if "<reasoning>" in text:
-            import re
-            text = re.sub(r"<reasoning>.*?</reasoning>", "", text, flags=re.DOTALL).strip()
-
-        # Strip markdown fences if present
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-        text = text.strip()
-
-        decision_data = json.loads(text)
-
-        # Enforce confidence threshold
-        if decision_data.get("confidence", 0) < _CONFIDENCE_THRESHOLD:
-            decision_data["action"] = "escalate"
-
-        log.info("[DEV] Classified: action=%s category=%s confidence=%.2f",
-                 decision_data.get("action"), decision_data.get("category"),
-                 decision_data.get("confidence", 0))
-
-        return AIDecision(**decision_data)
-
-    except Exception as e:
-        log.error("[DEV] Bedrock classification failed: %s", e)
         return AIDecision(
-            action="escalate",
-            severity="high",
-            category="unknown",
-            summary=f"AI classification failed: {e}. Manual review required.",
-            confidence=0.0,
-            suggested_action="Review alert manually.",
+            actionable=actionable,
+            action=action,
+            severity=match["severity"],
+            category=match["category"],
+            summary=f"Known pattern matched ({match['id']}): {alert_name}",
+            confidence=0.99,
+            suggested_action=match["steps"][0] if match["steps"] else "",
+            solution_id=match["id"],
+            solution_steps=match["steps"],
         )
+
+    # Step 2: Unknown alert — LLM fallback (always non-actionable)
+    log.info("[DEV] No KB match for '%s' — using LLM fallback", alert_name)
+    return _llm_classify(incident)

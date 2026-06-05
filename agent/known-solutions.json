@@ -1,8 +1,7 @@
 {
   "_meta": {
-    "description": "Known alert patterns with defined solutions. Agent classifies an alert as ACTIONABLE only if it matches a pattern here. All others are NON-ACTIONABLE and escalated to human.",
-    "severity_levels": ["critical", "high", "medium", "low"],
-    "action_types": ["ec2_restart", "gcp_vm_restart", "ssm_service_restart", "http_health_check", "notify_only"],
+    "description": "Known alert patterns with defined solutions. Agent classifies as ACTIONABLE only if matched here.",
+    "action_types": ["ec2_restart", "ssm_service_restart", "zabbix_service_restart", "email_client", "escalate", "ignore"],
     "last_updated": "2026-06-05"
   },
   "solutions": [
@@ -16,13 +15,14 @@
       "action": "ec2_restart",
       "requires_tag": "auto-restart=true",
       "steps": [
-        "Perform HTTP health check on host",
-        "If HTTP check fails: check EC2 instance status",
-        "If EC2 running but website down: attempt service restart via SSM",
-        "If EC2 stopped or unresponsive: restart EC2 instance (tag-gated)",
-        "Re-run HTTP health check after restart",
+        "Perform HTTP health check on the host URL",
+        "If check fails: verify EC2 instance status",
+        "Restart EC2 instance (tag-gated: auto-restart=true)",
+        "Wait for instance to reach running state",
+        "Re-run HTTP health check to confirm recovery",
         "If still down after restart: escalate to human"
       ],
+      "email_template": null,
       "resolution_message": "Website was unreachable. EC2 instance restarted and verified healthy.",
       "zabbix_triggers": ["This Website is Down", "Website check failed", "HTTP check failed"]
     },
@@ -33,16 +33,17 @@
       "category": "high-memory",
       "severity": "high",
       "actionable": true,
-      "action": "ec2_restart",
-      "requires_tag": "auto-restart=true",
+      "action": "email_client",
+      "requires_tag": null,
       "steps": [
-        "Check current memory utilization via Zabbix API",
-        "If memory > 95%: restart instance immediately (tag-gated)",
-        "If memory between 90-95%: create ticket for human review first",
-        "Post-restart: verify memory returns to normal range",
-        "If memory remains high after restart: escalate to human"
+        "Send client communication email using high-memory template",
+        "Include current memory utilization value and affected host details",
+        "Advise client to review memory-intensive processes",
+        "Log incident and monitor for recurrence",
+        "If memory stays critical (>95%) for 30 min: escalate to human"
       ],
-      "resolution_message": "Memory utilization exceeded 90%. Instance restarted and memory returned to normal.",
+      "email_template": "high_memory",
+      "resolution_message": "Memory utilization alert communicated to client. Monitoring for resolution.",
       "zabbix_triggers": [
         "Linux: High memory utilization (>90% for 5m)",
         "Linux: High memory utilization (>98% for 5m)",
@@ -56,15 +57,18 @@
       "category": "service-down",
       "severity": "medium",
       "actionable": true,
-      "action": "ssm_service_restart",
+      "action": "ssm_service_restart_then_ec2",
       "requires_tag": "auto-restart=true",
       "steps": [
-        "Verify service is stopped via SSM Run Command",
-        "Attempt service restart: Start-Service AwsReplicationVolumeUpdaterService",
-        "Verify service status after restart",
-        "If service fails to start: escalate to human"
+        "Attempt service restart via SSM Run Command: Start-Service AwsReplicationVolumeUpdaterService",
+        "Wait 60 seconds and verify service status",
+        "If service restart succeeds: send resolved notification",
+        "If service restart fails: restart EC2 instance (tag-gated: auto-restart=true)",
+        "Verify service running after EC2 restart",
+        "If still failing: escalate to human"
       ],
-      "resolution_message": "AwsReplicationVolumeUpdaterService was stopped. Service restarted successfully via SSM.",
+      "email_template": null,
+      "resolution_message": "AwsReplicationVolumeUpdaterService restarted successfully.",
       "zabbix_triggers": [
         "Windows: \"AwsReplicationVolumeUpdaterService\" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)"
       ]
@@ -76,16 +80,18 @@
       "category": "agent-unavailable",
       "severity": "medium",
       "actionable": true,
-      "action": "ec2_restart",
+      "action": "zabbix_service_restart",
       "requires_tag": "auto-restart=true",
       "steps": [
-        "Ping host to check basic network connectivity",
-        "If host reachable: attempt Zabbix agent restart via SSM",
-        "If host unreachable: restart EC2 instance (tag-gated)",
-        "Verify Zabbix agent comes back online after restart",
-        "If agent still unavailable: escalate to human"
+        "Attempt Zabbix agent service restart via SSM Run Command",
+        "Linux: sudo systemctl restart zabbix-agent2",
+        "Windows: Restart-Service -Name 'Zabbix Agent'",
+        "Wait 2 minutes and verify agent connectivity in Zabbix",
+        "If agent comes back: resolved",
+        "If agent still down: escalate to human for manual investigation"
       ],
-      "resolution_message": "Zabbix agent was unavailable. Instance restarted and agent connection restored.",
+      "email_template": null,
+      "resolution_message": "Zabbix agent service restarted and connectivity restored.",
       "zabbix_triggers": [
         "Linux: Zabbix agent is not available (or nodata for 30m)",
         "Zabbix agent is not available"
@@ -98,14 +104,16 @@
       "category": "agent-unavailable",
       "severity": "low",
       "actionable": true,
-      "action": "ssm_service_restart",
+      "action": "ec2_restart",
       "requires_tag": "auto-restart=true",
       "steps": [
-        "Attempt Zabbix agent restart via SSM Run Command",
-        "Verify active checks resume within 5 minutes",
+        "Restart EC2 instance (tag-gated: auto-restart=true)",
+        "Wait for instance to reach running state",
+        "Verify Zabbix active checks resume within 5 minutes",
         "If still unavailable: escalate to human"
       ],
-      "resolution_message": "Zabbix active checks were unavailable. Agent service restarted.",
+      "email_template": null,
+      "resolution_message": "Active checks unavailable. EC2 restarted and checks resumed.",
       "zabbix_triggers": [
         "Linux: Active checks are not available"
       ]
@@ -117,13 +125,14 @@
       "category": "high-cpu",
       "severity": "medium",
       "actionable": false,
-      "action": "notify_only",
+      "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Alert classified as NON-ACTIONABLE — CPU spikes require human investigation",
-        "Create ticket for human to identify the offending process",
-        "Send email alert with CPU metrics"
+        "Send client communication email using high-cpu template for their AWS account",
+        "Include current CPU utilization, affected host, and time of alert",
+        "Advise client to identify high-CPU processes"
       ],
+      "email_template": "high_cpu",
       "resolution_message": null,
       "zabbix_triggers": [
         "Windows: High CPU utilization",
@@ -137,12 +146,13 @@
       "category": "high-cpu",
       "severity": "medium",
       "actionable": false,
-      "action": "notify_only",
+      "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Alert classified as NON-ACTIONABLE — CPU queue requires human investigation",
-        "Create ticket for human review"
+        "Send client communication email using high-cpu template for their AWS account",
+        "Include CPU queue length value and affected host details"
       ],
+      "email_template": "high_cpu",
       "resolution_message": null,
       "zabbix_triggers": [
         "Windows: CPU queue length is too high (over 3 for 5m)"
@@ -155,13 +165,14 @@
       "category": "disk-space",
       "severity": "high",
       "actionable": false,
-      "action": "notify_only",
+      "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Alert classified as NON-ACTIONABLE — disk cleanup requires human decision",
-        "Create ticket with disk usage details",
-        "Escalate to human for cleanup or volume expansion"
+        "Send client communication email using disk-space template for their AWS account",
+        "Include current disk usage, filesystem, and affected host",
+        "Advise client to clean up or request volume expansion"
       ],
+      "email_template": "disk_space",
       "resolution_message": null,
       "zabbix_triggers": [
         "Linux: disk space is critically low",
@@ -175,13 +186,16 @@
       "category": "ec2-terminated",
       "severity": "critical",
       "actionable": false,
-      "action": "notify_only",
+      "action": "conditional",
+      "condition": "ignore_if_autoscaling",
       "requires_tag": null,
       "steps": [
-        "Alert classified as NON-ACTIONABLE — terminated instances cannot be restarted",
-        "Immediate escalation to human required",
-        "Create high-priority ticket"
+        "Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)",
+        "If Auto Scaling instance: ignore — ASG will replace it automatically",
+        "If NOT Auto Scaling instance: immediate escalation to human",
+        "Create high-priority ticket and send urgent email"
       ],
+      "email_template": "ec2_terminated",
       "resolution_message": null,
       "zabbix_triggers": [
         "AWS EC2: {HOST.NAME} is terminated"
@@ -194,13 +208,13 @@
       "category": "host-restarted",
       "severity": "low",
       "actionable": false,
-      "action": "notify_only",
+      "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Informational alert — host recently rebooted",
-        "Log event and send notification only",
-        "No action required unless part of a larger incident"
+        "Send informational email to client using host-restarted template",
+        "No remediation required"
       ],
+      "email_template": "host_restarted",
       "resolution_message": null,
       "zabbix_triggers": [
         "Windows: Host has been restarted (uptime < 10m)",
@@ -214,12 +228,13 @@
       "category": "high-load",
       "severity": "medium",
       "actionable": false,
-      "action": "notify_only",
+      "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Alert classified as NON-ACTIONABLE — high load requires human investigation",
-        "Create ticket for human to identify root cause"
+        "Send client communication email using high-load template for their AWS account",
+        "Include load average value and affected host"
       ],
+      "email_template": "high_load",
       "resolution_message": null,
       "zabbix_triggers": [
         "Linux: Load average is too high (per CPU load over 1.5 for 5m)"

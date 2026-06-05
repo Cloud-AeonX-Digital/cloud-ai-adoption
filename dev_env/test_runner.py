@@ -7,12 +7,13 @@ Prerequisites:
   - Dev agent running: uvicorn dev_env.dev_app:app --port 8000
 """
 import json
+import os
 import uuid
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-AGENT_URL = "http://localhost:8000/alert"
+AGENT_URL = os.environ.get("AGENT_URL", "http://172.25.29.253:8000/alert")
 
 # Real alert patterns from live Zabbix (fetched 2026-06-04)
 TEST_CASES = [
@@ -187,7 +188,7 @@ def run():
 
     # Health check first
     try:
-        with urllib.request.urlopen("http://localhost:8000/health", timeout=5) as r:
+        with urllib.request.urlopen(f"{AGENT_URL.replace('/alert','')}/health", timeout=5) as r:
             health = json.loads(r.read())
             print(f"✅ Agent healthy — model: {health.get('model', '?')}\n")
     except Exception as e:

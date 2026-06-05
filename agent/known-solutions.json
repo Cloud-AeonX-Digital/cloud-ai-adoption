@@ -1,0 +1,229 @@
+{
+  "_meta": {
+    "description": "Known alert patterns with defined solutions. Agent classifies an alert as ACTIONABLE only if it matches a pattern here. All others are NON-ACTIONABLE and escalated to human.",
+    "severity_levels": ["critical", "high", "medium", "low"],
+    "action_types": ["ec2_restart", "gcp_vm_restart", "ssm_service_restart", "http_health_check", "notify_only"],
+    "last_updated": "2026-06-05"
+  },
+  "solutions": [
+    {
+      "id": "S001",
+      "pattern": "This Website is Down",
+      "match_type": "contains",
+      "category": "website-down",
+      "severity": "high",
+      "actionable": true,
+      "action": "ec2_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Perform HTTP health check on host",
+        "If HTTP check fails: check EC2 instance status",
+        "If EC2 running but website down: attempt service restart via SSM",
+        "If EC2 stopped or unresponsive: restart EC2 instance (tag-gated)",
+        "Re-run HTTP health check after restart",
+        "If still down after restart: escalate to human"
+      ],
+      "resolution_message": "Website was unreachable. EC2 instance restarted and verified healthy.",
+      "zabbix_triggers": ["This Website is Down", "Website check failed", "HTTP check failed"]
+    },
+    {
+      "id": "S002",
+      "pattern": "High memory utilization",
+      "match_type": "contains",
+      "category": "high-memory",
+      "severity": "high",
+      "actionable": true,
+      "action": "ec2_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Check current memory utilization via Zabbix API",
+        "If memory > 95%: restart instance immediately (tag-gated)",
+        "If memory between 90-95%: create ticket for human review first",
+        "Post-restart: verify memory returns to normal range",
+        "If memory remains high after restart: escalate to human"
+      ],
+      "resolution_message": "Memory utilization exceeded 90%. Instance restarted and memory returned to normal.",
+      "zabbix_triggers": [
+        "Linux: High memory utilization (>90% for 5m)",
+        "Linux: High memory utilization (>98% for 5m)",
+        "Windows: High memory utilization (>90% for 5m)"
+      ]
+    },
+    {
+      "id": "S003",
+      "pattern": "AwsReplicationVolumeUpdaterService",
+      "match_type": "contains",
+      "category": "service-down",
+      "severity": "medium",
+      "actionable": true,
+      "action": "ssm_service_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Verify service is stopped via SSM Run Command",
+        "Attempt service restart: Start-Service AwsReplicationVolumeUpdaterService",
+        "Verify service status after restart",
+        "If service fails to start: escalate to human"
+      ],
+      "resolution_message": "AwsReplicationVolumeUpdaterService was stopped. Service restarted successfully via SSM.",
+      "zabbix_triggers": [
+        "Windows: \"AwsReplicationVolumeUpdaterService\" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)"
+      ]
+    },
+    {
+      "id": "S004",
+      "pattern": "Zabbix agent is not available",
+      "match_type": "contains",
+      "category": "agent-unavailable",
+      "severity": "medium",
+      "actionable": true,
+      "action": "ec2_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Ping host to check basic network connectivity",
+        "If host reachable: attempt Zabbix agent restart via SSM",
+        "If host unreachable: restart EC2 instance (tag-gated)",
+        "Verify Zabbix agent comes back online after restart",
+        "If agent still unavailable: escalate to human"
+      ],
+      "resolution_message": "Zabbix agent was unavailable. Instance restarted and agent connection restored.",
+      "zabbix_triggers": [
+        "Linux: Zabbix agent is not available (or nodata for 30m)",
+        "Zabbix agent is not available"
+      ]
+    },
+    {
+      "id": "S005",
+      "pattern": "Active checks are not available",
+      "match_type": "contains",
+      "category": "agent-unavailable",
+      "severity": "low",
+      "actionable": true,
+      "action": "ssm_service_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Attempt Zabbix agent restart via SSM Run Command",
+        "Verify active checks resume within 5 minutes",
+        "If still unavailable: escalate to human"
+      ],
+      "resolution_message": "Zabbix active checks were unavailable. Agent service restarted.",
+      "zabbix_triggers": [
+        "Linux: Active checks are not available"
+      ]
+    },
+    {
+      "id": "S006",
+      "pattern": "High CPU utilization",
+      "match_type": "contains",
+      "category": "high-cpu",
+      "severity": "medium",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Alert classified as NON-ACTIONABLE — CPU spikes require human investigation",
+        "Create ticket for human to identify the offending process",
+        "Send email alert with CPU metrics"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "Windows: High CPU utilization",
+        "Linux: High CPU utilization"
+      ]
+    },
+    {
+      "id": "S007",
+      "pattern": "CPU queue length is too high",
+      "match_type": "contains",
+      "category": "high-cpu",
+      "severity": "medium",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Alert classified as NON-ACTIONABLE — CPU queue requires human investigation",
+        "Create ticket for human review"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "Windows: CPU queue length is too high (over 3 for 5m)"
+      ]
+    },
+    {
+      "id": "S008",
+      "pattern": "disk space",
+      "match_type": "contains",
+      "category": "disk-space",
+      "severity": "high",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Alert classified as NON-ACTIONABLE — disk cleanup requires human decision",
+        "Create ticket with disk usage details",
+        "Escalate to human for cleanup or volume expansion"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "Linux: disk space is critically low",
+        "Windows: disk space is low"
+      ]
+    },
+    {
+      "id": "S009",
+      "pattern": "is terminated",
+      "match_type": "contains",
+      "category": "ec2-terminated",
+      "severity": "critical",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Alert classified as NON-ACTIONABLE — terminated instances cannot be restarted",
+        "Immediate escalation to human required",
+        "Create high-priority ticket"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "AWS EC2: {HOST.NAME} is terminated"
+      ]
+    },
+    {
+      "id": "S010",
+      "pattern": "Host has been restarted",
+      "match_type": "contains",
+      "category": "host-restarted",
+      "severity": "low",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Informational alert — host recently rebooted",
+        "Log event and send notification only",
+        "No action required unless part of a larger incident"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "Windows: Host has been restarted (uptime < 10m)",
+        "Linux: System has just been restarted"
+      ]
+    },
+    {
+      "id": "S011",
+      "pattern": "Load average is too high",
+      "match_type": "contains",
+      "category": "high-load",
+      "severity": "medium",
+      "actionable": false,
+      "action": "notify_only",
+      "requires_tag": null,
+      "steps": [
+        "Alert classified as NON-ACTIONABLE — high load requires human investigation",
+        "Create ticket for human to identify root cause"
+      ],
+      "resolution_message": null,
+      "zabbix_triggers": [
+        "Linux: Load average is too high (per CPU load over 1.5 for 5m)"
+      ]
+    }
+  ]
+}

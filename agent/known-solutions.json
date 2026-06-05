@@ -12,18 +12,18 @@
       "category": "website-down",
       "severity": "high",
       "actionable": true,
-      "action": "ec2_restart",
+      "action": "service_restart_then_ec2",
       "requires_tag": "auto-restart=true",
       "steps": [
         "Perform HTTP health check on the host URL",
-        "If check fails: verify EC2 instance status",
-        "Restart EC2 instance (tag-gated: auto-restart=true)",
-        "Wait for instance to reach running state",
-        "Re-run HTTP health check to confirm recovery",
-        "If still down after restart: escalate to human"
+        "Attempt web service restart via SSM Run Command (nginx/apache/iis)",
+        "Re-run HTTP health check — if recovered: resolved",
+        "If service restart fails or website still down: restart EC2 instance (tag-gated: auto-restart=true)",
+        "Re-run HTTP health check after EC2 restart",
+        "If still down: escalate to human"
       ],
       "email_template": null,
-      "resolution_message": "Website was unreachable. EC2 instance restarted and verified healthy.",
+      "resolution_message": "Website was unreachable. Service restarted and verified healthy.",
       "zabbix_triggers": ["This Website is Down", "Website check failed", "HTTP check failed"]
     },
     {
@@ -57,13 +57,14 @@
       "category": "service-down",
       "severity": "medium",
       "actionable": true,
-      "action": "ssm_service_restart_then_ec2",
+      "action": "local_restart_then_ssm_then_ec2",
       "requires_tag": "auto-restart=true",
       "steps": [
-        "Attempt service restart via SSM Run Command: Start-Service AwsReplicationVolumeUpdaterService",
+        "Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService",
         "Wait 60 seconds and verify service status",
-        "If service restart succeeds: send resolved notification",
-        "If service restart fails: restart EC2 instance (tag-gated: auto-restart=true)",
+        "If local restart fails: attempt SSM Run Command full service reset",
+        "Wait 60 seconds and verify again",
+        "If SSM restart fails: restart EC2 instance (tag-gated: auto-restart=true)",
         "Verify service running after EC2 restart",
         "If still failing: escalate to human"
       ],
@@ -103,17 +104,16 @@
       "match_type": "contains",
       "category": "agent-unavailable",
       "severity": "low",
-      "actionable": true,
-      "action": "ec2_restart",
-      "requires_tag": "auto-restart=true",
+      "actionable": false,
+      "action": "email_client",
+      "requires_tag": null,
       "steps": [
-        "Restart EC2 instance (tag-gated: auto-restart=true)",
-        "Wait for instance to reach running state",
-        "Verify Zabbix active checks resume within 5 minutes",
-        "If still unavailable: escalate to human"
+        "Send notification to ops team — active checks unavailable on host",
+        "Log incident for monitoring",
+        "No automated action taken — monitor for recurrence"
       ],
-      "email_template": null,
-      "resolution_message": "Active checks unavailable. EC2 restarted and checks resumed.",
+      "email_template": "host_restarted",
+      "resolution_message": null,
       "zabbix_triggers": [
         "Linux: Active checks are not available"
       ]

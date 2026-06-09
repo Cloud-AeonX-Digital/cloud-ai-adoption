@@ -68,7 +68,7 @@ async def handle_alert(request: Request):
             incident_id=incident.incident_id,
             approval_type=decision.category,
             description=decision.summary,
-            proposed_action=f"[{decision.action.upper()}] {decision.suggested_action or decision.solution_steps[0] if decision.solution_steps else decision.suggested_action}",
+            proposed_action=f"[{decision.action.upper()}] {decision.suggested_action or (decision.solution_steps[0] if decision.solution_steps else '')}",
             metadata={
                 "host": incident.host.model_dump(),
                 "client": incident.client.model_dump(),
@@ -76,6 +76,7 @@ async def handle_alert(request: Request):
                 "solution_id": decision.solution_id,
                 "solution_steps": decision.solution_steps,
                 "ai_action": decision.action,
+                "action_type": next((s.get("action","") for s in __import__('json').load(open("agent/known-solutions.json"))["solutions"] if s["id"]==decision.solution_id), "") if decision.solution_id else "",
                 "severity": decision.severity,
                 "confidence": decision.confidence,
             }
@@ -124,8 +125,8 @@ async def approve_action(approval_id: str, request: Request):
     a = decide(approval_id, "approve", decided_by=body.get("decided_by","human"), note=body.get("note",""))
     if not a: raise HTTPException(404, "Not found")
     if a["status"] == ApprovalStatus.APPROVED:
-        log.info("[DEV] Approved %s — action: %s", approval_id, a.get("proposed_action","")[:60])
-        mark_executed(approval_id)
+        log.info("[DEV] Approved %s — executing action", approval_id)
+        _execute_action_async(a)
     return a
 
 @app.post("/approvals/{approval_id}/reject")
@@ -141,10 +142,34 @@ async def reject_action(approval_id: str, request: Request):
 def approve_via_email(approval_id: str):
     a = decide(approval_id, "approve", decided_by="email-link")
     if not a: return HTMLResponse("<h2>Not found or expired</h2>", status_code=404)
-    if a["status"] == ApprovalStatus.APPROVED: mark_executed(approval_id)
+    if a["status"] == ApprovalStatus.APPROVED:
+        _execute_action_async(a)
     color = "#22c55e" if a["status"] == ApprovalStatus.APPROVED else "#6b7280"
-    msg = "✅ Approved — action queued for execution." if a["status"] == ApprovalStatus.APPROVED else f"Already {a['status']}"
+    msg = "✅ Approved — action executing now." if a["status"] == ApprovalStatus.APPROVED else f"Already {a['status']}"
     return HTMLResponse(f"""<html><body style="font-family:system-ui;background:#0b0e1a;color:#e8eaf6;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><div style="text-align:center;background:#141828;border:1px solid #252a45;border-radius:16px;padding:40px;max-width:400px"><h1 style="color:{color}">{msg}</h1><p style="color:#565b80;font-size:12px;margin-top:16px">ID: {approval_id}</p></div></body></html>""")
+
+
+def _execute_action_async(approval: dict):
+    """Execute the approved action in a background thread."""
+    import threading
+    def run():
+        try:
+            from agent.app.ssm_executor import execute_approved_action
+            result = execute_approved_action(approval)
+            if result["success"]:
+                log.info("✅ Action executed: %s | %s", approval["approval_id"][:8], result.get("output","").strip()[:80])
+            else:
+                log.error("❌ Action failed: %s | %s", approval["approval_id"][:8], result.get("error",""))
+            mark_executed(approval["approval_id"])
+            # Sync updated approval to Express
+            try:
+                from dev_env.logger_dev import sync_approval_to_express
+                from agent.app.approval_manager import get_approval
+                sync_approval_to_express(get_approval(approval["approval_id"]))
+            except Exception: pass
+        except Exception as e:
+            log.error("Execution error: %s", e)
+    threading.Thread(target=run, daemon=True).start()
 
 @app.get("/approvals/{approval_id}/reject", response_class=HTMLResponse)
 def reject_via_email(approval_id: str):

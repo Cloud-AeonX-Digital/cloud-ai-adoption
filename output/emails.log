@@ -2673,3 +2673,899 @@ REJECT:  http://172.25.29.253:8000/approvals/8721d489-b43e-4cc6-ab4e-3c7a105d5d4
 Expires in 24 hours.
 
 ============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:10:24.828597+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : cda6cf51-7ee2-496e-b781-fd2f1a4479eb
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused to http://9.210.2.110:5173
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/fc0a7400-b93c-42da-a13d-6d02e161b008/approve
+REJECT:  http://172.25.29.253:8000/approvals/fc0a7400-b93c-42da-a13d-6d02e161b008/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:10:25.650600+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : d9e08855-fe4e-4678-8bea-221e03fc6b65
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused to http://9.210.2.110:8000/docs
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/05bbf657-2043-490a-b13e-10d00997ff61/approve
+REJECT:  http://172.25.29.253:8000/approvals/05bbf657-2043-490a-b13e-10d00997ff61/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:11:29.495413+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Windows: "postgresql" (postgresql) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : 4fe50eb3-2e98-4ad6-966e-1647b8a074be
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "postgresql" (postgresql) is not running (startup type automatic)
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on a Windows host is stopped despite being set to start automatically, indicating a possible service failure.
+
+SUGGESTED:
+Investigate why the PostgreSQL service stopped: check Windows Event Viewer and PostgreSQL logs for errors, verify service configuration, ensure sufficient system resources (disk space, memory), and manually restart the service while monitoring for recurrence.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/56670a87-3455-45ad-a6ef-060c276b3b17/approve
+REJECT:  http://172.25.29.253:8000/approvals/56670a87-3455-45ad-a6ef-060c276b3b17/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:11:31.628134+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 0a237414-22a4-4663-b0db-b8af9ef0a985
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : service outage
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the Linux host is inactive, likely due to a failure to start or an unexpected crash.
+
+SUGGESTED:
+Investigate the PostgreSQL service on the affected host: check systemd status (`systemctl status postgresql`), review recent logs (`journalctl -u postgresql`), verify disk space, memory, and configuration changes, and determine why the service stopped before attempting a manual restart.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/17adbcbf-2fdf-4740-ae2d-8dcbc8d50bf7/approve
+REJECT:  http://172.25.29.253:8000/approvals/17adbcbf-2fdf-4740-ae2d-8dcbc8d50bf7/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:11:54.330369+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : cef04073-0b8a-4d2a-8d4c-782c825e64cf
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :5173
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e5b445ab-ea02-4f24-8bbd-7f07d6716778/approve
+REJECT:  http://172.25.29.253:8000/approvals/e5b445ab-ea02-4f24-8bbd-7f07d6716778/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:11:55.222075+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : e2b029d1-f5ea-4640-a21c-2fa17bc84ec6
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :8000
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/ffd6f4a2-6a48-472c-aa01-a7c06cd0a6e0/approve
+REJECT:  http://172.25.29.253:8000/approvals/ffd6f4a2-6a48-472c-aa01-a7c06cd0a6e0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:11:57.923590+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 7986b4cb-56a2-49b8-ab5b-2ba943bc9e85
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : service outage
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the Linux host is inactive, likely due to a crash, manual stop, or resource issue.
+
+SUGGESTED:
+Investigate the host: check systemd status (systemctl status postgresql), review recent logs (/var/log/postgresql/, journalctl), examine resource usage (CPU, memory, disk), verify recent deployments or configuration changes, and restart the service if appropriate while determining the root cause.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/34092506-bf75-4d4a-ba3b-a26b36646a4a/approve
+REJECT:  http://172.25.29.253:8000/approvals/34092506-bf75-4d4a-ba3b-a26b36646a4a/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:13:56.288675+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : c24d359d-1ee2-4702-9957-2fdf3a30516c
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : active
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/b834b953-82cb-45ac-a275-f12232704760/approve
+REJECT:  http://172.25.29.253:8000/approvals/b834b953-82cb-45ac-a275-f12232704760/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:13:56.941141+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 54b23f9f-e2b1-4ddd-aec9-061f0278d779
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : active
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/64fc41af-a7d8-41a2-97c9-9eb6bffea9ff/approve
+REJECT:  http://172.25.29.253:8000/approvals/64fc41af-a7d8-41a2-97c9-9eb6bffea9ff/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:13:59.068854+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 4af31648-bc4b-48e8-a143-6fdcb00776bd
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : active
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+PostgreSQL service on the Linux host is down, likely due to a crash, misconfiguration, or resource exhaustion.
+
+SUGGESTED:
+Investigate the host: verify the service status with systemctl, examine PostgreSQL logs for errors, check system resources (CPU, memory, disk), review recent changes or deployments, and restart the service if appropriate.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/0fefa976-3e99-4b1e-a8e9-e33712037721/approve
+REJECT:  http://172.25.29.253:8000/approvals/0fefa976-3e99-4b1e-a8e9-e33712037721/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:18:40.715931+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 790a94fb-a791-41c1-af51-d53bd6c6956a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :5173
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/1691824d-93db-4b23-80d7-4d1629bd8594/approve
+REJECT:  http://172.25.29.253:8000/approvals/1691824d-93db-4b23-80d7-4d1629bd8594/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:18:41.605715+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 6483f306-2953-4acd-8347-0065953cea39
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :8000
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/a169de28-aaf8-4231-8257-0af568176032/approve
+REJECT:  http://172.25.29.253:8000/approvals/a169de28-aaf8-4231-8257-0af568176032/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:18:44.177739+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 4b4b1466-d71d-4683-bcc2-ae20431df41a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database service
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the monitored Linux host is inactive, likely due to a crash, misconfiguration, or resource issue.
+
+SUGGESTED:
+Escalate to the on‑call SRE: check systemd status (`systemctl status postgresql`), review PostgreSQL logs, verify disk space and memory, examine recent changes or deployments, and attempt a safe restart if appropriate.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/606ef367-cc1c-43d5-9537-1fdcc647c4b6/approve
+REJECT:  http://172.25.29.253:8000/approvals/606ef367-cc1c-43d5-9537-1fdcc647c4b6/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:19:02.336133+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 6428124e-a20b-4f9f-9cb1-5d198dc8cecd
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the Linux host is inactive, likely due to a crash, resource exhaustion, or manual stop.
+
+SUGGESTED:
+Investigate the PostgreSQL service status via systemctl, review journal and PostgreSQL logs for errors, check recent system changes or resource constraints, and determine if a service restart or deeper remediation is required.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/94ce0edd-a997-466f-a436-d7f6355e9a7f/approve
+REJECT:  http://172.25.29.253:8000/approvals/94ce0edd-a997-466f-a436-d7f6355e9a7f/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:19:26.991918+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : d0a270c5-4545-4d31-9c0c-abe9f1b60c70
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :5173
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/d53a3e09-1911-4252-954c-821e9bf37ed7/approve
+REJECT:  http://172.25.29.253:8000/approvals/d53a3e09-1911-4252-954c-821e9bf37ed7/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:19:27.620767+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : c3098c84-92fe-44d1-ab53-4a69e8d1360d
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused :8000
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/19efbb96-c8ef-4444-a60c-f979142880ad/approve
+REJECT:  http://172.25.29.253:8000/approvals/19efbb96-c8ef-4444-a60c-f979142880ad/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:19:29.918463+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 680f7a27-c953-4731-b41e-c42c4087bcb2
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : service outage
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the monitored Linux host is inactive, likely due to a failure to start or an unexpected crash.
+
+SUGGESTED:
+Investigate the PostgreSQL service on the host: check systemd status (`systemctl status postgresql`), review recent logs (`journalctl -u postgresql`), verify disk space and memory, look for recent configuration changes or updates, and attempt to restart the service if appropriate.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/f6dc8e94-db3b-4c38-9234-bcecdc505cc0/approve
+REJECT:  http://172.25.29.253:8000/approvals/f6dc8e94-db3b-4c38-9234-bcecdc505cc0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:20:15.121476+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 4d05ad86-5af7-4cc7-beed-e1c704642902
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : :5173
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/781fe413-d2ae-4c1d-9564-142342fa697d/approve
+REJECT:  http://172.25.29.253:8000/approvals/781fe413-d2ae-4c1d-9564-142342fa697d/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:20:15.723211+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 3ff446c4-4f4e-48b8-a20e-40ece45fa461
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : :8000
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/724165d9-fe37-45f0-9016-5ad42d7e8be8/approve
+REJECT:  http://172.25.29.253:8000/approvals/724165d9-fe37-45f0-9016-5ad42d7e8be8/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:20:17.836013+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : bfe5b827-2180-436a-975a-71a3e5aad8a4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database service outage
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the monitored Linux host is inactive, likely due to a crash, misconfiguration, or resource issue.
+
+SUGGESTED:
+Investigate the PostgreSQL service on the host: check systemd status (systemctl status postgresql), review recent logs (/var/log/postgresql/ and journalctl -u postgresql), verify disk space, memory, and CPU usage, look for recent configuration changes or deployments, and attempt a manual restart if appropriate. Escalate to the database SRE team for deeper analysis.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/d917517a-911a-42f2-93a8-aae2cf3b43f9/approve
+REJECT:  http://172.25.29.253:8000/approvals/d917517a-911a-42f2-93a8-aae2cf3b43f9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:21:05.064325+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 13d42ad0-c091-4ebc-b06f-f69532c06bbc
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/44b0a0be-9fb0-4c5f-9428-7b0cd9b984e0/approve
+REJECT:  http://172.25.29.253:8000/approvals/44b0a0be-9fb0-4c5f-9428-7b0cd9b984e0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:21:05.740242+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : a33ac79a-41d7-47bc-aae0-fe2eed63cff3
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/cedad606-1cce-4cb9-b337-00e28b34ae01/approve
+REJECT:  http://172.25.29.253:8000/approvals/cedad606-1cce-4cb9-b337-00e28b34ae01/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:21:07.812693+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 9af3f084-a19b-4b7a-9af1-03d1275510d1
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : service_availability
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the Linux host is stopped, likely due to a crash, manual stop, or resource issue.
+
+SUGGESTED:
+Investigate the host: check systemd status (systemctl status postgresql), review PostgreSQL and system logs for errors, verify resource usage (CPU, memory, disk), look for recent configuration changes or deployments, and restart the service if appropriate while determining the root cause.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/a6fb3a8d-1893-43b5-8d3b-f2add01af6cb/approve
+REJECT:  http://172.25.29.253:8000/approvals/a6fb3a8d-1893-43b5-8d3b-f2add01af6cb/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:22:09.386349+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 579ddf20-c2bd-44f3-a091-c83dcd6fd5b2
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/840ef6ee-955e-4eab-a592-3cb34615f1c1/approve
+REJECT:  http://172.25.29.253:8000/approvals/840ef6ee-955e-4eab-a592-3cb34615f1c1/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:22:10.007616+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 8ef907e7-db89-472d-b88a-a24fba7d5a50
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/53c48743-9a9f-4bc3-a1a7-b6a1bf8794c1/approve
+REJECT:  http://172.25.29.253:8000/approvals/53c48743-9a9f-4bc3-a1a7-b6a1bf8794c1/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:22:14.768633+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 0139deee-1404-4b8b-8281-eb4508142b95
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The PostgreSQL service on the Linux host is stopped, likely due to a crash, resource exhaustion, or manual stop.
+
+SUGGESTED:
+Escalate to the on‑call DB/infra team: review PostgreSQL and system logs, check recent deployments or resource usage, verify if the service was intentionally stopped, and restart the service after root cause analysis.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/223ea687-1923-4e89-b6b3-0c240a02c554/approve
+REJECT:  http://172.25.29.253:8000/approvals/223ea687-1923-4e89-b6b3-0c240a02c554/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:23:03.682369+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 897b55ed-43f0-4eb3-b5f3-5c2099b0c8b5
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : T
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database service
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+PostgreSQL service on the Linux host is inactive, likely due to a failure to start or an unexpected crash.
+
+SUGGESTED:
+Investigate the PostgreSQL service on the affected host: check systemd status (systemctl status postgresql), review recent logs (/var/log/postgresql/ and journalctl -u postgresql), verify disk space, memory, and configuration changes, and determine why the service stopped before attempting a manual restart.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/2e0de5fb-3aed-4e08-843a-0a6c9b68c649/approve
+REJECT:  http://172.25.29.253:8000/approvals/2e0de5fb-3aed-4e08-843a-0a6c9b68c649/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T12:24:12.260262+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 7d0b3553-248c-4f6a-a6a9-966c5ae7495a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : T
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : inactive
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+PostgreSQL service on the host is inactive, likely due to a crash, misconfiguration, or resource issue.
+
+SUGGESTED:
+Investigate the PostgreSQL service on the affected host: check systemd status, recent logs, disk space, memory, and any recent deployments or configuration changes; restart the service if appropriate and determine root cause.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/5cc84382-dffe-4105-8030-a9816626ba94/approve
+REJECT:  http://172.25.29.253:8000/approvals/5cc84382-dffe-4105-8030-a9816626ba94/reject
+Expires in 24 hours.
+
+============================================================

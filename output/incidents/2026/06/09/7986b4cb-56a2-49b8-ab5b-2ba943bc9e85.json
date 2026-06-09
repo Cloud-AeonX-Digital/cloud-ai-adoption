@@ -1,0 +1,64 @@
+{
+  "incident_id": "7986b4cb-56a2-49b8-ab5b-2ba943bc9e85",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T12:11:55.741142+00:00",
+  "logged_at": "2026-06-09T12:11:57.925106+00:00",
+  "alert": {
+    "name": "Linux: postgresql service is not running",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "e99bbdd7",
+    "event_id": "446481b3",
+    "item_value": "inactive"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "service outage",
+    "action": "escalate",
+    "confidence": 0.86,
+    "solution_id": null,
+    "summary": "The PostgreSQL service on the Linux host is inactive, likely due to a crash, manual stop, or resource issue."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T12:11:55.741142+00:00",
+      "detail": "Zabbix alert: Linux: postgresql service is not running"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T12:11:57.925106+00:00",
+      "detail": "Non-actionable | HIGH | service outage"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T12:11:57.925106+00:00",
+      "detail": "Action: escalate | Confidence: 86%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T12:11:57.925106+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T12:11:57.925106+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

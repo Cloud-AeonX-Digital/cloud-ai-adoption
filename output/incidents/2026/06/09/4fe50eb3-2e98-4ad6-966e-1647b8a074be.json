@@ -1,0 +1,64 @@
+{
+  "incident_id": "4fe50eb3-2e98-4ad6-966e-1647b8a074be",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T12:10:26.175599+00:00",
+  "logged_at": "2026-06-09T12:11:29.497390+00:00",
+  "alert": {
+    "name": "Windows: \"postgresql\" (postgresql) is not running (startup type automatic)",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "06a48634",
+    "event_id": "d1913196",
+    "item_value": "inactive"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "database",
+    "action": "escalate",
+    "confidence": 0.86,
+    "solution_id": null,
+    "summary": "The PostgreSQL service on a Windows host is stopped despite being set to start automatically, indicating a possible service failure."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T12:10:26.175599+00:00",
+      "detail": "Zabbix alert: Windows: \"postgresql\" (postgresql) is not running (startup type automatic)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T12:11:29.497390+00:00",
+      "detail": "Non-actionable | HIGH | database"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T12:11:29.497390+00:00",
+      "detail": "Action: escalate | Confidence: 86%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T12:11:29.497390+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T12:11:29.497390+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

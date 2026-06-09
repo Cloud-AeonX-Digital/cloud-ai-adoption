@@ -277,6 +277,30 @@
       "zabbix_triggers": [
         "Linux: Load average is too high (per CPU load over 1.5 for 5m)"
       ]
+    },
+    {
+      "id": "S012",
+      "pattern": "postgresql",
+      "match_type": "contains",
+      "category": "service-down",
+      "severity": "high",
+      "actionable": true,
+      "action": "ssm_service_restart",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Restart PostgreSQL via SSM Run Command: sudo systemctl restart postgresql",
+        "Wait 10 seconds and verify service status",
+        "Check DB connectivity: pg_isready -h localhost",
+        "Restart dependent services (backend) after DB is up",
+        "If restart fails: escalate to human \u2014 do not retry DB restarts automatically"
+      ],
+      "email_template": null,
+      "resolution_message": "PostgreSQL service restarted successfully. Database connectivity verified.",
+      "zabbix_triggers": [
+        "Linux: postgresql service is not running",
+        "PostgreSQL: Service is down",
+        "DB: Connection failed"
+      ]
     }
   ]
 }

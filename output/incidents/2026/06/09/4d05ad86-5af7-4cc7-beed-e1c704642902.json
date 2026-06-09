@@ -1,0 +1,70 @@
+{
+  "incident_id": "4d05ad86-5af7-4cc7-beed-e1c704642902",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T12:20:14.820901+00:00",
+  "logged_at": "2026-06-09T12:20:15.122847+00:00",
+  "alert": {
+    "name": "CMT Frontend: health check failed",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "15da725f",
+    "event_id": "1ebd56bb",
+    "item_value": ":5173"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "high",
+    "category": "website-down",
+    "action": "human-approval-required",
+    "confidence": 0.99,
+    "solution_id": "S001b",
+    "summary": "Known pattern matched (S001b): CMT Frontend: health check failed"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Service health check failed \u2014 web scenario detected unreachable endpoint",
+    "Attempt application service restart via SSM Run Command",
+    "Re-run health check after restart",
+    "If still failing: restart EC2 instance (tag-gated: auto-restart=true)",
+    "If still failing: escalate to human"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T12:20:14.820901+00:00",
+      "detail": "Zabbix alert: CMT Frontend: health check failed"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T12:20:15.122847+00:00",
+      "detail": "Actionable | HIGH | website-down"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T12:20:15.122847+00:00",
+      "detail": "Action: human-approval-required | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T12:20:15.122847+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T12:20:15.122847+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

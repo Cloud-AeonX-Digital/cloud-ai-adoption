@@ -20,7 +20,7 @@ log = logging.getLogger(__name__)
 _MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "openai.gpt-oss-120b-1:0")
 _REGION = os.environ.get("AWS_REGION", "ap-south-1")
 _KB_PATH = os.environ.get("SOLUTIONS_KB_PATH",
-    str(Path(__file__).parent.parent / "agent" / "known-solutions.json"))
+    os.path.join(os.path.dirname(__file__), "..", "agent", "known-solutions.json"))
 
 _kb: list | None = None
 _client = None
@@ -28,9 +28,11 @@ _client = None
 
 def _load_kb() -> list:
     global _kb
-    if _kb is None:
-        with open(_KB_PATH) as f:
-            _kb = json.load(f)["solutions"]
+    kb_path = os.environ.get("SOLUTIONS_KB_PATH",
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "agent", "known-solutions.json"))
+    with open(kb_path) as f:
+        _kb = json.load(f)["solutions"]
+    log.info("[DEV] KB loaded: %d solutions from %s", len(_kb), kb_path)
     return _kb
 
 

@@ -1,0 +1,64 @@
+{
+  "incident_id": "ef6dd988-7635-40f8-853f-2330633050ce",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:11:08.697611+00:00",
+  "logged_at": "2026-06-09T11:11:10.033942+00:00",
+  "alert": {
+    "name": "Linux: System has just been restarted",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "5d69af8f",
+    "event_id": "bfdb3bf9",
+    "item_value": "uptime < 10m"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.0,
+    "solution_id": null,
+    "summary": "Classification failed \u2014 manual review required."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:11:08.697611+00:00",
+      "detail": "Zabbix alert: Linux: System has just been restarted"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:11:10.033942+00:00",
+      "detail": "Non-actionable | HIGH | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:11:10.033942+00:00",
+      "detail": "Action: escalate | Confidence: 0%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:11:10.033942+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:11:10.033942+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

@@ -240,7 +240,7 @@
     },
     {
       "id": "S010",
-      "pattern": "Host has been restarted",
+      "pattern": "restarted",
       "match_type": "contains",
       "category": "host-restarted",
       "severity": "low",
@@ -255,7 +255,8 @@
       "resolution_message": null,
       "zabbix_triggers": [
         "Windows: Host has been restarted (uptime < 10m)",
-        "Linux: System has just been restarted"
+        "Linux: System has just been restarted",
+        "{HOST.NAME} has been restarted"
       ]
     },
     {

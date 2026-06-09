@@ -1,0 +1,71 @@
+{
+  "incident_id": "8f0fd0f5-d287-4788-bc0c-3f491ea96adb",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T09:18:36.813107+00:00",
+  "logged_at": "2026-06-09T09:18:37.034598+00:00",
+  "alert": {
+    "name": "Linux: disk space is critically low",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "f40f3e80",
+    "event_id": "d9a9ce91",
+    "item_value": "95% on /dev/nvme0n1p1"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "disk-space",
+    "action": "human-approval-required",
+    "confidence": 0.99,
+    "solution_id": "S008",
+    "summary": "Known pattern matched (S008): Linux: disk space is critically low"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send client email with disk-space template including current usage, filesystem path, and expansion options",
+    "Await client approval: client specifies X GB increment via ticket reply or email",
+    "Human operator confirms in ManageEngine ticket",
+    "After human approval confirmed: expand EBS volume by X GB via AWS SDK",
+    "Extend filesystem (growpart + resize2fs / xfs_growfs)",
+    "Verify new free space and close ticket"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T09:18:36.813107+00:00",
+      "detail": "Zabbix alert: Linux: disk space is critically low"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T09:18:37.034598+00:00",
+      "detail": "Non-actionable | HIGH | disk-space"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T09:18:37.034598+00:00",
+      "detail": "Action: human-approval-required | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T09:18:37.034598+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T09:18:37.034598+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "incident_id": "da286a66-b787-4e41-b7e7-9543e5884e41",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-05T07:06:26.082138+00:00",
+  "logged_at": "2026-06-05T07:06:26.838988+00:00",
+  "alert": {
+    "name": "Linux: Zabbix agent is not available (or nodata for 30m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "55001",
+    "event_id": "7868006",
+    "item_value": ""
+  },
+  "host": {
+    "name": "Rahman - Web App Server",
+    "ip": "10.0.6.15",
+    "zabbix_host_id": "13001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "Rahman - Web App Server",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "medium",
+    "category": "agent-unavailable",
+    "action": "auto-remediate",
+    "confidence": 0.99,
+    "solution_id": "S004",
+    "summary": "Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Attempt Zabbix agent service restart via SSM Run Command",
+    "Linux: sudo systemctl restart zabbix-agent2",
+    "Windows: Restart-Service -Name 'Zabbix Agent'",
+    "Wait 2 minutes and verify agent connectivity in Zabbix",
+    "If agent comes back: resolved",
+    "If agent still down: escalate to human for manual investigation"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-05T07:06:26.082138+00:00",
+      "detail": "Zabbix alert: Linux: Zabbix agent is not available (or nodata for 30m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-05T07:06:26.838988+00:00",
+      "detail": "Actionable | MEDIUM | agent-unavailable"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-05T07:06:26.838988+00:00",
+      "detail": "Action: auto-remediate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-05T07:06:26.838988+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-05T07:06:26.838988+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

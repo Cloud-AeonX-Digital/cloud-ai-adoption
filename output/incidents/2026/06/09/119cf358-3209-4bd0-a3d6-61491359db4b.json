@@ -1,0 +1,64 @@
+{
+  "incident_id": "119cf358-3209-4bd0-a3d6-61491359db4b",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:15:22.572786+00:00",
+  "logged_at": "2026-06-09T11:15:23.193639+00:00",
+  "alert": {
+    "name": "AWS ELB: All targets unhealthy in target group",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "43712c41",
+    "event_id": "20684376",
+    "item_value": "0/3 healthy"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.0,
+    "solution_id": null,
+    "summary": "Classification failed \u2014 manual review required."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:15:22.572786+00:00",
+      "detail": "Zabbix alert: AWS ELB: All targets unhealthy in target group"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:15:23.193639+00:00",
+      "detail": "Non-actionable | HIGH | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:15:23.193639+00:00",
+      "detail": "Action: escalate | Confidence: 0%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:15:23.193639+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:15:23.193639+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

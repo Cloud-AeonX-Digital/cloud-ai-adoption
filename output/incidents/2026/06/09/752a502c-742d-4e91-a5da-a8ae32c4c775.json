@@ -1,0 +1,68 @@
+{
+  "incident_id": "752a502c-742d-4e91-a5da-a8ae32c4c775",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T09:18:35.967803+00:00",
+  "logged_at": "2026-06-09T09:18:36.484214+00:00",
+  "alert": {
+    "name": "Windows: High CPU utilization",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "cb59f226",
+    "event_id": "738e82f4",
+    "item_value": "97 %"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "high-cpu",
+    "action": "create-ticket",
+    "confidence": 0.99,
+    "solution_id": "S006",
+    "summary": "Known pattern matched (S006): Windows: High CPU utilization"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send client communication email using high-cpu template for their AWS account",
+    "Include current CPU utilization, affected host, and time of alert",
+    "Advise client to identify high-CPU processes"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T09:18:35.967803+00:00",
+      "detail": "Zabbix alert: Windows: High CPU utilization"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T09:18:36.484214+00:00",
+      "detail": "Non-actionable | MEDIUM | high-cpu"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T09:18:36.484214+00:00",
+      "detail": "Action: create-ticket | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T09:18:36.484214+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T09:18:36.484214+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

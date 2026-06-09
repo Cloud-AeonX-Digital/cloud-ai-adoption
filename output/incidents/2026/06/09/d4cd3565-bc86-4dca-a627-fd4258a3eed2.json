@@ -1,0 +1,64 @@
+{
+  "incident_id": "d4cd3565-bc86-4dca-a627-fd4258a3eed2",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:05.009217+00:00",
+  "logged_at": "2026-06-09T11:19:06.511553+00:00",
+  "alert": {
+    "name": "Filesystem /data is 98% full \u2014 write operations failing",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "9d53a18b",
+    "event_id": "dced3b16",
+    "item_value": "98% used"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "storage",
+    "action": "escalate",
+    "confidence": 0.92,
+    "solution_id": null,
+    "summary": "The /data filesystem is 98% full, causing write operations to fail, likely due to uncontrolled data growth or log accumulation."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:05.009217+00:00",
+      "detail": "Zabbix alert: Filesystem /data is 98% full \u2014 write operations failing"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:06.511553+00:00",
+      "detail": "Non-actionable | HIGH | storage"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:06.511553+00:00",
+      "detail": "Action: escalate | Confidence: 92%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:06.511553+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:06.511553+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

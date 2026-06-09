@@ -1,0 +1,64 @@
+{
+  "incident_id": "5d8ab6fc-76a4-49f6-ba02-03df401c1b15",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:17:13.773812+00:00",
+  "logged_at": "2026-06-09T11:17:16.690078+00:00",
+  "alert": {
+    "name": "AWS RDS: Too many connections on database",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "49a7e078",
+    "event_id": "8e591ec7",
+    "item_value": "max_connections exceeded: 150/150"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "database",
+    "action": "escalate",
+    "confidence": 0.92,
+    "solution_id": null,
+    "summary": "The RDS instance hit its max_connections limit (150/150), likely caused by a surge in traffic or a connection leak."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:17:13.773812+00:00",
+      "detail": "Zabbix alert: AWS RDS: Too many connections on database"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:17:16.690078+00:00",
+      "detail": "Non-actionable | HIGH | database"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:17:16.690078+00:00",
+      "detail": "Action: escalate | Confidence: 92%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:17:16.690078+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:17:16.690078+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

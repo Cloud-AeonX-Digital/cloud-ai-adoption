@@ -1,0 +1,64 @@
+{
+  "incident_id": "452e8de2-5420-45b2-9ea6-cb39493ba06f",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:17:17.219996+00:00",
+  "logged_at": "2026-06-09T11:17:18.602969+00:00",
+  "alert": {
+    "name": "SSL certificate expires in 7 days",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "227f9a64",
+    "event_id": "378b633c",
+    "item_value": "expires 2026-06-16"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "certificate_expiration",
+    "action": "escalate",
+    "confidence": 0.96,
+    "solution_id": null,
+    "summary": "The SSL certificate monitored by the cloud tool will expire on 2026-06-16, indicating an upcoming expiration that could cause service disruption."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:17:17.219996+00:00",
+      "detail": "Zabbix alert: SSL certificate expires in 7 days"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:17:18.602969+00:00",
+      "detail": "Non-actionable | MEDIUM | certificate_expiration"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:17:18.602969+00:00",
+      "detail": "Action: escalate | Confidence: 96%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:17:18.602969+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:17:18.602969+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

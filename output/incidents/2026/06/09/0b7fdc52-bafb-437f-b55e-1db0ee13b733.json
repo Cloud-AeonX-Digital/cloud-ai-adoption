@@ -1,0 +1,64 @@
+{
+  "incident_id": "0b7fdc52-bafb-437f-b55e-1db0ee13b733",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:02.384620+00:00",
+  "logged_at": "2026-06-09T11:19:04.671159+00:00",
+  "alert": {
+    "name": "Linux: CPU steal time is too high (over 20% for 5m)",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "2169d194",
+    "event_id": "5aa7003a",
+    "item_value": "23.4 %"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "performance",
+    "action": "escalate",
+    "confidence": 0.85,
+    "solution_id": null,
+    "summary": "CPU steal time on the host exceeded 20% for 5 minutes, likely caused by hypervisor contention or a noisy neighbor in the shared cloud environment."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:02.384620+00:00",
+      "detail": "Zabbix alert: Linux: CPU steal time is too high (over 20% for 5m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:04.671159+00:00",
+      "detail": "Non-actionable | MEDIUM | performance"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:04.671159+00:00",
+      "detail": "Action: escalate | Confidence: 85%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:04.671159+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:04.671159+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

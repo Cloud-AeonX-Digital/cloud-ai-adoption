@@ -62,30 +62,34 @@ async def handle_alert(request: Request):
     ticket_id = None
     approval_id = None
 
-    # Human approval required — handle before ticketing block
-    if decision.action == "human-approval-required":
+    # Every action requires human approval before execution
+    if decision.action in ("human-approval-required", "auto-remediate", "create-ticket", "escalate"):
         approval_id = request_approval(
             incident_id=incident.incident_id,
             approval_type=decision.category,
             description=decision.summary,
-            proposed_action=decision.suggested_action,
-            metadata={"host": incident.host.model_dump(), "client": incident.client.model_dump(), "alert": incident.alert.model_dump()}
+            proposed_action=f"[{decision.action.upper()}] {decision.suggested_action or decision.solution_steps[0] if decision.solution_steps else decision.suggested_action}",
+            metadata={
+                "host": incident.host.model_dump(),
+                "client": incident.client.model_dump(),
+                "alert": incident.alert.model_dump(),
+                "solution_id": decision.solution_id,
+                "solution_steps": decision.solution_steps,
+                "ai_action": decision.action,
+                "severity": decision.severity,
+                "confidence": decision.confidence,
+            }
         )
-        log.info("APPROVAL REQUIRED: %s", approval_id)
+        log.info("APPROVAL PENDING: %s | action=%s | %s", approval_id[:8], decision.action, incident.alert.name)
+        # Sync to Express for React UI
+        try:
+            from dev_env.logger_dev import sync_approval_to_express
+            from agent.app.approval_manager import get_approval
+            sync_approval_to_express(get_approval(approval_id))
+        except Exception as e:
+            log.debug("Express approval sync: %s", e)
         try:
             ticket_id = create_ticket(incident, decision)
-        except Exception as e:
-            log.error("TICKET ERROR: %s", e)
-    else:
-        try:
-            existing = find_open_ticket(incident)
-            if existing:
-                add_note(existing, f"Duplicate alert. AI: {decision.action} ({decision.confidence:.0%}). {decision.summary}")
-                ticket_id = existing
-            elif decision.action in ("create-ticket", "escalate"):
-                ticket_id = create_ticket(incident, decision)
-                if ticket_id:
-                    log.info("TICKET: created %s", ticket_id)
         except Exception as e:
             log.error("TICKET ERROR: %s", e)
 

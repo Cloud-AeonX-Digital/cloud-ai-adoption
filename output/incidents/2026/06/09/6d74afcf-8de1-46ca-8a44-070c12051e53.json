@@ -1,0 +1,64 @@
+{
+  "incident_id": "6d74afcf-8de1-46ca-8a44-070c12051e53",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:10.611253+00:00",
+  "logged_at": "2026-06-09T11:19:12.189754+00:00",
+  "alert": {
+    "name": "Linux: System load per CPU exceeded 2.0 for 15 minutes",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "19c18d1c",
+    "event_id": "3645de57",
+    "item_value": "load: 2.4"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "performance",
+    "action": "escalate",
+    "confidence": 0.86,
+    "solution_id": null,
+    "summary": "The host's CPU load per core reached 2.4, exceeding the 2.0 threshold for 15 minutes, likely caused by sustained high CPU demand from one or more processes."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:10.611253+00:00",
+      "detail": "Zabbix alert: Linux: System load per CPU exceeded 2.0 for 15 minutes"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:12.189754+00:00",
+      "detail": "Non-actionable | MEDIUM | performance"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:12.189754+00:00",
+      "detail": "Action: escalate | Confidence: 86%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:12.189754+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:12.189754+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

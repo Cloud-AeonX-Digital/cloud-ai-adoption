@@ -120,11 +120,11 @@ def classify(incident: AlertPayload) -> AIDecision:
 
     if match:
         actionable = match["actionable"]
-        # Determine action from KB entry
         kb_action = match.get("action", "")
-        if actionable:
-            action = "auto-remediate"
-        elif kb_action == "human_approval_then_expand":
+
+        # ALL actions require human approval before execution
+        # Classifier determines WHAT to do — human approves WHETHER to do it
+        if actionable or kb_action == "human_approval_then_expand":
             action = "human-approval-required"
         elif match.get("category") in ("ec2-terminated", "unknown"):
             action = "escalate"

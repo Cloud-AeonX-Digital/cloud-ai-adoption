@@ -1,0 +1,71 @@
+{
+  "incident_id": "69257c14-506c-41e7-b89d-48e6908e7d80",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T06:25:15.894599+00:00",
+  "logged_at": "2026-06-09T06:25:16.305723+00:00",
+  "alert": {
+    "name": "This Website is Down",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "b00191dd",
+    "event_id": "0e053e69",
+    "item_value": "Connection refused"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": "128"
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "high",
+    "category": "website-down",
+    "action": "auto-remediate",
+    "confidence": 0.99,
+    "solution_id": "S001",
+    "summary": "Known pattern matched (S001): This Website is Down"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Perform HTTP health check on the host URL",
+    "Attempt web service restart via SSM Run Command (nginx/apache/iis)",
+    "Re-run HTTP health check \u2014 if recovered: resolved",
+    "If service restart fails or website still down: restart EC2 instance (tag-gated: auto-restart=true)",
+    "Re-run HTTP health check after EC2 restart",
+    "If still down: escalate to human"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T06:25:15.894599+00:00",
+      "detail": "Zabbix alert: This Website is Down"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T06:25:16.305723+00:00",
+      "detail": "Actionable | HIGH | website-down"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T06:25:16.305723+00:00",
+      "detail": "Action: auto-remediate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T06:25:16.305723+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T06:25:16.305723+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

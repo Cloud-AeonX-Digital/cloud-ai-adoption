@@ -1,0 +1,64 @@
+{
+  "incident_id": "4226b2f6-6670-427a-89bc-3f770be9287a",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:17:21.168152+00:00",
+  "logged_at": "2026-06-09T11:17:22.788011+00:00",
+  "alert": {
+    "name": "CloudFront: High 5xx error rate (>5% for 10m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "f2b7ac66",
+    "event_id": "091197fc",
+    "item_value": "7.3% errors"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "availability",
+    "action": "escalate",
+    "confidence": 0.85,
+    "solution_id": null,
+    "summary": "CloudFront is returning 5xx errors at 7.3% over the last 10 minutes, likely caused by origin server failures or edge\u2011location issues."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:17:21.168152+00:00",
+      "detail": "Zabbix alert: CloudFront: High 5xx error rate (>5% for 10m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:17:22.788011+00:00",
+      "detail": "Non-actionable | MEDIUM | availability"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:17:22.788011+00:00",
+      "detail": "Action: escalate | Confidence: 85%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:17:22.788011+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:17:22.788011+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

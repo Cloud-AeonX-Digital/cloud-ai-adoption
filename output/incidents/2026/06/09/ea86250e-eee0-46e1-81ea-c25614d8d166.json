@@ -1,0 +1,64 @@
+{
+  "incident_id": "ea86250e-eee0-46e1-81ea-c25614d8d166",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:08.477502+00:00",
+  "logged_at": "2026-06-09T11:19:10.278268+00:00",
+  "alert": {
+    "name": "System uptime reset detected \u2014 host rebooted unexpectedly",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "43dde5b8",
+    "event_id": "89b8b4b9",
+    "item_value": "uptime: 2m"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "host-reboot",
+    "action": "escalate",
+    "confidence": 0.85,
+    "solution_id": null,
+    "summary": "The monitored host rebooted unexpectedly, resetting uptime to 2 minutes, likely due to a crash, OS panic, or external restart."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:08.477502+00:00",
+      "detail": "Zabbix alert: System uptime reset detected \u2014 host rebooted unexpectedly"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:10.278268+00:00",
+      "detail": "Non-actionable | MEDIUM | host-reboot"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:10.278268+00:00",
+      "detail": "Action: escalate | Confidence: 85%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:10.278268+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:10.278268+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

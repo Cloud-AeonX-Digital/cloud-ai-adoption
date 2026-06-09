@@ -1,0 +1,71 @@
+{
+  "incident_id": "b54d8631-ced4-4e67-9e15-463c34ec8069",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:11:04.706870+00:00",
+  "logged_at": "2026-06-09T11:11:05.248102+00:00",
+  "alert": {
+    "name": "Linux: Zabbix agent is not available (or nodata for 30m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "6921ca2f",
+    "event_id": "d67a239b",
+    "item_value": ""
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "medium",
+    "category": "agent-unavailable",
+    "action": "human-approval-required",
+    "confidence": 0.99,
+    "solution_id": "S004",
+    "summary": "Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Attempt Zabbix agent service restart via SSM Run Command",
+    "Linux: sudo systemctl restart zabbix-agent2",
+    "Windows: Restart-Service -Name 'Zabbix Agent'",
+    "Wait 2 minutes and verify agent connectivity in Zabbix",
+    "If agent comes back: resolved",
+    "If agent still down: escalate to human for manual investigation"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:11:04.706870+00:00",
+      "detail": "Zabbix alert: Linux: Zabbix agent is not available (or nodata for 30m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:11:05.248102+00:00",
+      "detail": "Actionable | MEDIUM | agent-unavailable"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:11:05.248102+00:00",
+      "detail": "Action: human-approval-required | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:11:05.248102+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:11:05.248102+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

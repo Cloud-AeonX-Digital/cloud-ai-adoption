@@ -1,7 +1,14 @@
 {
   "_meta": {
     "description": "Known alert patterns with defined solutions. Agent classifies as ACTIONABLE only if matched here.",
-    "action_types": ["ec2_restart", "ssm_service_restart", "zabbix_service_restart", "email_client", "escalate", "ignore"],
+    "action_types": [
+      "ec2_restart",
+      "ssm_service_restart",
+      "zabbix_service_restart",
+      "email_client",
+      "escalate",
+      "ignore"
+    ],
     "last_updated": "2026-06-05"
   },
   "solutions": [
@@ -17,14 +24,41 @@
       "steps": [
         "Perform HTTP health check on the host URL",
         "Attempt web service restart via SSM Run Command (nginx/apache/iis)",
-        "Re-run HTTP health check — if recovered: resolved",
+        "Re-run HTTP health check \u2014 if recovered: resolved",
         "If service restart fails or website still down: restart EC2 instance (tag-gated: auto-restart=true)",
         "Re-run HTTP health check after EC2 restart",
         "If still down: escalate to human"
       ],
       "email_template": null,
       "resolution_message": "Website was unreachable. Service restarted and verified healthy.",
-      "zabbix_triggers": ["This Website is Down", "Website check failed", "HTTP check failed"]
+      "zabbix_triggers": [
+        "This Website is Down",
+        "Website check failed",
+        "HTTP check failed"
+      ]
+    },
+    {
+      "id": "S001b",
+      "pattern": "health check failed",
+      "match_type": "contains",
+      "category": "website-down",
+      "severity": "high",
+      "actionable": true,
+      "action": "service_restart_then_ec2",
+      "requires_tag": "auto-restart=true",
+      "steps": [
+        "Service health check failed \u2014 web scenario detected unreachable endpoint",
+        "Attempt application service restart via SSM Run Command",
+        "Re-run health check after restart",
+        "If still failing: restart EC2 instance (tag-gated: auto-restart=true)",
+        "If still failing: escalate to human"
+      ],
+      "email_template": null,
+      "resolution_message": "Service health check was failing. Application service restarted and verified healthy.",
+      "zabbix_triggers": [
+        "CMT Backend API: Backend health check failed",
+        "{TRIGGER.NAME}: {STEP.NAME} failed"
+      ]
     },
     {
       "id": "S002",
@@ -108,9 +142,9 @@
       "action": "email_client",
       "requires_tag": null,
       "steps": [
-        "Send notification to ops team — active checks unavailable on host",
+        "Send notification to ops team \u2014 active checks unavailable on host",
         "Log incident for monitoring",
-        "No automated action taken — monitor for recurrence"
+        "No automated action taken \u2014 monitor for recurrence"
       ],
       "email_template": "host_restarted",
       "resolution_message": null,
@@ -165,12 +199,15 @@
       "category": "disk-space",
       "severity": "high",
       "actionable": false,
-      "action": "email_client",
+      "action": "human_approval_then_expand",
       "requires_tag": null,
       "steps": [
-        "Send client communication email using disk-space template for their AWS account",
-        "Include current disk usage, filesystem, and affected host",
-        "Advise client to clean up or request volume expansion"
+        "Send client email with disk-space template including current usage, filesystem path, and expansion options",
+        "Await client approval: client specifies X GB increment via ticket reply or email",
+        "Human operator confirms in ManageEngine ticket",
+        "After human approval confirmed: expand EBS volume by X GB via AWS SDK",
+        "Extend filesystem (growpart + resize2fs / xfs_growfs)",
+        "Verify new free space and close ticket"
       ],
       "email_template": "disk_space",
       "resolution_message": null,
@@ -191,7 +228,7 @@
       "requires_tag": null,
       "steps": [
         "Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)",
-        "If Auto Scaling instance: ignore — ASG will replace it automatically",
+        "If Auto Scaling instance: ignore \u2014 ASG will replace it automatically",
         "If NOT Auto Scaling instance: immediate escalation to human",
         "Create high-priority ticket and send urgent email"
       ],
@@ -203,7 +240,7 @@
     },
     {
       "id": "S010",
-      "pattern": "Host has been restarted",
+      "pattern": "restarted",
       "match_type": "contains",
       "category": "host-restarted",
       "severity": "low",
@@ -218,7 +255,8 @@
       "resolution_message": null,
       "zabbix_triggers": [
         "Windows: Host has been restarted (uptime < 10m)",
-        "Linux: System has just been restarted"
+        "Linux: System has just been restarted",
+        "{HOST.NAME} has been restarted"
       ]
     },
     {

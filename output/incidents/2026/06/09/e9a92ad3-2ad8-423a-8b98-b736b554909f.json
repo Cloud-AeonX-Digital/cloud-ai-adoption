@@ -1,0 +1,68 @@
+{
+  "incident_id": "e9a92ad3-2ad8-423a-8b98-b736b554909f",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T08:05:12.135491+00:00",
+  "logged_at": "2026-06-09T08:05:13.348379+00:00",
+  "alert": {
+    "name": "Linux: disk space is critically low",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "dc9177bc",
+    "event_id": "disk001",
+    "item_value": "95% used on /dev/nvme0n1p1"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "disk-space",
+    "action": "create-ticket",
+    "confidence": 0.99,
+    "solution_id": "S008",
+    "summary": "Known pattern matched (S008): Linux: disk space is critically low"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send client communication email using disk-space template for their AWS account",
+    "Include current disk usage, filesystem, and affected host",
+    "Advise client to clean up or request volume expansion"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T08:05:12.135491+00:00",
+      "detail": "Zabbix alert: Linux: disk space is critically low"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T08:05:13.348379+00:00",
+      "detail": "Non-actionable | HIGH | disk-space"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T08:05:13.348379+00:00",
+      "detail": "Action: create-ticket | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T08:05:13.348379+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T08:05:13.348379+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

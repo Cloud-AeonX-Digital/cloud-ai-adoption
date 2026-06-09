@@ -1,0 +1,64 @@
+{
+  "incident_id": "abdd1e05-bb3c-4be5-ba8e-6e614e045bfa",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:00.084386+00:00",
+  "logged_at": "2026-06-09T11:19:02.051799+00:00",
+  "alert": {
+    "name": "Passive agent check timeout on host",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "97a6b833",
+    "event_id": "fd052528",
+    "item_value": "timeout 30s"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "monitoring",
+    "action": "escalate",
+    "confidence": 0.78,
+    "solution_id": null,
+    "summary": "The passive monitoring agent on the host did not respond within the 30\u2011second timeout, likely due to an agent crash, network latency, or resource exhaustion."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:00.084386+00:00",
+      "detail": "Zabbix alert: Passive agent check timeout on host"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:02.051799+00:00",
+      "detail": "Non-actionable | MEDIUM | monitoring"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:02.051799+00:00",
+      "detail": "Action: escalate | Confidence: 78%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:02.051799+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:02.051799+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

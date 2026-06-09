@@ -1,0 +1,67 @@
+{
+  "incident_id": "670ed170-26d9-43cd-ae9b-9ce5c9df2840",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-05T06:51:57.830742+00:00",
+  "logged_at": "2026-06-05T06:51:58.599646+00:00",
+  "alert": {
+    "name": "Windows: CPU queue length is too high",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "49299",
+    "event_id": "7868003",
+    "item_value": "12 items/sec"
+  },
+  "host": {
+    "name": "Kairish - PROD SAP Router DMZ (Jump Server)",
+    "ip": "10.0.3.20",
+    "zabbix_host_id": "15001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "Kairish - PROD SAP Router DMZ (Jump Server)",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "high-cpu",
+    "action": "escalate",
+    "confidence": 0.99,
+    "solution_id": "S007",
+    "summary": "Known pattern matched (S007): Windows: CPU queue length is too high"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send client communication email using high-cpu template for their AWS account",
+    "Include CPU queue length value and affected host details"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-05T06:51:57.830742+00:00",
+      "detail": "Zabbix alert: Windows: CPU queue length is too high"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-05T06:51:58.599646+00:00",
+      "detail": "Non-actionable | MEDIUM | high-cpu"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-05T06:51:58.599646+00:00",
+      "detail": "Action: escalate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-05T06:51:58.599646+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-05T06:51:58.599646+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

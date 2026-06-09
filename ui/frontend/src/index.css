@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ── */
+:root {
+  --bg:        #0b0e1a;
+  --bg2:       #0f1222;
+  --surface:   #141828;
+  --surface2:  #1a1f35;
+  --surface3:  #1f2540;
+  --border:    #252a45;
+  --border2:   #2f3560;
+  --text:      #e8eaf6;
+  --text2:     #8b90c0;
+  --text3:     #565b80;
+
+  --blue:      #6c8cff;
+  --blue-bg:   rgba(108,140,255,0.12);
+  --green:     #34d399;
+  --green-bg:  rgba(52,211,153,0.12);
+  --yellow:    #fbbf24;
+  --yellow-bg: rgba(251,191,36,0.12);
+  --orange:    #fb923c;
+  --orange-bg: rgba(251,146,60,0.12);
+  --red:       #f87171;
+  --red-bg:    rgba(248,113,113,0.12);
+  --purple:    #a78bfa;
+  --purple-bg: rgba(167,139,250,0.12);
+}
+
+.light {
+  --bg:        #f0f2ff;
+  --bg2:       #e8ebff;
+  --surface:   #ffffff;
+  --surface2:  #f4f6ff;
+  --surface3:  #eef0ff;
+  --border:    #dde0ff;
+  --border2:   #bcc3ff;
+  --text:      #1a1d3c;
+  --text2:     #4a4f7a;
+  --text3:     #8b90b8;
+
+  --blue:      #4361ee;
+  --blue-bg:   rgba(67,97,238,0.08);
+  --green:     #059669;
+  --green-bg:  rgba(5,150,105,0.08);
+  --yellow:    #d97706;
+  --yellow-bg: rgba(217,119,6,0.08);
+  --orange:    #ea580c;
+  --orange-bg: rgba(234,88,12,0.08);
+  --red:       #dc2626;
+  --red-bg:    rgba(220,38,38,0.08);
+  --purple:    #7c3aed;
+  --purple-bg: rgba(124,58,237,0.08);
+}
+
+/* ── Apply tokens ── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Semantic utility classes */
+.bg-app       { background: var(--bg); }
+.bg-surface   { background: var(--surface); }
+.bg-surface2  { background: var(--surface2); }
+.border-app   { border-color: var(--border); }
+.border-app2  { border-color: var(--border2); }
+.text-primary { color: var(--text); }
+.text-muted   { color: var(--text2); }
+.text-faint   { color: var(--text3); }
+
+/* Severity badge tokens */
+.sev-critical { background: var(--red-bg);    color: var(--red);    border-color: var(--red); }
+.sev-high     { background: var(--orange-bg); color: var(--orange); border-color: var(--orange); }
+.sev-medium   { background: var(--yellow-bg); color: var(--yellow); border-color: var(--yellow); }
+.sev-average  { background: var(--orange-bg); color: var(--orange); border-color: var(--orange); }
+.sev-low      { background: var(--green-bg);  color: var(--green);  border-color: var(--green); }
+.sev-warning  { background: var(--yellow-bg); color: var(--yellow); border-color: var(--yellow); }
+.sev-disaster { background: var(--red-bg);    color: var(--red);    border-color: var(--red); }
+.sev-information { background: var(--purple-bg); color: var(--purple); border-color: var(--purple); }
+
+/* Action badge tokens */
+.act-auto     { background: var(--green-bg);  color: var(--green);  border-color: var(--green); }
+.act-ticket   { background: var(--blue-bg);   color: var(--blue);   border-color: var(--blue); }
+.act-escalate { background: var(--red-bg);    color: var(--red);    border-color: var(--red); }
+.act-dedup    { background: var(--purple-bg); color: var(--purple); border-color: var(--purple); }
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* Table row hover */
+.tbl-row:hover td { background: var(--surface2); }
+
+/* Input/select */
+.ctrl {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.ctrl:focus { border-color: var(--blue); }
+.ctrl option { background: var(--surface); color: var(--text); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Smooth transitions */
+*, *::before, *::after { transition: background-color 0.15s, border-color 0.15s, color 0.05s; }

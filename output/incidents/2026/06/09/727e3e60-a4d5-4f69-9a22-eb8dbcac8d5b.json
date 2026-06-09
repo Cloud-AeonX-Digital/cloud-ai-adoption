@@ -1,0 +1,64 @@
+{
+  "incident_id": "727e3e60-a4d5-4f69-9a22-eb8dbcac8d5b",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:18:51.906122+00:00",
+  "logged_at": "2026-06-09T11:18:53.789291+00:00",
+  "alert": {
+    "name": "Application endpoint /api/v1/health returned 503",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "4072296b",
+    "event_id": "3e0aaa48",
+    "item_value": "503 Service Unavailable"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "availability",
+    "action": "escalate",
+    "confidence": 0.86,
+    "solution_id": null,
+    "summary": "The /api/v1/health endpoint returned HTTP 503, indicating the service is currently unavailable, likely due to a failure in the application or its dependencies."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:18:51.906122+00:00",
+      "detail": "Zabbix alert: Application endpoint /api/v1/health returned 503"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:18:53.789291+00:00",
+      "detail": "Non-actionable | HIGH | availability"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:18:53.789291+00:00",
+      "detail": "Action: escalate | Confidence: 86%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:18:53.789291+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:18:53.789291+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

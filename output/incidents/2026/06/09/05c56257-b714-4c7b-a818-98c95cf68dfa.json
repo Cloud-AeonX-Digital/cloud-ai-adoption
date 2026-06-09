@@ -1,0 +1,64 @@
+{
+  "incident_id": "05c56257-b714-4c7b-a818-98c95cf68dfa",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:17:23.326350+00:00",
+  "logged_at": "2026-06-09T11:17:24.920642+00:00",
+  "alert": {
+    "name": "AWS ELB: All targets unhealthy in target group",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "3105fb20",
+    "event_id": "ca0438d8",
+    "item_value": "0/3 healthy"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "critical",
+    "category": "load_balancer",
+    "action": "escalate",
+    "confidence": 0.87,
+    "solution_id": null,
+    "summary": "All targets in the ELB target group are reported unhealthy, likely due to failing health checks or instance issues."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:17:23.326350+00:00",
+      "detail": "Zabbix alert: AWS ELB: All targets unhealthy in target group"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:17:24.920642+00:00",
+      "detail": "Non-actionable | CRITICAL | load_balancer"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:17:24.920642+00:00",
+      "detail": "Action: escalate | Confidence: 87%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:17:24.920642+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:17:24.920642+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

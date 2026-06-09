@@ -50,3 +50,4 @@ class IncidentResponse(BaseModel):
     incident_id: str
     action_taken: str
     ticket_id: Optional[str]
+    approval_id: Optional[str] = None

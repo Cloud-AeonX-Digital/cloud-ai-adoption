@@ -1,0 +1,70 @@
+{
+  "incident_id": "fd7f15b1-d7de-4615-b9af-9bbdb9970bb8",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T06:25:16.608998+00:00",
+  "logged_at": "2026-06-09T06:25:16.853741+00:00",
+  "alert": {
+    "name": "Linux: High memory utilization (>90% for 5m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "61f3865f",
+    "event_id": "7ba9404f",
+    "item_value": "94.2 %"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": "128"
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "high",
+    "category": "high-memory",
+    "action": "auto-remediate",
+    "confidence": 0.99,
+    "solution_id": "S002",
+    "summary": "Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send client communication email using high-memory template",
+    "Include current memory utilization value and affected host details",
+    "Advise client to review memory-intensive processes",
+    "Log incident and monitor for recurrence",
+    "If memory stays critical (>95%) for 30 min: escalate to human"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T06:25:16.608998+00:00",
+      "detail": "Zabbix alert: Linux: High memory utilization (>90% for 5m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T06:25:16.853741+00:00",
+      "detail": "Actionable | HIGH | high-memory"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T06:25:16.853741+00:00",
+      "detail": "Action: auto-remediate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T06:25:16.853741+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T06:25:16.853741+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

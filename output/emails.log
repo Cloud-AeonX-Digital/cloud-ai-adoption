@@ -1,0 +1,2675 @@
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:56.884739+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Biostadt - Website SAP PRD
+
+INCIDENT ID : b5a90f3b-85f3-4a9c-8953-66e2288a0a2f
+HOST        : Biostadt - Website SAP PRD (10.0.1.50)
+CLIENT      : Biostadt - Website SAP PRD
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:57.827730+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — BioStadt - SAP PRD APP 1
+
+INCIDENT ID : 56914814-6399-457b-8b3e-8f61c4c216de
+HOST        : BioStadt - SAP PRD APP 1 (10.0.2.10)
+CLIENT      : BioStadt - SAP PRD APP 1
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:58.598912+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: CPU queue length is too high — Kairish - PROD SAP Router DMZ (Jump Server)
+
+INCIDENT ID : 670ed170-26d9-43cd-ae9b-9ce5c9df2840
+HOST        : Kairish - PROD SAP Router DMZ (Jump Server) (10.0.3.20)
+CLIENT      : Kairish - PROD SAP Router DMZ (Jump Server)
+ALERT       : Windows: CPU queue length is too high
+SEVERITY    : WARNING
+VALUE       : 12 items/sec
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S007): Windows: CPU queue length is too high
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:59.138306+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" is not running — Ashapura - SAP PROD APP
+
+INCIDENT ID : 87f4f4e4-bbab-445d-b3b8-f86ecd48090e
+HOST        : Ashapura - SAP PROD APP (10.0.4.5)
+CLIENT      : Ashapura - SAP PROD APP
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" is not running
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" is not running
+
+SUGGESTED:
+Attempt service restart via SSM Run Command: Start-Service AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:59.582507+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated — ECS Instance - Microservice-Nexus-UAT
+
+INCIDENT ID : e91ec159-2aea-42f0-a819-e294f8ee25f2
+HOST        : ECS Instance - Microservice-Nexus-UAT (10.0.5.100)
+CLIENT      : ECS Instance - Microservice-Nexus-UAT
+ALERT       : AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T06:51:59.977077+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Rahman - Web App Server
+
+INCIDENT ID : f32098ae-e3c9-40bc-bd32-b67c33b4f3a8
+HOST        : Rahman - Web App Server (10.0.6.15)
+CLIENT      : Rahman - Web App Server
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:24.789879+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Biostadt - Website SAP PRD
+
+INCIDENT ID : bdd9187b-8292-4f2d-a410-7eae1be28794
+HOST        : Biostadt - Website SAP PRD (10.0.1.50)
+CLIENT      : Biostadt - Website SAP PRD
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:25.067845+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — BioStadt - SAP PRD APP 1
+
+INCIDENT ID : 9d93a7f8-b14c-4714-93f1-20fab5e04fdc
+HOST        : BioStadt - SAP PRD APP 1 (10.0.2.10)
+CLIENT      : BioStadt - SAP PRD APP 1
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:25.286066+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: CPU queue length is too high — Kairish - PROD SAP Router DMZ (Jump Server)
+
+INCIDENT ID : ac15bd2c-88ab-423e-bb20-c85eaaa894c7
+HOST        : Kairish - PROD SAP Router DMZ (Jump Server) (10.0.3.20)
+CLIENT      : Kairish - PROD SAP Router DMZ (Jump Server)
+ALERT       : Windows: CPU queue length is too high
+SEVERITY    : WARNING
+VALUE       : 12 items/sec
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S007): Windows: CPU queue length is too high
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:25.765280+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" is not running — Ashapura - SAP PROD APP
+
+INCIDENT ID : d6d2d376-78be-446d-b9aa-38622751b43f
+HOST        : Ashapura - SAP PROD APP (10.0.4.5)
+CLIENT      : Ashapura - SAP PROD APP
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" is not running
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" is not running
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:26.033197+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated — ECS Instance - Microservice-Nexus-UAT
+
+INCIDENT ID : 6a6e4d10-e586-42a9-813e-50458df7e4af
+HOST        : ECS Instance - Microservice-Nexus-UAT (10.0.5.100)
+CLIENT      : ECS Instance - Microservice-Nexus-UAT
+ALERT       : AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:06:26.838254+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Rahman - Web App Server
+
+INCIDENT ID : da286a66-b787-4e41-b7e7-9543e5884e41
+HOST        : Rahman - Web App Server (10.0.6.15)
+CLIENT      : Rahman - Web App Server
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:08.595464+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Biostadt - Website SAP PRD
+
+INCIDENT ID : 26283439-94c2-4b37-921f-7a2c83ba25ce
+HOST        : Biostadt - Website SAP PRD (10.0.1.50)
+CLIENT      : Biostadt - Website SAP PRD
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:08.908176+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — BioStadt - SAP PRD APP 1
+
+INCIDENT ID : 5549f9f0-e533-443d-8f04-8e53428a7ae2
+HOST        : BioStadt - SAP PRD APP 1 (10.0.2.10)
+CLIENT      : BioStadt - SAP PRD APP 1
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:09.385860+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: CPU queue length is too high — Kairish - PROD SAP Router DMZ (Jump Server)
+
+INCIDENT ID : e81c69d9-9338-47a3-be1a-8c5206f7c3d9
+HOST        : Kairish - PROD SAP Router DMZ (Jump Server) (10.0.3.20)
+CLIENT      : Kairish - PROD SAP Router DMZ (Jump Server)
+ALERT       : Windows: CPU queue length is too high
+SEVERITY    : WARNING
+VALUE       : 12 items/sec
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S007): Windows: CPU queue length is too high
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:09.693584+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" is not running — Ashapura - SAP PROD APP
+
+INCIDENT ID : 1c84ddd4-66e1-4284-85c9-2893aa0593cf
+HOST        : Ashapura - SAP PROD APP (10.0.4.5)
+CLIENT      : Ashapura - SAP PROD APP
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" is not running
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" is not running
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:10.369617+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated — ECS Instance - Microservice-Nexus-UAT
+
+INCIDENT ID : fc8a89aa-b62f-4748-b614-9d5721a95e4f
+HOST        : ECS Instance - Microservice-Nexus-UAT (10.0.5.100)
+CLIENT      : ECS Instance - Microservice-Nexus-UAT
+ALERT       : AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-05T07:49:10.687209+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Rahman - Web App Server
+
+INCIDENT ID : 3b9ac67d-34bf-40b6-bb28-a28cd2d8acd3
+HOST        : Rahman - Web App Server (10.0.6.15)
+CLIENT      : Rahman - Web App Server
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:23:58.526476+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : 7f754e7b-2a37-45fe-98bf-bf72941d6c8d
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:24.274244+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : d1abeaef-e98d-4bb9-8e8c-9ac51fd402b1
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:25.019840+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : e02043d6-572a-4529-8db7-be662d566657
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:25.818176+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : 881b5d9a-ed43-4edf-90b9-aaa2b2b7bb60
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:26.553776+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : 7b13a894-6c9f-4a9a-8b45-2fd3399f7d01
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:27.381705+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : 8f6454d1-eaae-4a48-bcad-568ca22aef99
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 96 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S006): Windows: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:24:28.134326+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: i-00902943a502495a5 is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : 4825f0c5-53cd-4b4c-b663-9c7cdf923a7c
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: i-00902943a502495a5 is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: i-00902943a502495a5 is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:16.304162+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : 69257c14-506c-41e7-b89d-48e6908e7d80
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:16.852583+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : fd7f15b1-d7de-4615-b9af-9bbdb9970bb8
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:17.421754+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : b27ba87e-c938-4c4c-af80-adb02d599ac0
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:18.046838+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : 2f98a5ff-e810-41d3-8df8-0f292e52c69c
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:18.647538+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : c6b26cc8-3ff9-4686-9ff3-3453811304bf
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 96 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S006): Windows: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:25:19.229781+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: i-00902943a502495a5 is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : 3d5b268d-3f71-46f0-a542-a33970ffa84f
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: i-00902943a502495a5 is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: i-00902943a502495a5 is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:42.761938+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : 1ba09c86-9600-4186-9ac7-bf1cc87571db
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:43.387114+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : b7734b91-01bf-461f-a82f-904db2c3d4d1
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:43.916345+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : b33bd6f1-ee9d-4691-9ef2-5a969f9fd721
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:44.495382+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : 47f15c14-1ce8-46e3-a88c-1aeeb73fa2b3
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:45.064015+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : a40b582f-14d1-4640-a912-9e8ab7242b17
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 96 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S006): Windows: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:26:45.680845+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: i-00902943a502495a5 is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : b1e073f5-3a4c-43e7-b664-1a7cd30ef630
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: i-00902943a502495a5 is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: i-00902943a502495a5 is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:15.898404+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : cd4f87f3-879f-427c-ae0f-07e8797033a3
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:16.656649+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 49e66c54-6514-41fa-b752-b8cc482b0cfe
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 93.7 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:17.443159+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : edf01bd4-63ea-4981-a704-9afeec253950
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:18.231938+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : 6d723094-4f54-4d79-8f9f-cbde4bd6d32a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:18.974153+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : 15146c7f-1e8a-4830-8ec1-f053498524c6
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 97 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S006): Windows: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T06:29:19.709325+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: Cloud Monitoring Tool is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : e042ad11-62d5-4e02-80d6-1e26a6afedea
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: Cloud Monitoring Tool is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:03:25.948380+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 215c6311-fc9c-4e06-9dd3-246532db8c9b
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Failed: Connection refused
+
+AI CATEGORY : service_availability
+AI SEVERITY : HIGH
+CONFIDENCE  : 87%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The CMT Backend API health check failed due to a connection refused error, indicating the service is unreachable.
+
+SUGGESTED:
+Escalate to the on‑call SRE team to investigate the backend service: verify the API process is running, check network/firewall rules, examine recent deployments or configuration changes, and review logs for connection errors.
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:08:36.720495+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 540cbf5a-83e8-4827-863f-c379b6511930
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection timed out
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:08:37.093797+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : 93d39913-d84c-4384-b78e-627d8748ad52
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:08:37.380946+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Web scenario step health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 4e282630-0737-4b26-9be4-63a511156aea
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Web scenario step health check failed
+SEVERITY    : HIGH
+VALUE       : timeout
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001b): Web scenario step health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:10.790334+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 391957ad-6976-43c4-8355-7d23b64344cd
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection timed out
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:11.063790+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 1d7dce64-059d-4ba8-a724-7001389a3bb4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 91.3 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:11.351148+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : b4b38b83-57eb-4f4c-95c8-51fe3b8d179a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:11.636297+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : 6866a30e-6185-4084-98a9-12591403f53f
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : ⚙️ Auto-Remediation Triggered
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:11.927183+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : 160dba34-be7b-4248-98aa-3d745349f15c
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 97 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S006): Linux: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:12.192663+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Load average is too high (per CPU load over 1.5 for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 53a1afab-5b81-43db-8c9c-302aca340918
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Load average is too high (per CPU load over 1.5 for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 2.1
+
+AI CATEGORY : high-load
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S011): Linux: Load average is too high (per CPU load over 1.5 for 5m)
+
+SUGGESTED:
+Send client communication email using high-load template for their AWS account
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:12.461949+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: Cloud Monitoring Tool is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : da299b6d-e6c4-47f8-96f9-2dbf5d79b1ea
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: Cloud Monitoring Tool is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T07:09:12.733513+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟢 [LOW] Linux: Active checks are not available — Cloud Monitoring Tool
+
+INCIDENT ID : 4f016ee4-1c93-4154-87ae-6a362a1b2c9b
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Active checks are not available
+SEVERITY    : HIGH
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : LOW
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S005): Linux: Active checks are not available
+
+SUGGESTED:
+Send notification to ops team — active checks unavailable on host
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T08:05:13.346340+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : e9a92ad3-2ad8-423a-8b98-b736b554909f
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% used on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client communication email using disk-space template for their AWS account
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T08:05:55.191936+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : 3ea02d65-00f3-4cd6-96a8-7c637d24c2ad
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client communication email using disk-space template for their AWS account
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T08:06:38.456889+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : e9d7ae66-06af-4826-88fc-9d0d2b142ec4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client email with disk-space template including current usage, filesystem path, and expansion options
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T08:07:31.328416+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : 977e2276-c07b-4083-8872-ed649b3bb009
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client email with disk-space template including current usage, filesystem path, and expansion options
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/ac1e26ce-a0ba-4f59-82ca-88ed5f04e6f0/approve
+REJECT:  http://172.25.29.253:8000/approvals/ac1e26ce-a0ba-4f59-82ca-88ed5f04e6f0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T09:18:34.639206+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : bb27a213-3f19-4800-af1f-7c94f09a6d43
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/ba6a06b4-ab14-4c27-97d4-7fe80a666853/approve
+REJECT:  http://172.25.29.253:8000/approvals/ba6a06b4-ab14-4c27-97d4-7fe80a666853/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T09:18:35.546143+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 4c17ec13-a540-4438-a48f-9bce48e5b624
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 93.5 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/d4e1d33e-e865-4781-b448-0809d2fe981c/approve
+REJECT:  http://172.25.29.253:8000/approvals/d4e1d33e-e865-4781-b448-0809d2fe981c/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T09:18:36.483672+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : 752a502c-742d-4e91-a5da-a8ae32c4c775
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 97 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S006): Windows: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/255032de-acad-4e56-90ba-9db6437436ec/approve
+REJECT:  http://172.25.29.253:8000/approvals/255032de-acad-4e56-90ba-9db6437436ec/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T09:18:37.033706+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : 8f0fd0f5-d287-4788-bc0c-3f491ea96adb
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client email with disk-space template including current usage, filesystem path, and expansion options
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/366788ba-d6f8-4743-85f2-128d110b14f1/approve
+REJECT:  http://172.25.29.253:8000/approvals/366788ba-d6f8-4743-85f2-128d110b14f1/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T09:18:37.875581+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: Cloud Monitoring Tool is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : e68d291b-d2a8-40c3-9290-e83efc614de4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: Cloud Monitoring Tool is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/19d3e8de-2743-4fef-85be-fda05c2d0b25/approve
+REJECT:  http://172.25.29.253:8000/approvals/19d3e8de-2743-4fef-85be-fda05c2d0b25/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T10:15:38.046860+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Cloud Monitoring Tool
+
+INCIDENT ID : 85dc7f1c-ab38-43cb-aa0c-bd0ace2e4b2b
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001): This Website is Down
+
+SUGGESTED:
+Perform HTTP health check on the host URL
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/18be719f-2278-4e9e-b12a-bd5452cfe533/approve
+REJECT:  http://172.25.29.253:8000/approvals/18be719f-2278-4e9e-b12a-bd5452cfe533/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T10:15:38.659669+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 06965024-f2d0-4b4a-96b8-bbbea5342881
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 93.5 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/3b5c17c9-2eeb-4961-a267-f61be616453c/approve
+REJECT:  http://172.25.29.253:8000/approvals/3b5c17c9-2eeb-4961-a267-f61be616453c/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T10:15:40.313920+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : 6ae3924a-e1eb-49f0-be21-ccafc62f1f75
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client email with disk-space template including current usage, filesystem path, and expansion options
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/4a255609-f8ce-49ff-8968-347e08ea0235/approve
+REJECT:  http://172.25.29.253:8000/approvals/4a255609-f8ce-49ff-8968-347e08ea0235/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T10:15:40.858944+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: Cloud Monitoring Tool is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : 89090de8-5f4b-4f4b-aa58-e5ec1142a31c
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: Cloud Monitoring Tool is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/fd0fbbdf-8d2e-4cf1-acaf-4acd950da8e2/approve
+REJECT:  http://172.25.29.253:8000/approvals/fd0fbbdf-8d2e-4cf1-acaf-4acd950da8e2/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:01:53.863255+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 09481eb0-1778-4316-8711-e58bb1510117
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : Connection refused to http://9.210.2.110:8000/docs
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/b0ff5e42-fdbf-4246-b81f-d8c5efb7ca4f/approve
+REJECT:  http://172.25.29.253:8000/approvals/b0ff5e42-fdbf-4246-b81f-d8c5efb7ca4f/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:03:37.593878+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: High memory utilization (>90% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : ee523bcf-fe1e-40fa-bdd6-57b482d680fb
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 93.7 %
+
+AI CATEGORY : high-memory
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S002): Linux: High memory utilization (>90% for 5m)
+
+SUGGESTED:
+Send client communication email using high-memory template
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/1faaa4dd-f6a6-4485-b7b3-a34e6592f3a9/approve
+REJECT:  http://172.25.29.253:8000/approvals/1faaa4dd-f6a6-4485-b7b3-a34e6592f3a9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:04.374427+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic) — Cloud Monitoring Tool
+
+INCIDENT ID : 2c85a465-2035-415a-bc83-4b600b81688a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S003): Windows: "AwsReplicationVolumeUpdaterService" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)
+
+SUGGESTED:
+Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/bc2ea15f-71a8-46e8-9b76-728c2981bbf6/approve
+REJECT:  http://172.25.29.253:8000/approvals/bc2ea15f-71a8-46e8-9b76-728c2981bbf6/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:05.246810+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Zabbix agent is not available (or nodata for 30m) — Cloud Monitoring Tool
+
+INCIDENT ID : b54d8631-ced4-4e67-9e15-463c34ec8069
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S004): Linux: Zabbix agent is not available (or nodata for 30m)
+
+SUGGESTED:
+Attempt Zabbix agent service restart via SSM Run Command
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/d76d8cdc-e58f-4e14-933d-f6cffc1e7de9/approve
+REJECT:  http://172.25.29.253:8000/approvals/d76d8cdc-e58f-4e14-933d-f6cffc1e7de9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:06.173236+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟢 [LOW] Linux: Active checks are not available — Cloud Monitoring Tool
+
+INCIDENT ID : 6b82d7e4-9998-4579-b18e-9455fc3e3615
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Active checks are not available
+SEVERITY    : HIGH
+VALUE       : N/A
+
+AI CATEGORY : agent-unavailable
+AI SEVERITY : LOW
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S005): Linux: Active checks are not available
+
+SUGGESTED:
+Send notification to ops team — active checks unavailable on host
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/17e5db54-0380-475a-888e-9b8ed0641714/approve
+REJECT:  http://172.25.29.253:8000/approvals/17e5db54-0380-475a-888e-9b8ed0641714/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:07.087010+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: High CPU utilization — Cloud Monitoring Tool
+
+INCIDENT ID : 827cc6ed-2679-47b0-90c2-d63d288c9870
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: High CPU utilization
+SEVERITY    : WARNING
+VALUE       : 97 %
+
+AI CATEGORY : high-cpu
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S006): Linux: High CPU utilization
+
+SUGGESTED:
+Send client communication email using high-cpu template for their AWS account
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/5f339cc3-d2e3-467e-869e-684a6f4e4dc9/approve
+REJECT:  http://172.25.29.253:8000/approvals/5f339cc3-d2e3-467e-869e-684a6f4e4dc9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:07.806619+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: disk space is critically low — Cloud Monitoring Tool
+
+INCIDENT ID : fb3bc17e-af81-4a4b-b16d-8e1ccbf0c814
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: disk space is critically low
+SEVERITY    : HIGH
+VALUE       : 95% on /dev/nvme0n1p1
+
+AI CATEGORY : disk-space
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S008): Linux: disk space is critically low
+
+SUGGESTED:
+Send client email with disk-space template including current usage, filesystem path, and expansion options
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/09c8f910-fa9e-46da-a607-556247bc4abf/approve
+REJECT:  http://172.25.29.253:8000/approvals/09c8f910-fa9e-46da-a607-556247bc4abf/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:08.377130+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: Cloud Monitoring Tool is terminated — Cloud Monitoring Tool
+
+INCIDENT ID : 7246de81-91c3-434c-b1e5-e229b0852e3d
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS EC2: Cloud Monitoring Tool is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : ec2-terminated
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 99%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated
+
+SUGGESTED:
+Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/a42fab64-a98f-4a8b-91e6-2ab65e3882bf/approve
+REJECT:  http://172.25.29.253:8000/approvals/a42fab64-a98f-4a8b-91e6-2ab65e3882bf/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:10.032821+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: System has just been restarted — Cloud Monitoring Tool
+
+INCIDENT ID : ef6dd988-7635-40f8-853f-2330633050ce
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: System has just been restarted
+SEVERITY    : WARNING
+VALUE       : uptime < 10m
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/bbc62c69-cb1c-4031-9bed-485ac179bfb5/approve
+REJECT:  http://172.25.29.253:8000/approvals/bbc62c69-cb1c-4031-9bed-485ac179bfb5/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:11:10.583673+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: Load average is too high (per CPU load over 1.5 for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : f23c6b44-f6a8-472b-bede-e9e10b003736
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: Load average is too high (per CPU load over 1.5 for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 2.3
+
+AI CATEGORY : high-load
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 99%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+Known pattern matched (S011): Linux: Load average is too high (per CPU load over 1.5 for 5m)
+
+SUGGESTED:
+Send client communication email using high-load template for their AWS account
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/6a09aa8d-c332-4e06-b643-b7cf4d4ffd87/approve
+REJECT:  http://172.25.29.253:8000/approvals/6a09aa8d-c332-4e06-b643-b7cf4d4ffd87/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:15:16.042419+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] AWS RDS: Too many connections on database — Cloud Monitoring Tool
+
+INCIDENT ID : 3d7f1d23-2c5c-45ca-a9db-ef759c34f619
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS RDS: Too many connections on database
+SEVERITY    : HIGH
+VALUE       : max_connections exceeded: 150/150
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/275b8078-a639-4dce-873d-c5c4606cebb4/approve
+REJECT:  http://172.25.29.253:8000/approvals/275b8078-a639-4dce-873d-c5c4606cebb4/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:15:17.836725+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] SSL certificate expires in 7 days — Cloud Monitoring Tool
+
+INCIDENT ID : be04a7cb-f15a-44af-99c5-ec2261fdcb13
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : SSL certificate expires in 7 days
+SEVERITY    : AVERAGE
+VALUE       : expires 2026-06-16
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e3d9cc12-f62d-40b0-a03e-d5f17b4ba543/approve
+REJECT:  http://172.25.29.253:8000/approvals/e3d9cc12-f62d-40b0-a03e-d5f17b4ba543/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:15:19.809677+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] AWS S3: Bucket public access detected — Cloud Monitoring Tool
+
+INCIDENT ID : ceb321a4-d743-4b6b-b961-0a33bc4131c7
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS S3: Bucket public access detected
+SEVERITY    : HIGH
+VALUE       : bucket: aeonx-client-docs
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/d1e6c42e-64b0-4650-b364-12ddcbc4df23/approve
+REJECT:  http://172.25.29.253:8000/approvals/d1e6c42e-64b0-4650-b364-12ddcbc4df23/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:15:21.522148+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CloudFront: High 5xx error rate (>5% for 10m) — Cloud Monitoring Tool
+
+INCIDENT ID : 5fe3f0c1-e7ef-498f-9e1b-e7f4308f0d44
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CloudFront: High 5xx error rate (>5% for 10m)
+SEVERITY    : AVERAGE
+VALUE       : 7.3 % errors
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/0a28376e-392d-4be0-ac1f-cb1e5c02ed68/approve
+REJECT:  http://172.25.29.253:8000/approvals/0a28376e-392d-4be0-ac1f-cb1e5c02ed68/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:15:23.192420+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] AWS ELB: All targets unhealthy in target group — Cloud Monitoring Tool
+
+INCIDENT ID : 119cf358-3209-4bd0-a3d6-61491359db4b
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS ELB: All targets unhealthy in target group
+SEVERITY    : DISASTER
+VALUE       : 0/3 healthy
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Classification failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/a800ad3c-c510-46fd-b0b5-28551524d69a/approve
+REJECT:  http://172.25.29.253:8000/approvals/a800ad3c-c510-46fd-b0b5-28551524d69a/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:17:16.689315+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] AWS RDS: Too many connections on database — Cloud Monitoring Tool
+
+INCIDENT ID : 5d8ab6fc-76a4-49f6-ba02-03df401c1b15
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS RDS: Too many connections on database
+SEVERITY    : HIGH
+VALUE       : max_connections exceeded: 150/150
+
+AI CATEGORY : database
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The RDS instance hit its max_connections limit (150/150), likely caused by a surge in traffic or a connection leak.
+
+SUGGESTED:
+Escalate to the DB/DevOps team: review current connection usage, inspect application connection pooling, check for long‑running or idle connections, consider increasing max_connections or scaling the instance, and implement proper connection management.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/243c6355-09c9-4a6f-91ff-4f42bd504950/approve
+REJECT:  http://172.25.29.253:8000/approvals/243c6355-09c9-4a6f-91ff-4f42bd504950/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:17:18.602238+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] SSL certificate expires in 7 days — Cloud Monitoring Tool
+
+INCIDENT ID : 452e8de2-5420-45b2-9ea6-cb39493ba06f
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : SSL certificate expires in 7 days
+SEVERITY    : AVERAGE
+VALUE       : expires 2026-06-16
+
+AI CATEGORY : certificate_expiration
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 96%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The SSL certificate monitored by the cloud tool will expire on 2026-06-16, indicating an upcoming expiration that could cause service disruption.
+
+SUGGESTED:
+Escalate to the appropriate team to verify the certificate details, obtain a renewed certificate, and replace the expiring one in all relevant services before the expiration date.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/dc07cf5b-6b1b-482c-b818-549e85e349c1/approve
+REJECT:  http://172.25.29.253:8000/approvals/dc07cf5b-6b1b-482c-b818-549e85e349c1/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:17:20.625502+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] AWS S3: Bucket public access detected — Cloud Monitoring Tool
+
+INCIDENT ID : 303b548d-46d1-4da4-a58f-d479f064a29e
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS S3: Bucket public access detected
+SEVERITY    : HIGH
+VALUE       : bucket: aeonx-client-docs
+
+AI CATEGORY : security
+AI SEVERITY : HIGH
+CONFIDENCE  : 95%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Public access was detected on S3 bucket 'aeonx-client-docs', likely caused by an overly permissive bucket policy or ACL.
+
+SUGGESTED:
+A human should review the bucket's policy, ACLs, and Block Public Access settings, check recent access logs for unauthorized activity, and adjust permissions to restrict public access as appropriate.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/ea2d29a1-66d9-4c61-810d-b7e074aba7a0/approve
+REJECT:  http://172.25.29.253:8000/approvals/ea2d29a1-66d9-4c61-810d-b7e074aba7a0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:17:22.787547+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] CloudFront: High 5xx error rate (>5% for 10m) — Cloud Monitoring Tool
+
+INCIDENT ID : 4226b2f6-6670-427a-89bc-3f770be9287a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CloudFront: High 5xx error rate (>5% for 10m)
+SEVERITY    : AVERAGE
+VALUE       : 7.3% errors
+
+AI CATEGORY : availability
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 85%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+CloudFront is returning 5xx errors at 7.3% over the last 10 minutes, likely caused by origin server failures or edge‑location issues.
+
+SUGGESTED:
+Review CloudFront access and error logs, verify the health and response of the origin servers, check recent configuration changes or deployments, and if the issue persists, open a ticket with AWS support for deeper investigation.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/8222bb68-6367-43e7-9329-639bc12e7b9f/approve
+REJECT:  http://172.25.29.253:8000/approvals/8222bb68-6367-43e7-9329-639bc12e7b9f/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:17:24.920156+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS ELB: All targets unhealthy in target group — Cloud Monitoring Tool
+
+INCIDENT ID : 05c56257-b714-4c7b-a818-98c95cf68dfa
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : AWS ELB: All targets unhealthy in target group
+SEVERITY    : DISASTER
+VALUE       : 0/3 healthy
+
+AI CATEGORY : load_balancer
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 87%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+All targets in the ELB target group are reported unhealthy, likely due to failing health checks or instance issues.
+
+SUGGESTED:
+Investigate the health check configuration, verify the health of the underlying instances, check security groups, network ACLs, and instance logs for errors, and ensure the target group is correctly attached to healthy resources.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/42a1347d-a9b3-4dc1-9f67-f59c3c241e05/approve
+REJECT:  http://172.25.29.253:8000/approvals/42a1347d-a9b3-4dc1-9f67-f59c3c241e05/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:18:53.782298+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Application endpoint /api/v1/health returned 503 — Cloud Monitoring Tool
+
+INCIDENT ID : 727e3e60-a4d5-4f69-9a22-eb8dbcac8d5b
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Application endpoint /api/v1/health returned 503
+SEVERITY    : HIGH
+VALUE       : 503 Service Unavailable
+
+AI CATEGORY : availability
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The /api/v1/health endpoint returned HTTP 503, indicating the service is currently unavailable, likely due to a failure in the application or its dependencies.
+
+SUGGESTED:
+Investigate recent deployments, check application and infrastructure logs, examine resource usage and upstream dependencies, and consider restarting or scaling the service if needed.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/cf6fa093-dfb4-4dc7-90eb-fab226ce1e30/approve
+REJECT:  http://172.25.29.253:8000/approvals/cf6fa093-dfb4-4dc7-90eb-fab226ce1e30/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:18:55.771077+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: Memory usage exceeded threshold (85% for 10m) — Cloud Monitoring Tool
+
+INCIDENT ID : a29a895f-49e4-4aeb-89b8-b80bac49c9ad
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Windows: Memory usage exceeded threshold (85% for 10m)
+SEVERITY    : AVERAGE
+VALUE       : 87.2 %
+
+AI CATEGORY : memory_utilization
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Windows host memory usage rose above the 85% threshold for 10 minutes, likely caused by high workload or a memory leak.
+
+SUGGESTED:
+Escalate to the on‑call engineer: review top memory‑consuming processes, check for recent deployments or leaks, and consider scaling resources or restarting affected services.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/28a62171-ea91-470e-b6ed-e69d9e8f0125/approve
+REJECT:  http://172.25.29.253:8000/approvals/28a62171-ea91-470e-b6ed-e69d9e8f0125/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:18:57.797860+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Critical process uvicorn not found in process list — Cloud Monitoring Tool
+
+INCIDENT ID : 3847c3b5-b118-4df4-9438-bebd32205e27
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Critical process uvicorn not found in process list
+SEVERITY    : HIGH
+VALUE       : 0 processes
+
+AI CATEGORY : process_missing
+AI SEVERITY : HIGH
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The uvicorn process is not running on the host, likely due to a crash, failed start, or deployment issue.
+
+SUGGESTED:
+Investigate the host's system logs, uvicorn service logs, and recent deployment changes to determine why uvicorn failed to start or stopped, then restart the service or remediate the underlying cause.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/18f6e7a8-d185-4ff4-99cd-8e4e449cfc17/approve
+REJECT:  http://172.25.29.253:8000/approvals/18f6e7a8-d185-4ff4-99cd-8e4e449cfc17/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:18:59.747042+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] No data received from host for 45 minutes — Cloud Monitoring Tool
+
+INCIDENT ID : 55520b88-374a-44f2-9bd5-9fe31d5a5bed
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : No data received from host for 45 minutes
+SEVERITY    : AVERAGE
+VALUE       : last seen 45m ago
+
+AI CATEGORY : monitoring
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 82%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The monitoring system has not received any data from the host for 45 minutes, likely indicating the host is down, the monitoring agent stopped, or network connectivity issues.
+
+SUGGESTED:
+Investigate the host's status: verify it is up, check network connectivity, confirm the monitoring agent is running and properly configured, review host and agent logs, and restart or reinstall the agent if needed.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/cab716b2-7ded-4b32-af9f-d5a3e2e9a9a5/approve
+REJECT:  http://172.25.29.253:8000/approvals/cab716b2-7ded-4b32-af9f-d5a3e2e9a9a5/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:02.050978+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Passive agent check timeout on host — Cloud Monitoring Tool
+
+INCIDENT ID : abdd1e05-bb3c-4be5-ba8e-6e614e045bfa
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Passive agent check timeout on host
+SEVERITY    : AVERAGE
+VALUE       : timeout 30s
+
+AI CATEGORY : monitoring
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 78%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The passive monitoring agent on the host did not respond within the 30‑second timeout, likely due to an agent crash, network latency, or resource exhaustion.
+
+SUGGESTED:
+Check the status and logs of the passive agent on the affected host, verify network connectivity and resource usage, and restart or reinstall the agent if it is unresponsive.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/a5bd381e-507a-4d81-9722-926f015d7882/approve
+REJECT:  http://172.25.29.253:8000/approvals/a5bd381e-507a-4d81-9722-926f015d7882/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:04.670259+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: CPU steal time is too high (over 20% for 5m) — Cloud Monitoring Tool
+
+INCIDENT ID : 0b7fdc52-bafb-437f-b55e-1db0ee13b733
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: CPU steal time is too high (over 20% for 5m)
+SEVERITY    : WARNING
+VALUE       : 23.4 %
+
+AI CATEGORY : performance
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 85%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+CPU steal time on the host exceeded 20% for 5 minutes, likely caused by hypervisor contention or a noisy neighbor in the shared cloud environment.
+
+SUGGESTED:
+Investigate the underlying hypervisor and host metrics, identify any noisy neighbor or over‑committed resources, consider migrating the VM to a less contended host or scaling resources, and engage the cloud provider if the issue persists.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e7019951-0dd0-48c8-b28d-ada238fa5e6d/approve
+REJECT:  http://172.25.29.253:8000/approvals/e7019951-0dd0-48c8-b28d-ada238fa5e6d/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:06.509831+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Filesystem /data is 98% full — write operations failing — Cloud Monitoring Tool
+
+INCIDENT ID : d4cd3565-bc86-4dca-a627-fd4258a3eed2
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Filesystem /data is 98% full — write operations failing
+SEVERITY    : HIGH
+VALUE       : 98% used
+
+AI CATEGORY : storage
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The /data filesystem is 98% full, causing write operations to fail, likely due to uncontrolled data growth or log accumulation.
+
+SUGGESTED:
+A human should examine the /data volume usage, identify and remove or archive large/old files, consider expanding the storage, and implement monitoring/alerts to prevent future saturation.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/f1b1d631-76c3-45a9-ba75-d5516eb8e7da/approve
+REJECT:  http://172.25.29.253:8000/approvals/f1b1d631-76c3-45a9-ba75-d5516eb8e7da/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:08.139637+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] CloudWatch: EC2 instance state changed to terminated — Cloud Monitoring Tool
+
+INCIDENT ID : f37b8b83-bd48-405a-aac4-9ed116c04b0a
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CloudWatch: EC2 instance state changed to terminated
+SEVERITY    : DISASTER
+VALUE       : state: terminated
+
+AI CATEGORY : compute/ec2
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+An EC2 instance changed state to terminated, likely due to manual termination, an Auto Scaling policy, or a failure that triggered termination.
+
+SUGGESTED:
+Review CloudTrail logs for termination events, check Auto Scaling group policies, examine recent deployment or configuration changes, and verify if the termination was expected or indicates a failure.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/70531313-f15e-425d-822f-ffd8fd03d63d/approve
+REJECT:  http://172.25.29.253:8000/approvals/70531313-f15e-425d-822f-ffd8fd03d63d/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:10.277474+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] System uptime reset detected — host rebooted unexpectedly — Cloud Monitoring Tool
+
+INCIDENT ID : ea86250e-eee0-46e1-81ea-c25614d8d166
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : System uptime reset detected — host rebooted unexpectedly
+SEVERITY    : WARNING
+VALUE       : uptime: 2m
+
+AI CATEGORY : host-reboot
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 85%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The monitored host rebooted unexpectedly, resetting uptime to 2 minutes, likely due to a crash, OS panic, or external restart.
+
+SUGGESTED:
+Escalate to the on‑call SRE: review system and cloud provider logs, check for kernel panics, OOM events, recent configuration changes, and any scheduled maintenance or external reboot triggers.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/af5761ee-eff4-431b-b633-2a2589fe87f1/approve
+REJECT:  http://172.25.29.253:8000/approvals/af5761ee-eff4-431b-b633-2a2589fe87f1/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-09T11:19:12.188758+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: System load per CPU exceeded 2.0 for 15 minutes — Cloud Monitoring Tool
+
+INCIDENT ID : 6d74afcf-8de1-46ca-8a44-070c12051e53
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: System load per CPU exceeded 2.0 for 15 minutes
+SEVERITY    : AVERAGE
+VALUE       : load: 2.4
+
+AI CATEGORY : performance
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 86%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+The host's CPU load per core reached 2.4, exceeding the 2.0 threshold for 15 minutes, likely caused by sustained high CPU demand from one or more processes.
+
+SUGGESTED:
+Investigate the top CPU-consuming processes on the host, review recent workload changes, and consider scaling resources or optimizing the offending workloads.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/8721d489-b43e-4cc6-ab4e-3c7a105d5d44/approve
+REJECT:  http://172.25.29.253:8000/approvals/8721d489-b43e-4cc6-ab4e-3c7a105d5d44/reject
+Expires in 24 hours.
+
+============================================================

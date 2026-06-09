@@ -1,0 +1,68 @@
+{
+  "incident_id": "6b82d7e4-9998-4579-b18e-9455fc3e3615",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:11:05.575688+00:00",
+  "logged_at": "2026-06-09T11:11:06.174783+00:00",
+  "alert": {
+    "name": "Linux: Active checks are not available",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "0a0a76e0",
+    "event_id": "6f33e322",
+    "item_value": ""
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "low",
+    "category": "agent-unavailable",
+    "action": "create-ticket",
+    "confidence": 0.99,
+    "solution_id": "S005",
+    "summary": "Known pattern matched (S005): Linux: Active checks are not available"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Send notification to ops team \u2014 active checks unavailable on host",
+    "Log incident for monitoring",
+    "No automated action taken \u2014 monitor for recurrence"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:11:05.575688+00:00",
+      "detail": "Zabbix alert: Linux: Active checks are not available"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:11:06.174783+00:00",
+      "detail": "Non-actionable | LOW | agent-unavailable"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:11:06.174783+00:00",
+      "detail": "Action: create-ticket | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:11:06.174783+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:11:06.174783+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

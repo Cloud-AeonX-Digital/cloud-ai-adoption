@@ -1,0 +1,71 @@
+{
+  "incident_id": "b5a90f3b-85f3-4a9c-8953-66e2288a0a2f",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-05T06:51:55.122839+00:00",
+  "logged_at": "2026-06-05T06:51:56.887524+00:00",
+  "alert": {
+    "name": "This Website is Down",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "12001",
+    "event_id": "7868001",
+    "item_value": "Connection refused"
+  },
+  "host": {
+    "name": "Biostadt - Website SAP PRD",
+    "ip": "10.0.1.50",
+    "zabbix_host_id": "11819",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "Biostadt - Website SAP PRD",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "high",
+    "category": "website-down",
+    "action": "auto-remediate",
+    "confidence": 0.99,
+    "solution_id": "S001",
+    "summary": "Known pattern matched (S001): This Website is Down"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Perform HTTP health check on the host URL",
+    "If check fails: verify EC2 instance status",
+    "Restart EC2 instance (tag-gated: auto-restart=true)",
+    "Wait for instance to reach running state",
+    "Re-run HTTP health check to confirm recovery",
+    "If still down after restart: escalate to human"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-05T06:51:55.122839+00:00",
+      "detail": "Zabbix alert: This Website is Down"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-05T06:51:56.887524+00:00",
+      "detail": "Actionable | HIGH | website-down"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-05T06:51:56.887524+00:00",
+      "detail": "Action: auto-remediate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-05T06:51:56.887524+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-05T06:51:56.887524+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "incident_id": "3847c3b5-b118-4df4-9438-bebd32205e27",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:18:56.108647+00:00",
+  "logged_at": "2026-06-09T11:18:57.799783+00:00",
+  "alert": {
+    "name": "Critical process uvicorn not found in process list",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "c21c1179",
+    "event_id": "7eb8b972",
+    "item_value": "0 processes"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "process_missing",
+    "action": "escalate",
+    "confidence": 0.86,
+    "solution_id": null,
+    "summary": "The uvicorn process is not running on the host, likely due to a crash, failed start, or deployment issue."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:18:56.108647+00:00",
+      "detail": "Zabbix alert: Critical process uvicorn not found in process list"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:18:57.799783+00:00",
+      "detail": "Non-actionable | HIGH | process_missing"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:18:57.799783+00:00",
+      "detail": "Action: escalate | Confidence: 86%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:18:57.799783+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:18:57.799783+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

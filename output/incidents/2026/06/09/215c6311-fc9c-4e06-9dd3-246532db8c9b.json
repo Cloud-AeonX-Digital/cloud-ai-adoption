@@ -1,0 +1,64 @@
+{
+  "incident_id": "215c6311-fc9c-4e06-9dd3-246532db8c9b",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T07:03:22.242968+00:00",
+  "logged_at": "2026-06-09T07:03:25.950914+00:00",
+  "alert": {
+    "name": "CMT Backend API: Backend health check failed",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "CMT-TEST-001",
+    "event_id": "713a091d",
+    "item_value": "Failed: Connection refused"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": "128"
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "service_availability",
+    "action": "escalate",
+    "confidence": 0.87,
+    "solution_id": null,
+    "summary": "The CMT Backend API health check failed due to a connection refused error, indicating the service is unreachable."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T07:03:22.242968+00:00",
+      "detail": "Zabbix alert: CMT Backend API: Backend health check failed"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T07:03:25.950914+00:00",
+      "detail": "Non-actionable | HIGH | service_availability"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T07:03:25.950914+00:00",
+      "detail": "Action: escalate | Confidence: 87%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T07:03:25.950914+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T07:03:25.950914+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "incident_id": "f37b8b83-bd48-405a-aac4-9ed116c04b0a",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:19:06.848759+00:00",
+  "logged_at": "2026-06-09T11:19:08.140325+00:00",
+  "alert": {
+    "name": "CloudWatch: EC2 instance state changed to terminated",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "5863f534",
+    "event_id": "261ed44e",
+    "item_value": "state: terminated"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "critical",
+    "category": "compute/ec2",
+    "action": "escalate",
+    "confidence": 0.92,
+    "solution_id": null,
+    "summary": "An EC2 instance changed state to terminated, likely due to manual termination, an Auto Scaling policy, or a failure that triggered termination."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:19:06.848759+00:00",
+      "detail": "Zabbix alert: CloudWatch: EC2 instance state changed to terminated"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:19:08.140325+00:00",
+      "detail": "Non-actionable | CRITICAL | compute/ec2"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:19:08.140325+00:00",
+      "detail": "Action: escalate | Confidence: 92%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:19:08.140325+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:19:08.140325+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

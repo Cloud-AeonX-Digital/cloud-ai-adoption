@@ -1,0 +1,69 @@
+{
+  "incident_id": "da299b6d-e6c4-47f8-96f9-2dbf5d79b1ea",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T07:09:12.224525+00:00",
+  "logged_at": "2026-06-09T07:09:12.462768+00:00",
+  "alert": {
+    "name": "AWS EC2: Cloud Monitoring Tool is terminated",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "f9cdca67",
+    "event_id": "a6b33564",
+    "item_value": "terminated"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "critical",
+    "category": "ec2-terminated",
+    "action": "escalate",
+    "confidence": 0.99,
+    "solution_id": "S009",
+    "summary": "Known pattern matched (S009): AWS EC2: Cloud Monitoring Tool is terminated"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)",
+    "If Auto Scaling instance: ignore \u2014 ASG will replace it automatically",
+    "If NOT Auto Scaling instance: immediate escalation to human",
+    "Create high-priority ticket and send urgent email"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T07:09:12.224525+00:00",
+      "detail": "Zabbix alert: AWS EC2: Cloud Monitoring Tool is terminated"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T07:09:12.462768+00:00",
+      "detail": "Non-actionable | CRITICAL | ec2-terminated"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T07:09:12.462768+00:00",
+      "detail": "Action: escalate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T07:09:12.462768+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T07:09:12.462768+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

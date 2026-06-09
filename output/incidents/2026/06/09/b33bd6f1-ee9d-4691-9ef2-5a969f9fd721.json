@@ -1,0 +1,72 @@
+{
+  "incident_id": "b33bd6f1-ee9d-4691-9ef2-5a969f9fd721",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T06:26:43.692361+00:00",
+  "logged_at": "2026-06-09T06:26:43.917110+00:00",
+  "alert": {
+    "name": "Windows: \"AwsReplicationVolumeUpdaterService\" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "0483c55a",
+    "event_id": "33a7f3ed",
+    "item_value": "stopped"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": "128"
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "medium",
+    "category": "service-down",
+    "action": "auto-remediate",
+    "confidence": 0.99,
+    "solution_id": "S003",
+    "summary": "Known pattern matched (S003): Windows: \"AwsReplicationVolumeUpdaterService\" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Attempt local service restart via SSM Run Command: net start AwsReplicationVolumeUpdaterService",
+    "Wait 60 seconds and verify service status",
+    "If local restart fails: attempt SSM Run Command full service reset",
+    "Wait 60 seconds and verify again",
+    "If SSM restart fails: restart EC2 instance (tag-gated: auto-restart=true)",
+    "Verify service running after EC2 restart",
+    "If still failing: escalate to human"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T06:26:43.692361+00:00",
+      "detail": "Zabbix alert: Windows: \"AwsReplicationVolumeUpdaterService\" (AwsReplicationVolumeUpdaterService) is not running (startup type automatic)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T06:26:43.917110+00:00",
+      "detail": "Actionable | MEDIUM | service-down"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T06:26:43.917110+00:00",
+      "detail": "Action: auto-remediate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T06:26:43.917110+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T06:26:43.917110+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "incident_id": "303b548d-46d1-4da4-a58f-d479f064a29e",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:17:19.123875+00:00",
+  "logged_at": "2026-06-09T11:17:20.626380+00:00",
+  "alert": {
+    "name": "AWS S3: Bucket public access detected",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "6693ab96",
+    "event_id": "39c6be1c",
+    "item_value": "bucket: aeonx-client-docs"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "security",
+    "action": "escalate",
+    "confidence": 0.95,
+    "solution_id": null,
+    "summary": "Public access was detected on S3 bucket 'aeonx-client-docs', likely caused by an overly permissive bucket policy or ACL."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:17:19.123875+00:00",
+      "detail": "Zabbix alert: AWS S3: Bucket public access detected"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:17:20.626380+00:00",
+      "detail": "Non-actionable | HIGH | security"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:17:20.626380+00:00",
+      "detail": "Action: escalate | Confidence: 95%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:17:20.626380+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:17:20.626380+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

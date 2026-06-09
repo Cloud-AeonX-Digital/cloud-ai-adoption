@@ -1,0 +1,64 @@
+{
+  "incident_id": "55520b88-374a-44f2-9bd5-9fe31d5a5bed",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:18:58.134649+00:00",
+  "logged_at": "2026-06-09T11:18:59.748296+00:00",
+  "alert": {
+    "name": "No data received from host for 45 minutes",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "208e07a6",
+    "event_id": "bd6ad4c5",
+    "item_value": "last seen 45m ago"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "monitoring",
+    "action": "escalate",
+    "confidence": 0.82,
+    "solution_id": null,
+    "summary": "The monitoring system has not received any data from the host for 45 minutes, likely indicating the host is down, the monitoring agent stopped, or network connectivity issues."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:18:58.134649+00:00",
+      "detail": "Zabbix alert: No data received from host for 45 minutes"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:18:59.748296+00:00",
+      "detail": "Non-actionable | MEDIUM | monitoring"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:18:59.748296+00:00",
+      "detail": "Action: escalate | Confidence: 82%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:18:59.748296+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:18:59.748296+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

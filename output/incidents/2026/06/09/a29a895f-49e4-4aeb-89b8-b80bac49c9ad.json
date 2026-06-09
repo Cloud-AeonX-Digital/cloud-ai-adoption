@@ -1,0 +1,64 @@
+{
+  "incident_id": "a29a895f-49e4-4aeb-89b8-b80bac49c9ad",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-09T11:18:54.123511+00:00",
+  "logged_at": "2026-06-09T11:18:55.777583+00:00",
+  "alert": {
+    "name": "Windows: Memory usage exceeded threshold (85% for 10m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "a8b1b261",
+    "event_id": "1b672f2f",
+    "item_value": "87.2 %"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "memory_utilization",
+    "action": "escalate",
+    "confidence": 0.92,
+    "solution_id": null,
+    "summary": "Windows host memory usage rose above the 85% threshold for 10 minutes, likely caused by high workload or a memory leak."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-09T11:18:54.123511+00:00",
+      "detail": "Zabbix alert: Windows: Memory usage exceeded threshold (85% for 10m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-09T11:18:55.777583+00:00",
+      "detail": "Non-actionable | MEDIUM | memory_utilization"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-09T11:18:55.777583+00:00",
+      "detail": "Action: escalate | Confidence: 92%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-09T11:18:55.777583+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-09T11:18:55.777583+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

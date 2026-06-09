@@ -1,16 +1,21 @@
 """
 Dev S3 mock — writes full workflow timeline to local filesystem.
 Each incident record tracks every step from alert → resolution.
+Also posts to Express backend for React UI.
 """
 import json
 import os
 import logging
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 from agent.app.models import AlertPayload, AIDecision
 
+_EXPRESS_URL = os.environ.get("EXPRESS_API_URL", "http://localhost:3001")
+
 log = logging.getLogger(__name__)
 
-_OUTPUT_DIR = os.environ.get("DEV_S3_DIR", "./dev_env/output/incidents")
+_OUTPUT_DIR = os.environ.get("DEV_S3_DIR", "./output/incidents")
 
 
 def log_incident(incident: AlertPayload, decision: AIDecision,
@@ -64,4 +69,29 @@ def log_incident(incident: AlertPayload, decision: AIDecision,
         json.dump(record, f, indent=2)
 
     log.info("[DEV] Incident logged to %s", path)
+
+    # Also post to Express backend for React UI
+    try:
+        body = json.dumps(record).encode()
+        req = urllib.request.Request(
+            f"{_EXPRESS_URL}/incidents", data=body,
+            headers={"Content-Type": "application/json"}, method="POST"
+        )
+        urllib.request.urlopen(req, timeout=3)
+    except Exception as e:
+        log.debug("[DEV] Express incident post skipped: %s", e)
+
     return path
+
+
+def sync_approval_to_express(approval: dict) -> None:
+    """Sync approval state to Express so React UI can display it."""
+    try:
+        body = json.dumps(approval).encode()
+        req = urllib.request.Request(
+            f"{_EXPRESS_URL}/approvals", data=body,
+            headers={"Content-Type": "application/json"}, method="POST"
+        )
+        urllib.request.urlopen(req, timeout=3)
+    except Exception as e:
+        log.debug("[DEV] Express approval sync skipped: %s", e)

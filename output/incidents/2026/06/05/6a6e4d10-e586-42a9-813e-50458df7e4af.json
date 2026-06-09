@@ -1,0 +1,69 @@
+{
+  "incident_id": "6a6e4d10-e586-42a9-813e-50458df7e4af",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-05T07:06:25.767001+00:00",
+  "logged_at": "2026-06-05T07:06:26.034444+00:00",
+  "alert": {
+    "name": "AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "101612",
+    "event_id": "7868005",
+    "item_value": "terminated"
+  },
+  "host": {
+    "name": "ECS Instance - Microservice-Nexus-UAT",
+    "ip": "10.0.5.100",
+    "zabbix_host_id": "20001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "ECS Instance - Microservice-Nexus-UAT",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "critical",
+    "category": "ec2-terminated",
+    "action": "escalate",
+    "confidence": 0.99,
+    "solution_id": "S009",
+    "summary": "Known pattern matched (S009): AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Check if instance belongs to an Auto Scaling Group (tag: aws:autoscaling:groupName exists)",
+    "If Auto Scaling instance: ignore \u2014 ASG will replace it automatically",
+    "If NOT Auto Scaling instance: immediate escalation to human",
+    "Create high-priority ticket and send urgent email"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-05T07:06:25.767001+00:00",
+      "detail": "Zabbix alert: AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-05T07:06:26.034444+00:00",
+      "detail": "Non-actionable | CRITICAL | ec2-terminated"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-05T07:06:26.034444+00:00",
+      "detail": "Action: escalate | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-05T07:06:26.034444+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-05T07:06:26.034444+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

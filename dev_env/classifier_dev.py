@@ -120,10 +120,16 @@ def classify(incident: AlertPayload) -> AIDecision:
 
     if match:
         actionable = match["actionable"]
-        action = "auto-remediate" if actionable else "create-ticket"
-        # escalate only for critical non-actionable (ec2-terminated, unknown)
-        if not actionable and match.get("category") in ("ec2-terminated", "unknown"):
+        # Determine action from KB entry
+        kb_action = match.get("action", "")
+        if actionable:
+            action = "auto-remediate"
+        elif kb_action == "human_approval_then_expand":
+            action = "human-approval-required"
+        elif match.get("category") in ("ec2-terminated", "unknown"):
             action = "escalate"
+        else:
+            action = "create-ticket"
 
         log.info("[DEV] KB match: %s → actionable=%s severity=%s [%s]",
                  match["id"], actionable, match["severity"], match["category"])

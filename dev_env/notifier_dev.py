@@ -12,12 +12,24 @@ log = logging.getLogger(__name__)
 _LOG_FILE = os.environ.get("DEV_SES_LOG", "./output/emails.log")
 
 
-def send_email(incident: AlertPayload, decision: AIDecision) -> None:
+def send_email(incident: AlertPayload, decision: AIDecision, approval_id: str | None = None) -> None:
     os.makedirs(os.path.dirname(_LOG_FILE), exist_ok=True)
 
     emoji = _SEVERITY_EMOJI.get(decision.severity, "⚪")
     action_label = _ACTION_LABEL.get(decision.action, decision.action)
     subject = f"{emoji} [{decision.severity.upper()}] {incident.alert.name} — {incident.host.name}"
+
+    approval_section = ""
+    if approval_id:
+        base = os.environ.get("AGENT_BASE_URL", "http://172.25.29.253:8000")
+        approval_section = f"""
+{'='*60}
+⚠️  HUMAN APPROVAL REQUIRED
+{'='*60}
+APPROVE: {base}/approvals/{approval_id}/approve
+REJECT:  {base}/approvals/{approval_id}/reject
+Expires in 24 hours.
+"""
 
     body = f"""
 {'='*60}
@@ -42,6 +54,7 @@ SUMMARY:
 
 SUGGESTED:
 {decision.suggested_action or 'N/A'}
+{approval_section}
 {'='*60}
 """
     with open(_LOG_FILE, "a") as f:

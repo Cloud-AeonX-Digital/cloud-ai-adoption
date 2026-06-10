@@ -23,6 +23,7 @@ from agent.app.approval_manager import (
     request_approval, get_approval, decide, mark_executed,
     list_pending, list_all, ApprovalStatus
 )
+from agent.app.memory import init_db, write_incident
 from dev_env.classifier_dev import classify as kb_classify
 from dev_env.notifier_dev import send_email
 from dev_env.logger_dev import log_incident
@@ -46,6 +47,7 @@ log = logging.getLogger(__name__)
 
 app = FastAPI(title="AeonX AI Ops Agent [DEV]")
 app.include_router(ui_router)
+init_db()  # Phase D: initialise FTS5 memory store
 
 
 @app.post("/alert", response_model=IncidentResponse)
@@ -117,6 +119,21 @@ async def handle_alert(request: Request):
 
     send_email(incident, decision, approval_id=approval_id)
     log_incident(incident, decision, ticket_id=ticket_id)
+
+    # Phase D: write to persistent FTS5 memory
+    is_fp = (decision.action == "create_ticket" and decision.actionable)  # actionable KB match but chose not to restart = false positive
+    write_incident(
+        incident_id=incident.incident_id,
+        host=incident.host.name,
+        client=incident.client.name,
+        alert_name=incident.alert.name,
+        category=decision.category,
+        severity=decision.severity,
+        action=decision.action,
+        solution_id=decision.solution_id or "",
+        confidence=decision.confidence,
+        false_positive=is_fp,
+    )
 
     return IncidentResponse(
         incident_id=incident.incident_id,

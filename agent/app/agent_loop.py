@@ -37,31 +37,62 @@ def _client():
 _SYSTEM = """You are an expert SRE AI agent for AeonX Digital Technology.
 You monitor cloud infrastructure and respond to alerts across many client accounts.
 
-Your job when receiving an alert:
-1. ALWAYS call search_runbook first — check if a known solution exists
-2. Optionally call get_service_status to confirm the service is actually down
-3. Optionally call get_recent_alerts to detect recurring patterns
-4. Once you have enough context, call request_human_approval with your recommendation
+MANDATORY WORKFLOW — follow this exactly:
+1. Call search_runbook — check for a known solution
+2. For any service/host/website DOWN alert: call get_service_status to VERIFY the service is actually down
+   - If service is ACTIVE/RUNNING → the alert is a FALSE POSITIVE → call request_human_approval(action_type="create_ticket", reason="False positive: service is running normally", confidence=0.95)
+   - If service is INACTIVE/FAILED → confirmed down → proceed to step 3
+3. Call get_recent_alerts — check if this is recurring (flapping = different recommendation than one-off)
+4. Call request_human_approval with your final recommendation
 
-Rules:
-- NEVER execute actions directly — always use request_human_approval
-- If search_runbook returns a known solution, use it (high confidence)
-- If no known solution, use your SRE expertise to diagnose
-- Be concise in your reasoning field — one sentence max
+DECISION RULES:
+- Confirmed down + first occurrence → action_type="service_restart", confidence=0.9+
+- Confirmed down + recurring (3+ times in 24h) → action_type="escalate", reason="Recurring failure — restart won't fix root cause"
+- False positive (service is up) → action_type="create_ticket", confidence=0.95
+- High CPU/memory/disk (no service to check) → action_type="create_ticket" or "notify_client"
+- Unknown alert, no runbook → action_type="escalate"
+
+RULES:
+- NEVER call request_human_approval with action_type="service_restart" without first calling get_service_status
+- Always include the exact service name and instance_id in target_service
+- commands array: list the exact systemctl commands that will run post-approval
 - Always set confidence: 0.95+ for known KB matches, 0.6-0.8 for LLM inference"""
 
 
 def _system_prompt(incident: AlertPayload) -> str:
-    return (f"{_SYSTEM}\n\n"
-            f"ALERT CONTEXT:\n"
-            f"  Alert: {incident.alert.name}\n"
-            f"  Severity: {incident.alert.severity}\n"
-            f"  Status: {incident.alert.status}\n"
-            f"  Host: {incident.host.name} ({incident.host.ip})\n"
-            f"  Instance: {incident.host.instance_id or 'unknown'}\n"
-            f"  Value: {incident.alert.item_value}\n"
-            f"  Client: {incident.client.name} (account: {incident.client.aws_account or 'unknown'})\n"
-            f"\nStart by calling search_runbook.")
+    # Inject host memory context
+    from agent.app.memory import get_host_history
+    history = get_host_history(incident.host.name, days=7)
+
+    mem_ctx = ""
+    if history["total"] > 0:
+        mem_ctx = (
+            f"\nHOST MEMORY (last 7 days):\n"
+            f"  Total incidents: {history['total']}\n"
+            f"  False positives: {history['false_positives']}\n"
+        )
+        if history["recurring"]:
+            recurring_str = ", ".join(f"{r['alert']} x{r['count']}" for r in history["recurring"][:3])
+            mem_ctx += f"  Recurring alerts: {recurring_str}\n"
+        if history["incidents"]:
+            last = history["incidents"][0]
+            mem_ctx += f"  Last incident: {last['alert']} → {last['action']} ({last['ts']})\n"
+        if history["false_positives"] > 2:
+            mem_ctx += "  ⚠️  HIGH FALSE POSITIVE RATE — verify service state carefully before recommending restart\n"
+        if history["recurring"]:
+            mem_ctx += "  ⚠️  RECURRING PATTERN — if confirmed down, escalate instead of restart (restart won't fix root cause)\n"
+
+    return (
+        f"NEW ALERT — analyze and decide action:{mem_ctx}\n"
+        f"  Alert: {incident.alert.name}\n"
+        f"  Severity: {incident.alert.severity}\n"
+        f"  Status: {incident.alert.status}\n"
+        f"  Host: {incident.host.name} ({incident.host.ip})\n"
+        f"  Instance: {incident.host.instance_id or 'unknown'}\n"
+        f"  Value: {incident.alert.item_value}\n"
+        f"  Client: {incident.client.name} (account: {incident.client.aws_account or 'unknown'})\n\n"
+        f"Start with search_runbook, then verify service status before recommending any restart."
+    )
 
 
 def run(incident: AlertPayload) -> AIDecision:

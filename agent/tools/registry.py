@@ -69,12 +69,13 @@ TOOL_SPECS = [
     {
         "toolSpec": {
             "name": "get_recent_alerts",
-            "description": "Fetch recent alerts for the same host from incident history. Use to detect recurring patterns or ongoing incidents.",
+            "description": "Fetch incident history for a host from persistent memory. Returns recurring patterns, false positive count, and whether this alert has fired before. Use alert_query to also search similar incidents across all hosts.",
             "inputSchema": {"json": {
                 "type": "object",
                 "properties": {
-                    "host_name": {"type": "string", "description": "Zabbix host name"},
-                    "hours": {"type": "integer", "description": "Look back N hours (default: 24)", "default": 24}
+                    "host_name": {"type": "string", "description": "Zabbix host name or instance ID"},
+                    "hours": {"type": "integer", "description": "Look back N hours (default: 24)", "default": 24},
+                    "alert_query": {"type": "string", "description": "Optional: keyword search across all incident history (e.g. 'postgresql', 'health check')"}
                 },
                 "required": ["host_name"]
             }}
@@ -198,22 +199,27 @@ def _handle_query_cloudwatch_metric(args: dict) -> dict:
 
 
 def _handle_get_recent_alerts(args: dict) -> dict:
-    """Query Express backend for recent alerts on this host."""
-    import urllib.request
+    """Query FTS5 memory store for recent alerts on this host."""
+    from agent.app.memory import get_host_history, search_incidents
     host = args["host_name"]
     hours = args.get("hours", 24)
-    try:
-        url = f"http://localhost:3001/incidents?host={urllib.request.quote(host)}&hours={hours}&limit=10"
-        with urllib.request.urlopen(url, timeout=5) as r:
-            incidents = json.loads(r.read())
-        return {
-            "host": host,
-            "count": len(incidents),
-            "recent": [{"name": i.get("alert_name",""), "severity": i.get("severity",""), "ts": i.get("created_at","")} for i in incidents[:5]],
-            "recurring": len(incidents) > 3,
-        }
-    except Exception as e:
-        return {"host": host, "count": 0, "error": str(e)}
+    days = max(1, hours // 24)
+
+    history = get_host_history(host, days=max(days, 1))
+
+    # Also do FTS search for similar alert names across all hosts
+    alert_query = args.get("alert_query", "")
+    similar = search_incidents(alert_query, limit=3) if alert_query else []
+
+    return {
+        "host": host,
+        "total_incidents": history["total"],
+        "false_positives": history["false_positives"],
+        "recurring_alerts": history["recurring"],   # alerts that fired 2+ times
+        "is_recurring": len(history["recurring"]) > 0,
+        "recent": history["incidents"],
+        "similar_on_other_hosts": similar,
+    }
 
 
 def _handle_request_human_approval(args: dict) -> dict:

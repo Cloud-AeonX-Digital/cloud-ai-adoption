@@ -140,7 +140,7 @@ function SectionHeader({ children }) {
   );
 }
 
-function AxiomMiniChat({ approval }) {
+function AivexMiniChat({ approval }) {
   const meta = approval?.metadata || {};
   const context = {
     host: meta.host?.name,
@@ -221,7 +221,7 @@ function AxiomMiniChat({ approval }) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMsg()}
           disabled={loading}
-          placeholder="Ask Axiom about this alert…"
+          placeholder="Ask Aivex about this alert…"
           style={{
             flex: 1, padding: '9px 12px', fontSize: 12, background: 'var(--surface)',
             border: 'none', outline: 'none', color: 'var(--text)',
@@ -358,10 +358,10 @@ export default function ApprovalDetail({ approval, onClose, onDecide, deciding }
             </section>
           )}
 
-          {/* Axiom mini-chat */}
+          {/* Aivex mini-chat */}
           <section>
-            <SectionHeader>Ask Axiom</SectionHeader>
-            <AxiomMiniChat approval={approval} />
+            <SectionHeader>Ask Aivex</SectionHeader>
+            <AivexMiniChat approval={approval} />
           </section>
         </div>
 

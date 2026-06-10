@@ -31,7 +31,7 @@ export default function App() {
     { id: 'dashboard', label: 'Dashboard',  icon: <LayoutDashboard size={14} /> },
     { id: 'alerts',    label: 'All Alerts',  icon: <List size={14} /> },
     { id: 'approvals', label: 'Approvals',   icon: <ShieldCheck size={14} />, badge: pendingCount },
-    { id: 'chat',      label: 'Axiom',      icon: <MessageSquare size={14} /> },
+    { id: 'chat',      label: 'Aivex',      icon: <MessageSquare size={14} /> },
   ];
 
   return (

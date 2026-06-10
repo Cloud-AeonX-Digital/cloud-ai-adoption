@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Info } from 'lucide-react';
 import { api } from '../api';
 
-const BOT_NAME = 'Axiom';
+const BOT_NAME = 'Aivex';
 
 const SUGGESTIONS = [
   'Is cmt-backend running on Cloud Monitoring Tool?',

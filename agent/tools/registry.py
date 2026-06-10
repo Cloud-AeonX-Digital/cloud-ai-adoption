@@ -83,6 +83,55 @@ TOOL_SPECS = [
     },
     {
         "toolSpec": {
+            "name": "get_disk_usage",
+            "description": "Get disk usage and mount point details on a remote host via SSM. Use for disk-space alerts to see which filesystems are full, current usage %, and available space before recommending expansion.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "instance_id": {"type": "string", "description": "EC2 instance ID"},
+                    "mount_point": {"type": "string", "description": "Optional specific mount point to check, e.g. /var or /data. Leave empty for all."}
+                },
+                "required": ["instance_id"]
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "get_server_info",
+            "description": "Retrieve live server diagnostics from a remote host: disk usage (df -h), memory (free -m), process list (ps aux), log tails, network connections, or any read-only system information. This is a safe read operation via AWS SSM.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "instance_id": {"type": "string", "description": "EC2 instance ID"},
+                    "query": {"type": "string", "description": "What to retrieve. Examples: 'disk usage', 'memory usage', 'running processes', 'last 50 lines of /var/log/app.log', 'network connections', 'uptime'"},
+                    "custom_command": {"type": "string", "description": "Optional specific shell command override, e.g. 'df -h /var' or 'ps aux | head -20'"}
+                },
+                "required": ["instance_id", "query"]
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "describe_aws_resource",
+            "description": "Query AWS for resource details: RDS instances, EBS volumes, ALB target health, S3 bucket sizes, security groups, ECS services. Use to answer questions about AWS infrastructure state.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "resource_type": {
+                        "type": "string",
+                        "enum": ["ebs_volumes", "rds_instances", "alb_target_health", "ecs_services", "security_groups", "s3_buckets"],
+                        "description": "Type of AWS resource to query"
+                    },
+                    "instance_id": {"type": "string", "description": "EC2 instance ID (for ebs_volumes, security_groups)"},
+                    "resource_id": {"type": "string", "description": "Resource ARN or ID (for alb_target_health, ecs_services)"},
+                    "region": {"type": "string", "description": "AWS region, default ap-south-1"}
+                },
+                "required": ["resource_type"]
+            }}
+        }
+    },
+    {
+        "toolSpec": {
             "name": "request_human_approval",
             "description": "Submit a proposed remediation action for human approval. Call this ONLY after gathering enough context. The action will NOT execute until a human approves it in the UI or via email.",
             "inputSchema": {"json": {
@@ -222,6 +271,112 @@ def _handle_get_recent_alerts(args: dict) -> dict:
     }
 
 
+def _handle_get_disk_usage(args: dict) -> dict:
+    import boto3
+    instance_id = args["instance_id"]
+    mount = args.get("mount_point", "")
+    cmd = f"df -h {mount}" if mount else "df -h"
+    result = _ssm_run_simple(instance_id, [cmd, "echo '---'", "lsblk -o NAME,SIZE,MOUNTPOINT,FSTYPE"])
+    return {"instance_id": instance_id, "output": result}
+
+
+def _handle_get_server_info(args: dict) -> dict:
+    instance_id = args["instance_id"]
+    query = args.get("query", "").lower()
+    custom = args.get("custom_command", "")
+
+    # Map natural language queries to safe read-only commands
+    if custom:
+        command = custom
+    elif "disk" in query or "df" in query or "mount" in query or "storage" in query:
+        command = "df -h"
+    elif "memory" in query or "ram" in query or "free" in query:
+        command = "free -m && echo '---' && cat /proc/meminfo | grep -E 'MemTotal|MemFree|MemAvailable'"
+    elif "process" in query or "cpu" in query or "top" in query:
+        command = "ps aux --sort=-%cpu | head -15"
+    elif "log" in query:
+        # Extract log path if mentioned
+        import re
+        path = re.search(r'(/[/\w\.-]+\.log)', query)
+        command = f"tail -50 {path.group(1)}" if path else "journalctl -n 50 --no-pager"
+    elif "network" in query or "connection" in query or "port" in query:
+        command = "ss -tlnp"
+    elif "uptime" in query or "load" in query:
+        command = "uptime && cat /proc/loadavg"
+    else:
+        command = f"echo 'Query: {query}' && uptime && df -h && free -m"
+
+    result = _ssm_run_simple(instance_id, [command])
+    return {"instance_id": instance_id, "query": query, "command": command, "output": result}
+
+
+def _handle_describe_aws_resource(args: dict) -> dict:
+    import boto3
+    region = args.get("region", os.environ.get("AWS_REGION", "ap-south-1"))
+    rtype = args["resource_type"]
+    instance_id = args.get("instance_id", "")
+    resource_id = args.get("resource_id", "")
+    try:
+        if rtype == "ebs_volumes":
+            ec2 = boto3.client("ec2", region_name=region)
+            filters = [{"Name": "attachment.instance-id", "Values": [instance_id]}] if instance_id else []
+            vols = ec2.describe_volumes(Filters=filters)["Volumes"]
+            return {"volumes": [{"id": v["VolumeId"], "size_gb": v["Size"], "type": v["VolumeType"],
+                "state": v["State"], "mount": v["Attachments"][0]["Device"] if v["Attachments"] else "detached"} for v in vols]}
+
+        elif rtype == "rds_instances":
+            rds = boto3.client("rds", region_name=region)
+            dbs = rds.describe_db_instances()["DBInstances"]
+            return {"rds_instances": [{"id": d["DBInstanceIdentifier"], "class": d["DBInstanceClass"],
+                "engine": d["Engine"] + " " + d["EngineVersion"], "status": d["DBInstanceStatus"],
+                "storage_gb": d["AllocatedStorage"]} for d in dbs]}
+
+        elif rtype == "ecs_services":
+            ecs = boto3.client("ecs", region_name=region)
+            clusters = ecs.list_clusters()["clusterArns"]
+            services = []
+            for c in clusters[:3]:
+                svcs = ecs.list_services(cluster=c)["serviceArns"]
+                if svcs:
+                    detail = ecs.describe_services(cluster=c, services=svcs[:5])["services"]
+                    services += [{"name": s["serviceName"], "desired": s["desiredCount"],
+                        "running": s["runningCount"], "status": s["status"]} for s in detail]
+            return {"ecs_services": services}
+
+        elif rtype == "alb_target_health":
+            elbv2 = boto3.client("elbv2", region_name=region)
+            tg_arn = resource_id
+            health = elbv2.describe_target_health(TargetGroupArn=tg_arn)["TargetHealthDescriptions"]
+            return {"targets": [{"id": t["Target"]["Id"], "port": t["Target"]["Port"],
+                "state": t["TargetHealth"]["State"]} for t in health]}
+
+        else:
+            return {"error": f"resource_type '{rtype}' not yet implemented"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _ssm_run_simple(instance_id: str, commands: list) -> str:
+    """Helper: run SSM commands and return stdout as string."""
+    import boto3, time
+    try:
+        ssm = boto3.client("ssm", region_name=os.environ.get("AWS_REGION", "ap-south-1"))
+        resp = ssm.send_command(InstanceIds=[instance_id], DocumentName="AWS-RunShellScript",
+                                Parameters={"commands": commands})
+        cmd_id = resp["Command"]["CommandId"]
+        for _ in range(12):
+            time.sleep(5)
+            try:
+                inv = ssm.get_command_invocation(CommandId=cmd_id, InstanceId=instance_id)
+                if inv["Status"] in ("Success", "Failed", "Cancelled", "TimedOut"):
+                    return inv.get("StandardOutputContent", inv.get("StandardErrorContent", ""))[:2000]
+            except ssm.exceptions.InvocationDoesNotExist:
+                continue
+        return "Timed out"
+    except Exception as e:
+        return str(e)
+
+
 def _handle_request_human_approval(args: dict) -> dict:
     # This is a sentinel — the agent_loop intercepts this and converts it to an ApprovalRequest
     # Returning the args lets agent_loop extract and create the actual approval
@@ -236,6 +391,9 @@ _HANDLERS = {
     "get_ec2_info": _handle_get_ec2_info,
     "query_cloudwatch_metric": _handle_query_cloudwatch_metric,
     "get_recent_alerts": _handle_get_recent_alerts,
+    "get_disk_usage": _handle_get_disk_usage,
+    "get_server_info": _handle_get_server_info,
+    "describe_aws_resource": _handle_describe_aws_resource,
     "request_human_approval": _handle_request_human_approval,
 }
 

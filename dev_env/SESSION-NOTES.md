@@ -142,8 +142,10 @@ docs/
 | P8 | Zabbix webhook not wired (email is fine for now) | LOW | ⏳ after Lambda 1 deployed |
 | P9 | SSM service mapping varies per client | LOW | ⏳ standardize service naming |
 | P10 | Agent is single-account only | HIGH | ⏳ Phase B — multi-account tool layer |
-| P11 | Agent is if/else routing, not true tool-calling | HIGH | ⏳ Phase C — Bedrock Converse tool-use loop |
-| P12 | No persistent memory / vector store | HIGH | ⏳ Phase D — pgvector or OpenSearch |
+| P11 | Agent is if/else routing, not true tool-calling | HIGH | ✅ FIXED — Phase C |
+| P12 | No persistent memory / vector store | HIGH | ✅ FIXED — Phase D SQLite FTS5 |
+
+| P13 | Aivex chat unstable — pre-flight SSM latency, disk expand approval action preview | MEDIUM | 🔄 Under Review — test cases added, core works |
 
 ---
 

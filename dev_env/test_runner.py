@@ -222,3 +222,69 @@ def run():
 
 if __name__ == "__main__":
     run()
+
+
+# ── Aivex Chat Test Suite ────────────────────────────────────────────────────
+
+CHAT_URL = os.environ.get("CHAT_URL", "http://localhost:3001/chat")
+CHAT_CONTEXT = {
+    "host": "Cloud Monitoring Tool",
+    "instance_id": "i-00902943a502495a5",
+    "account_id": "719395381450",
+    "client_name": "Aeonx Sandbox",
+}
+
+CHAT_TESTS = [
+    # (test_id, question, expect_tools, expect_approval)
+    ("C1", "Is cmt-backend running on Cloud Monitoring Tool?",         ["get_service_status"],   False),
+    ("C2", "What recent incidents happened on Cloud Monitoring Tool?", ["get_recent_alerts"],    False),
+    ("C3", "Show me disk usage on this server",                        ["get_server_info"],      False),
+    ("C4", "How much memory is available?",                            ["get_server_info"],      False),
+    ("C5", "What is the CPU utilization in the last 30 minutes?",      ["query_cloudwatch_metric"], False),
+    ("C6", "Please restart cmt-backend on this server",               ["request_human_approval"], True),
+    ("C7", "Increase /var by 20GB",                                   ["get_server_info", "describe_aws_resource", "request_human_approval"], True),
+    ("C8", "What AWS volumes are attached to this instance?",         ["describe_aws_resource"], False),
+]
+
+
+def run_chat_tests():
+    print("\n" + "="*60)
+    print("AIVEX CHAT TEST SUITE")
+    print("="*60)
+    print(f"Target: {CHAT_URL}\n")
+
+    results = []
+    for test_id, question, expect_tools, expect_approval in CHAT_TESTS:
+        print(f"[{test_id}] {question[:60]}")
+        try:
+            body = json.dumps({"question": question, "context": CHAT_CONTEXT}).encode()
+            req = urllib.request.Request(CHAT_URL, data=body,
+                headers={"Content-Type": "application/json"}, method="POST")
+            with urllib.request.urlopen(req, timeout=60) as r:
+                resp = json.loads(r.read())
+
+            got_tools = resp.get("tools_used", [])
+            got_approval = bool(resp.get("approval_id"))
+            answer = resp.get("answer", "")[:80]
+
+            tool_ok = any(t in got_tools for t in expect_tools)
+            approval_ok = (got_approval == expect_approval)
+            ok = tool_ok and approval_ok
+
+            print(f"  {'✅' if ok else '❌'} tools={got_tools} approval={got_approval}")
+            print(f"     answer: {answer}")
+            if not tool_ok:
+                print(f"     ⚠️  expected one of {expect_tools}")
+            results.append({"id": test_id, "ok": ok})
+        except Exception as e:
+            print(f"  ❌ ERROR: {e}")
+            results.append({"id": test_id, "ok": False})
+        print()
+
+    passed = sum(1 for r in results if r["ok"])
+    print(f"CHAT RESULTS: {passed}/{len(results)} passed")
+    return results
+
+
+if __name__ == "__main__" and "--chat" in __import__("sys").argv:
+    run_chat_tests()

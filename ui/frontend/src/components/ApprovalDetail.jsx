@@ -14,7 +14,14 @@ const STATUS_STYLE = {
 // Map solution/category to a human-readable action preview
 function ActionPreview({ approval }) {
   const meta = approval?.metadata || {};
-  const category = approval?.type || '';
+  // For chat-sourced approvals, derive category from action_type; for alert-sourced, use approval.type
+  const rawCategory = approval?.type || '';
+  const actionType = meta.action_type || meta.ai_action_type || '';
+  const ACTION_TO_CATEGORY = {
+    disk_expand: 'disk-space', service_restart: 'service-down',
+    ec2_restart: 'website-down', notify_client: 'high-memory', escalate: 'ec2-terminated',
+  };
+  const category = ACTION_TO_CATEGORY[actionType] || ACTION_TO_CATEGORY[rawCategory] || rawCategory;
   const steps = meta.solution_steps || [];
   const aiAction = meta.ai_action || '';
   const host = meta.host?.name || '?';
@@ -63,7 +70,9 @@ function ActionPreview({ approval }) {
       icon: <HardDrive size={15} />,
       title: 'EBS Volume Expansion Plan',
       color: 'var(--red)',
-      preview: [
+      preview: meta.solution_steps?.length ? [
+        { label: 'Commands to execute post-approval', code: meta.solution_steps.join('\n') }
+      ] : [
         { label: 'Client email (sent first)', code: `Subject: 🔴 Low Disk Space Alert — ${host}\n\nDisk usage critical: ${alertValue}\nFilesystem needs expansion.\n\nPlease reply with approved size increase (e.g. "+20 GB").` },
         { label: 'After approval — AWS SDK', code: `aws ec2 modify-volume \\\n  --volume-id <VOLUME_ID> \\\n  --size <NEW_SIZE_GB>\n\n# Then extend filesystem:\ngrowpart /dev/nvme0n1 1\nresize2fs /dev/nvme0n1p1` },
       ]

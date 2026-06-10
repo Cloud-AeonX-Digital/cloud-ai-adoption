@@ -145,14 +145,19 @@ def execute_approved_action(approval: dict) -> dict:
             restart_service(instance_id, "cmt-backend", aws_account)
 
     elif solution_id in ("S001", "S001b") or "backend" in alert_name or "health check" in alert_name:
-        # Try service restart first
-        service = "cmt-backend" if "backend" in alert_name else "nginx"
+        # Determine which service based on alert name
+        if "frontend" in alert_name or ":5173" in alert_name:
+            service = "cmt-frontend"
+        elif "backend" in alert_name or ":8000" in alert_name:
+            service = "cmt-backend"
+        else:
+            service = "cmt-backend"  # default for generic health check
         result = restart_service(instance_id, service, aws_account)
         if not result["success"] and action_type == "service_restart_then_ec2":
             log.info("Service restart failed, trying EC2 restart")
             result = restart_ec2(instance_id, aws_account)
 
-    elif "frontend" in alert_name:
+    elif "frontend" in alert_name or ":5173" in alert_name:
         result = restart_service(instance_id, "cmt-frontend", aws_account)
 
     elif solution_id in ("S004", "S005") or "zabbix" in alert_name:

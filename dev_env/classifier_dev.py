@@ -28,11 +28,15 @@ _client = None
 
 def _load_kb() -> list:
     global _kb
-    kb_path = os.environ.get("SOLUTIONS_KB_PATH",
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "agent", "known-solutions.json"))
+    # Use normpath to resolve the relative .. regardless of CWD
+    kb_path = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "agent", "known-solutions.json"
+    ))
+    if os.environ.get("SOLUTIONS_KB_PATH"):
+        kb_path = os.environ["SOLUTIONS_KB_PATH"]
     with open(kb_path) as f:
         _kb = json.load(f)["solutions"]
-    log.info("[DEV] KB loaded: %d solutions from %s", len(_kb), kb_path)
+    return _kb
     return _kb
 
 

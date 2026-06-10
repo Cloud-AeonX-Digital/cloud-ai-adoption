@@ -1,125 +1,129 @@
+"""
+Production classifier — KB-first + Bedrock gpt-oss-120b fallback.
+Identical logic to dev_env/classifier_dev.py.
+"""
 import json
 import os
-import boto3
+import re
 import logging
-from google.oauth2 import service_account
-from google.auth.transport.requests import Request as GoogleRequest
-import urllib.request
+import boto3
 
 from .models import AlertPayload, AIDecision
 
 log = logging.getLogger(__name__)
 
-# SSM parameter path for GCP service account key
-_SSM_GCP_KEY = "/aeonx/ai-agent/gcp-service-account-key"
-_GCP_PROJECT = os.environ.get("GCP_PROJECT_ID", "")
-_GCP_LOCATION = os.environ.get("GCP_LOCATION", "us-central1")
-_GEMINI_MODEL = "gemini-1.5-flash"
+_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "openai.gpt-oss-120b-1:0")
+_REGION = os.environ.get("AWS_REGION", "ap-south-1")
 _CONFIDENCE_THRESHOLD = float(os.environ.get("CONFIDENCE_THRESHOLD", "0.75"))
 
-_credentials = None  # cached
+_client = None
 
 
-def _get_credentials():
-    global _credentials
-    if _credentials and _credentials.valid:
-        return _credentials
+def _get_client():
+    global _client
+    if _client:
+        return _client
+    _client = boto3.client("bedrock-runtime", region_name=_REGION)
+    return _client
 
-    # Service account credentials refresh by re-signing a JWT — no refresh_token needed
-    if _credentials and _credentials.expired:
-        _credentials.refresh(GoogleRequest())
-        return _credentials
 
-    ssm = boto3.client("ssm", region_name="ap-south-1")
-    param = ssm.get_parameter(Name=_SSM_GCP_KEY, WithDecryption=True)
-    key_data = json.loads(param["Parameter"]["Value"])
-
-    _credentials = service_account.Credentials.from_service_account_info(
-        key_data,
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
+def _kb_path() -> str:
+    return os.environ.get(
+        "SOLUTIONS_KB_PATH",
+        os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "known-solutions.json"))
     )
-    _credentials.refresh(GoogleRequest())
-    return _credentials
+
+
+def _load_kb() -> list:
+    with open(_kb_path()) as f:
+        return json.load(f)["solutions"]
+
+
+def _match_kb(alert_name: str) -> dict | None:
+    name_lower = alert_name.lower()
+    for entry in _load_kb():
+        pattern = entry["pattern"].lower()
+        if entry.get("match_type") == "contains" and pattern in name_lower:
+            return entry
+    return None
 
 
 def _build_prompt(incident: AlertPayload) -> str:
-    return f"""You are an expert SRE analyzing a cloud infrastructure alert.
+    return f"""You are an expert SRE analyzing a cloud infrastructure alert with no defined solution in the knowledge base.
 
-Alert details:
-- Alert name: {incident.alert.name}
-- Severity: {incident.alert.severity}
-- Status: {incident.alert.status}
-- Host: {incident.host.name} (IP: {incident.host.ip})
-- Client: {incident.client.name}
-- Metric value: {incident.alert.item_value}
+Alert: {incident.alert.name}
+Severity: {incident.alert.severity}
+Host: {incident.host.name} (IP: {incident.host.ip})
+Value: {incident.alert.item_value}
 
-Respond ONLY with a valid JSON object in this exact format:
+Respond ONLY with valid JSON:
 {{
-  "action": "<auto-remediate|create-ticket|escalate>",
-  "severity": "<low|medium|high|critical>",
-  "category": "<website-down|high-memory|service-down|agent-unavailable|unknown>",
-  "summary": "<one sentence describing what happened and likely cause>",
-  "confidence": <0.0 to 1.0>,
-  "suggested_action": "<what should be done>"
-}}
+  "action": "escalate",
+  "severity": "<critical|high|medium|low>",
+  "category": "<best guess category>",
+  "summary": "<one sentence: what happened and likely cause>",
+  "confidence": <0.0-1.0>,
+  "suggested_action": "<what a human should investigate>"
+}}"""
 
-Rules:
-- Use "auto-remediate" only for website-down, high-memory, service-down, agent-unavailable with confidence >= {_CONFIDENCE_THRESHOLD}
-- Use "escalate" for unknown categories or confidence < {_CONFIDENCE_THRESHOLD}
-- Use "create-ticket" when human review is needed but not urgent"""
+
+def _llm_classify(incident: AlertPayload) -> AIDecision:
+    try:
+        response = _get_client().invoke_model(
+            modelId=_MODEL_ID,
+            body=json.dumps({
+                "messages": [{"role": "user", "content": _build_prompt(incident)}],
+                "max_tokens": 300, "temperature": 0.1,
+            }),
+            contentType="application/json", accept="application/json",
+        )
+        text = json.loads(response["body"].read())["choices"][0]["message"]["content"].strip()
+        if "<reasoning>" in text:
+            text = re.sub(r"<reasoning>.*?</reasoning>", "", text, flags=re.DOTALL).strip()
+        if text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"): text = text[4:]
+        data = json.loads(text.strip())
+        return AIDecision(
+            actionable=False, action="escalate",
+            severity=data.get("severity", "high"),
+            category=data.get("category", "unknown"),
+            summary=data.get("summary", "Unknown alert — manual review required."),
+            confidence=data.get("confidence", 0.5),
+            suggested_action=data.get("suggested_action", "Review manually."),
+            solution_id=None, solution_steps=[],
+        )
+    except Exception as e:
+        log.error("LLM classification failed: %s", e)
+        return AIDecision(
+            actionable=False, action="escalate", severity="high",
+            category="unknown", summary="Classification failed — manual review required.",
+            confidence=0.0, suggested_action="Review alert manually.",
+            solution_id=None, solution_steps=[],
+        )
 
 
 def classify(incident: AlertPayload) -> AIDecision:
-    try:
-        creds = _get_credentials()
-        prompt = _build_prompt(incident)
+    match = _match_kb(incident.alert.name)
+    if match:
+        actionable = match["actionable"]
+        kb_action = match.get("action", "")
+        if actionable or kb_action == "human_approval_then_expand":
+            action = "human-approval-required"
+        elif match.get("category") in ("ec2-terminated", "unknown"):
+            action = "escalate"
+        else:
+            action = "create-ticket"
 
-        url = (
-            f"https://{_GCP_LOCATION}-aiplatform.googleapis.com/v1/projects/{_GCP_PROJECT}"
-            f"/locations/{_GCP_LOCATION}/publishers/google/models/{_GEMINI_MODEL}:generateContent"
-        )
-
-        body = json.dumps({
-            "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0.1, "maxOutputTokens": 512},
-        }).encode()
-
-        req = urllib.request.Request(
-            url,
-            data=body,
-            headers={
-                "Authorization": f"Bearer {creds.token}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
-
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            result = json.loads(resp.read())
-
-        text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
-        # Strip markdown code fences if present
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-
-        decision_data = json.loads(text)
-
-        # Enforce confidence threshold
-        if decision_data.get("confidence", 0) < _CONFIDENCE_THRESHOLD:
-            decision_data["action"] = "escalate"
-
-        return AIDecision(**decision_data)
-
-    except Exception as e:
-        log.error("Gemini classification failed: %s", e)
-        # Safe fallback — always escalate on error
+        log.info("KB match: %s → actionable=%s action=%s", match["id"], actionable, action)
         return AIDecision(
-            action="escalate",
-            severity="high",
-            category="unknown",
-            summary=f"AI classification failed: {e}. Manual review required.",
-            confidence=0.0,
-            suggested_action="Review alert manually.",
+            actionable=actionable, action=action,
+            severity=match["severity"], category=match["category"],
+            summary=f"Known pattern matched ({match['id']}): {incident.alert.name}",
+            confidence=0.99,
+            suggested_action=match["steps"][0] if match["steps"] else "",
+            solution_id=match["id"], solution_steps=match["steps"],
         )
+
+    log.info("No KB match for '%s' — LLM fallback", incident.alert.name)
+    return _llm_classify(incident)

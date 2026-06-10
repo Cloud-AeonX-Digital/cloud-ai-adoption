@@ -78,7 +78,6 @@ def chat(question: str, context: dict = None) -> dict:
     q_lower = question.lower()
     instance_id = context.get("instance_id", "")
     if instance_id and any(kw in q_lower for kw in ["df", "disk", "mount", "storage", "free", "memory", "ram", "process", "ps aux", "uptime", "load"]):
-        from agent.tools.registry import execute_tool
         if any(kw in q_lower for kw in ["disk", "df", "mount", "storage"]):
             result = execute_tool("get_server_info", {"instance_id": instance_id, "query": "disk usage"})
         elif any(kw in q_lower for kw in ["memory", "ram", "free"]):
@@ -147,11 +146,15 @@ def chat(question: str, context: dict = None) -> dict:
                     description=args.get("reason", question),
                     proposed_action=args.get("reason", ""),
                     metadata={
+                        "host": {"name": context.get("host",""), "ip": context.get("host_ip",""), "instance_id": context.get("instance_id","")},
+                        "client": {"name": context.get("client_name",""), "aws_account": context.get("account_id","")},
+                        "alert": {"name": args.get("reason", question), "item_value": ""},
                         "chat_question": question,
                         "action_type": args.get("action_type"),
-                        "target_service": args.get("target_service", ""),
-                        "commands": args.get("commands", []),
-                        "severity": args.get("severity", "medium"),
+                        "ai_action_type": args.get("action_type"),
+                        "agent_target_service": args.get("target_service",""),
+                        "solution_steps": args.get("commands",[]),
+                        "severity": args.get("severity","medium"),
                         "confidence": args.get("confidence", 0.8),
                         "source": "chat",
                     }

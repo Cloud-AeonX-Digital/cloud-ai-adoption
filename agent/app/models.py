@@ -36,7 +36,7 @@ class AlertPayload(BaseModel):
 
 class AIDecision(BaseModel):
     actionable: bool                          # True = known pattern with defined solution
-    action: str                               # "auto-remediate" | "create-ticket" | "escalate"
+    action: str                               # "human-approval-required" | "create-ticket" | "escalate"
     severity: str                             # "critical" | "high" | "medium" | "low"
     category: str                             # "website-down" | "high-memory" | "service-down" | etc.
     summary: str
@@ -44,6 +44,9 @@ class AIDecision(BaseModel):
     suggested_action: str = ""
     solution_id: Optional[str] = None        # KB entry ID e.g. "S001"
     solution_steps: list[str] = []           # Step-by-step resolution from KB
+    # Agent loop fields (set when agent_loop.py drives the decision)
+    agent_action_type: Optional[str] = None  # "service_restart" | "ec2_restart" | "disk_expand" | ...
+    agent_target_service: Optional[str] = None  # e.g. "cmt-backend", "i-0abc123"
 
 
 class IncidentResponse(BaseModel):

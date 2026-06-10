@@ -136,6 +136,20 @@ def execute_approved_action(approval: dict) -> dict:
 
     log.info("Executing approved action: solution=%s action=%s instance=%s", solution_id, action_type, instance_id)
 
+    # Agent-loop derived actions (Phase C) — take priority if present
+    agent_action_type = meta.get("ai_action_type") or meta.get("agent_action_type", "")
+    agent_target = meta.get("agent_target_service", "")
+
+    if agent_action_type == "service_restart" and agent_target:
+        result = restart_service(instance_id, agent_target, aws_account)
+        if result["success"] and agent_target == "postgresql":
+            time.sleep(2)
+            restart_service(instance_id, "cmt-backend", aws_account)
+        return result
+
+    if agent_action_type == "ec2_restart":
+        return restart_ec2(instance_id, aws_account)
+
     # Determine what to restart based on alert name and solution
     if solution_id == "S012" or "postgresql" in alert_name:
         result = restart_service(instance_id, "postgresql", aws_account)

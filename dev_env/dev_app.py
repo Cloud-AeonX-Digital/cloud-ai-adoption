@@ -23,10 +23,19 @@ from agent.app.approval_manager import (
     request_approval, get_approval, decide, mark_executed,
     list_pending, list_all, ApprovalStatus
 )
-from dev_env.classifier_dev import classify
+from dev_env.classifier_dev import classify as kb_classify
 from dev_env.notifier_dev import send_email
 from dev_env.logger_dev import log_incident
 from dev_env.ui import router as ui_router
+
+# Phase C: set USE_AGENT_LOOP=false to fall back to KB-only classifier
+_USE_AGENT_LOOP = os.environ.get("USE_AGENT_LOOP", "true").lower() == "true"
+
+if _USE_AGENT_LOOP:
+    from agent.app.agent_loop import run as _agent_run
+    classify = _agent_run
+else:
+    classify = kb_classify
 
 logging.basicConfig(
     level=logging.INFO,
@@ -87,6 +96,8 @@ async def handle_alert(request: Request):
                 "solution_steps": decision.solution_steps,
                 "ai_action": decision.action,
                 "action_type": next((s.get("action","") for s in __import__('json').load(open("agent/known-solutions.json"))["solutions"] if s["id"]==decision.solution_id), "") if decision.solution_id else "",
+                "ai_action_type": decision.agent_action_type,
+                "agent_target_service": decision.agent_target_service,
                 "severity": decision.severity,
                 "confidence": decision.confidence,
             }

@@ -162,10 +162,23 @@ docs/
 Every executor accepts `(account_id, region)` and assumes `Aeonx-L2-Role` dynamically.
 Unlocks all 150 client accounts with zero additional infra.
 
-### Phase C — True Agent Tool-Calling Loop
-Replace if/else with Bedrock Converse API tool-use. Each capability = a registered tool.
-New tools added without touching core agent loop.
-Covers: provisioning, deployment, cost, security, networking, DB ops, K8s.
+### Phase C — True Agent Tool-Calling Loop ✅ COMPLETE (2026-06-10)
+**What was built:**
+- `agent/tools/registry.py` — 6 tools: `search_runbook`, `get_service_status`, `get_ec2_info`, `query_cloudwatch_metric`, `get_recent_alerts`, `request_human_approval`
+- `agent/app/agent_loop.py` — Bedrock Converse API loop, max 6 iterations, system prompt separate param
+- `dev_env/dev_app.py` — `USE_AGENT_LOOP=true` flag (default on), falls back to KB classifier
+
+**Key Converse API notes:**
+- Content blocks use `{"toolUse": {...}}` NOT `{"type": "toolUse", ...}`
+- Tool results use `{"toolResult": {...}}` NOT `{"type": "toolResult", ...}`
+- System prompt is separate `system=[{"text": "..."}]` param
+- `gpt-oss-120b` returns `reasoningContent` blocks before `toolUse` blocks
+
+**Live test results:**
+- Backend down → agent: search_runbook → get_service_status (confirmed inactive) → get_recent_alerts → request_human_approval(service_restart, confidence=96%) ✅
+- PostgreSQL alert but service actually active → agent detected false positive → create_ticket instead of restart ✅ (smart!)
+
+**To add new tools:** Add entry to `TOOL_SPECS` + `_HANDLERS` dict in `agent/tools/registry.py`. Agent loop picks it up automatically.
 
 ### Phase D — Persistent Memory
 PostgreSQL + pgvector for incident history + semantic runbook search.

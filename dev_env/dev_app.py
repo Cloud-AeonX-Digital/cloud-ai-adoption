@@ -16,7 +16,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 import logging, os
 
-from agent.app.models import AlertPayload, IncidentResponse
+from agent.app.models import AlertPayload, IncidentResponse, AIDecision
 from agent.app.dedup import is_duplicate, mark_seen
 from agent.app.ticketing import find_open_ticket, create_ticket, add_note
 from agent.app.approval_manager import (
@@ -54,6 +54,16 @@ async def handle_alert(request: Request):
         return IncidentResponse(incident_id=incident.incident_id, action_taken="deduplicated", ticket_id=None)
 
     mark_seen(incident)
+
+    # Skip approval flow for resolved alerts — just log them
+    if incident.alert.status == "resolved":
+        log.info("RESOLVED: %s | %s", incident.incident_id[:8], incident.alert.name)
+        log_incident(incident, AIDecision(
+            actionable=False, action="resolved", severity=incident.alert.severity,
+            category="resolved", summary=f"Alert resolved: {incident.alert.name}",
+            confidence=1.0, solution_id=None, solution_steps=[]
+        ))
+        return IncidentResponse(incident_id=incident.incident_id, action_taken="resolved", ticket_id=None, approval_id=None)
 
     decision = classify(incident)
     log.info("DECISION: actionable=%s action=%s sev=%s conf=%.0f%%",

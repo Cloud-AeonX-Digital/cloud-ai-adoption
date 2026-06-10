@@ -132,38 +132,53 @@ docs/
 
 | # | Issue | Severity | Status |
 |---|-------|----------|--------|
-| P1 | S012 PostgreSQL KB match in uvicorn | HIGH | ✅ FIXED (normpath fix) |
-| P2 | AWS session expires every ~1h | MEDIUM | ⏳ Open — run `aws login` when needed |
+| P1 | S012 PostgreSQL KB match in uvicorn | HIGH | ✅ FIXED |
+| P2 | AWS session expires every ~1h | MEDIUM | ⏳ run `aws login` when needed |
 | P3 | SSM execution untested | MEDIUM | ✅ FIXED — live tested 2026-06-10 |
 | P4 | Resolved alerts create new approval | LOW | ✅ FIXED |
-| P5 | Production agent uses Vertex AI (not Bedrock) | MEDIUM | ⏳ Open — `agent/app/classifier.py` still uses GCP |
-| P6 | ManageEngine resolve/close blocked | MEDIUM | ⏳ Open — needs `aws.automation` Technician role upgrade |
-| P7 | Production infra not deployed | HIGH | ⏳ Open — IAM role, EC2, S3, Lambda 1 not created in 761685920937 |
-| P8 | Zabbix Gen-AI action still sends email (not webhook) | HIGH | ⏳ Open — needs Lambda 1 URL after prod deploy |
-| P9 | SSM executor service mapping incomplete | LOW | ⏳ Open — nginx mapped wrong (now fixed), other services may vary per client |
-| P10 | Client GUI (Phase 9) not built | LOW | ⏳ Future |
+| P5 | Production classifier used Vertex AI | MEDIUM | ✅ FIXED — now Bedrock |
+| P6 | ManageEngine resolve/close blocked | MEDIUM | ⏳ upgrade `aws.automation` to Technician |
+| P7 | Production infra not deployed | HIGH | ⏳ IAM role, EC2, S3, Lambda 1 in 761685920937 |
+| P8 | Zabbix webhook not wired (email is fine for now) | LOW | ⏳ after Lambda 1 deployed |
+| P9 | SSM service mapping varies per client | LOW | ⏳ standardize service naming |
+| P10 | Agent is single-account only | HIGH | ⏳ Phase B — multi-account tool layer |
+| P11 | Agent is if/else routing, not true tool-calling | HIGH | ⏳ Phase C — Bedrock Converse tool-use loop |
+| P12 | No persistent memory / vector store | HIGH | ⏳ Phase D — pgvector or OpenSearch |
 
 ---
 
-## Next Steps (in order)
+## Build Roadmap (Full Vision)
 
-### Immediate (dev env)
-1. Switch `agent/app/classifier.py` to use Bedrock (remove GCP Vertex AI dependency) — P5
-2. Upgrade `aws.automation@aeonx.digital` to Technician in ManageEngine — P6
+### Phase A — Production Deploy `NEXT`
+- Create IAM role `aeonx-ai-agent-role` (files in `iam/`)
+- Launch EC2 t3.small in 761685920937 (private subnet, same VPC as Zabbix)
+- Create S3 bucket `aeonx-ai-agent-incidents`
+- Store SSM secrets (`docs/ssm-secrets.md`)
+- Deploy Lambda 1 (`lambda/alert-ingestor/deploy.sh`)
+- Update Zabbix Gen-AI action → Lambda 1 webhook URL
+- Upgrade ManageEngine `aws.automation` → Technician role
 
-### Production deployment (account 761685920937)
-3. Create IAM role `aeonx-ai-agent-role` — files ready in `iam/`
-4. Launch EC2 t3.small (ap-south-1, private subnet, same VPC as Zabbix)
-5. Create S3 bucket `aeonx-ai-agent-incidents`
-6. Store SSM secrets (see `docs/ssm-secrets.md`)
-7. Deploy Lambda 1 — `lambda/alert-ingestor/deploy.sh`
-8. Update Zabbix Gen-AI action → Lambda 1 webhook URL
-9. Test end-to-end with real Zabbix alerts in production
+### Phase B — Multi-account Tool Layer
+Every executor accepts `(account_id, region)` and assumes `Aeonx-L2-Role` dynamically.
+Unlocks all 150 client accounts with zero additional infra.
 
-### Phase 5+ (future)
-- Memory/RAG layer — index past incidents for LLM context
-- CI/CD — GitHub Actions pipelines
-- Client GUI (Phase 9)
+### Phase C — True Agent Tool-Calling Loop
+Replace if/else with Bedrock Converse API tool-use. Each capability = a registered tool.
+New tools added without touching core agent loop.
+Covers: provisioning, deployment, cost, security, networking, DB ops, K8s.
+
+### Phase D — Persistent Memory
+PostgreSQL + pgvector for incident history + semantic runbook search.
+Feeds past incidents as context into every LLM call.
+Enables RCA, "what changed last 24h", post-incident reports.
+
+### Phase E — Developer Self-Service Chat (`POST /chat`)
+Natural language → tool calls → response with approval gate for destructive actions.
+"Spin up dev env", "Why is service X slow?", "What changed in prod today?"
+
+### Phase F — Cost / Security / Compliance Tools
+Additional tools registered in Phase C framework:
+cost anomaly, Security Hub, GuardDuty, Config drift, secrets rotation.
 
 ---
 

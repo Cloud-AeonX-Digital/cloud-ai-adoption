@@ -132,6 +132,75 @@ TOOL_SPECS = [
     },
     {
         "toolSpec": {
+            "name": "get_cost_breakdown",
+            "description": "Get AWS cost breakdown for the current or past month by service. Use to answer 'what is costing the most?', 'how much did EC2 cost this week?', or 'show me costs for this account'. Also supports filtering by specific service name.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "days": {"type": "integer", "description": "Number of past days to look back (default: 7)", "default": 7},
+                    "service_filter": {"type": "string", "description": "Optional: filter to a specific AWS service name, e.g. 'Amazon EC2', 'Amazon RDS'"},
+                    "granularity": {"type": "string", "enum": ["DAILY", "MONTHLY"], "default": "DAILY"}
+                },
+                "required": []
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "get_cost_anomalies",
+            "description": "Get AWS Cost Anomaly Detection alerts — services or accounts with unexpected cost spikes. Use when asked about cost surprises, billing alerts, or unexpected charges.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "days": {"type": "integer", "description": "Look back N days (default: 14)", "default": 14},
+                    "min_impact_usd": {"type": "number", "description": "Minimum dollar impact to include (default: 1.0)", "default": 1.0}
+                },
+                "required": []
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "flag_idle_resources",
+            "description": "Find idle or orphaned AWS resources that are accruing cost: unattached EBS volumes, unused Elastic IPs, stopped EC2 instances, old snapshots. Use to answer cost optimization questions.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "resource_types": {"type": "array", "items": {"type": "string"}, "description": "Types to check: ebs_volumes, elastic_ips, stopped_ec2, snapshots. Default: all."}
+                },
+                "required": []
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "get_security_findings",
+            "description": "Get security issues: Security Hub findings (if enabled), public S3 buckets, security groups with 0.0.0.0/0 open ports, and IAM users without MFA. Returns actionable findings.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "check_types": {"type": "array", "items": {"type": "string"}, "description": "Types to check: security_hub, public_s3, open_security_groups, iam_mfa. Default: all available."},
+                    "severity": {"type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "ALL"], "default": "HIGH"}
+                },
+                "required": []
+            }}
+        }
+    },
+    {
+        "toolSpec": {
+            "name": "get_secrets_rotation_status",
+            "description": "Check AWS Secrets Manager and SSM Parameter Store for secrets/parameters that haven't been rotated recently.",
+            "inputSchema": {"json": {
+                "type": "object",
+                "properties": {
+                    "days_threshold": {"type": "integer", "description": "Flag secrets not rotated in this many days (default: 90)", "default": 90}
+                },
+                "required": []
+            }}
+        }
+    },
+    {
+        "toolSpec": {
             "name": "request_human_approval",
             "description": "Submit a proposed remediation action for human approval. Call this ONLY after gathering enough context. The action will NOT execute until a human approves it in the UI or via email.",
             "inputSchema": {"json": {
@@ -377,6 +446,209 @@ def _ssm_run_simple(instance_id: str, commands: list) -> str:
         return str(e)
 
 
+def _handle_get_cost_breakdown(args: dict) -> dict:
+    import boto3
+    from datetime import datetime, timezone, timedelta
+    days = args.get("days", 7)
+    granularity = args.get("granularity", "DAILY")
+    service_filter = args.get("service_filter", "")
+    end = datetime.now(timezone.utc).date()
+    start = end - timedelta(days=days)
+    try:
+        ce = boto3.client("ce", region_name="us-east-1")
+        params = dict(
+            TimePeriod={"Start": str(start), "End": str(end)},
+            Granularity=granularity,
+            Metrics=["UnblendedCost"],
+            GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}],
+        )
+        if service_filter:
+            params["Filter"] = {"Dimensions": {"Key": "SERVICE", "Values": [service_filter], "MatchOptions": ["CONTAINS"]}}
+        resp = ce.get_cost_and_usage(**params)
+        # Aggregate by service across all days
+        totals = {}
+        for day in resp["ResultsByTime"]:
+            for g in day["Groups"]:
+                svc = g["Keys"][0]
+                amt = float(g["Metrics"]["UnblendedCost"]["Amount"])
+                totals[svc] = totals.get(svc, 0) + amt
+        top = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:10]
+        total_usd = sum(v for _, v in top)
+        return {
+            "period": f"{start} to {end}",
+            "total_usd": round(total_usd, 4),
+            "top_services": [{"service": k, "cost_usd": round(v, 4)} for k, v in top],
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _handle_get_cost_anomalies(args: dict) -> dict:
+    import boto3
+    from datetime import datetime, timezone, timedelta
+    days = args.get("days", 14)
+    min_impact = args.get("min_impact_usd", 1.0)
+    start = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+    end = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    try:
+        ce = boto3.client("ce", region_name="us-east-1")
+        resp = ce.get_anomalies(
+            DateInterval={"StartDate": start, "EndDate": end},
+            TotalImpact={"NumericOperator": "GREATER_THAN_OR_EQUAL", "StartValue": min_impact},
+        )
+        anomalies = []
+        for a in resp.get("Anomalies", []):
+            impact = a.get("Impact", {})
+            anomalies.append({
+                "id": a["AnomalyId"][:12],
+                "service": a.get("DimensionValue", "unknown"),
+                "start_date": a.get("AnomalyStartDate", ""),
+                "total_impact_usd": round(float(impact.get("TotalImpact", 0)), 2),
+                "expected_spend": round(float(impact.get("TotalExpectedSpend", 0)), 2),
+                "actual_spend": round(float(impact.get("TotalActualSpend", 0)), 2),
+            })
+        return {
+            "period": f"{start} to {end}",
+            "anomalies_found": len(anomalies),
+            "anomalies": anomalies,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _handle_flag_idle_resources(args: dict) -> dict:
+    import boto3
+    region = os.environ.get("AWS_REGION", "ap-south-1")
+    checks = args.get("resource_types") or ["ebs_volumes", "elastic_ips", "stopped_ec2"]
+    results = {}
+    try:
+        ec2 = boto3.client("ec2", region_name=region)
+        if "ebs_volumes" in checks:
+            vols = ec2.describe_volumes(Filters=[{"Name": "status", "Values": ["available"]}])["Volumes"]
+            results["unattached_ebs"] = [{"id": v["VolumeId"], "size_gb": v["Size"],
+                "type": v["VolumeType"], "created": str(v["CreateTime"])[:10]} for v in vols]
+
+        if "elastic_ips" in checks:
+            eips = ec2.describe_addresses()["Addresses"]
+            results["unused_eips"] = [{"ip": e["PublicIp"], "allocation_id": e.get("AllocationId","")}
+                for e in eips if "InstanceId" not in e]
+
+        if "stopped_ec2" in checks:
+            stopped = ec2.describe_instances(
+                Filters=[{"Name": "instance-state-name", "Values": ["stopped"]}])["Reservations"]
+            insts = []
+            for r in stopped:
+                for i in r["Instances"]:
+                    tags = {t["Key"]: t["Value"] for t in i.get("Tags", [])}
+                    insts.append({"id": i["InstanceId"], "type": i["InstanceType"],
+                        "name": tags.get("Name", ""), "stopped_reason": i.get("StateTransitionReason","")[:50]})
+            results["stopped_instances"] = insts
+
+        idle_count = sum(len(v) for v in results.values())
+        return {"region": region, "idle_resources_found": idle_count, **results}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _handle_get_security_findings(args: dict) -> dict:
+    import boto3
+    region = os.environ.get("AWS_REGION", "ap-south-1")
+    checks = args.get("check_types") or ["public_s3", "open_security_groups", "iam_mfa"]
+    results = {}
+    try:
+        # Security Hub (optional — may not be enabled)
+        if "security_hub" in checks:
+            try:
+                sh = boto3.client("securityhub", region_name=region)
+                sev = args.get("severity", "HIGH")
+                filters = {} if sev == "ALL" else {"SeverityLabel": [{"Value": sev, "Comparison": "EQUALS"}]}
+                findings = sh.get_findings(Filters=filters, MaxResults=10)["Findings"]
+                results["security_hub"] = [{"title": f["Title"], "severity": f["Severity"]["Label"],
+                    "resource": f["Resources"][0]["Id"] if f.get("Resources") else ""} for f in findings]
+            except Exception as e:
+                results["security_hub"] = {"note": f"Not enabled or no access: {e}"}
+
+        # Public S3 buckets
+        if "public_s3" in checks:
+            try:
+                s3 = boto3.client("s3", region_name=region)
+                buckets = s3.list_buckets()["Buckets"]
+                public = []
+                for b in buckets[:20]:  # limit to avoid throttling
+                    try:
+                        acl = s3.get_bucket_acl(Bucket=b["Name"])
+                        for grant in acl["Grants"]:
+                            grantee = grant.get("Grantee", {})
+                            if grantee.get("URI", "").endswith("AllUsers") or grantee.get("URI", "").endswith("AuthenticatedUsers"):
+                                public.append({"bucket": b["Name"], "permission": grant["Permission"]})
+                    except Exception:
+                        pass
+                results["public_s3_buckets"] = public
+            except Exception as e:
+                results["public_s3_buckets"] = {"error": str(e)}
+
+        # Security groups with 0.0.0.0/0
+        if "open_security_groups" in checks:
+            try:
+                ec2 = boto3.client("ec2", region_name=region)
+                sgs = ec2.describe_security_groups()["SecurityGroups"]
+                open_sgs = []
+                for sg in sgs:
+                    for perm in sg.get("IpPermissions", []):
+                        for r in perm.get("IpRanges", []):
+                            if r.get("CidrIp") == "0.0.0.0/0":
+                                port = perm.get("FromPort", "all")
+                                open_sgs.append({"sg_id": sg["GroupId"], "name": sg.get("GroupName",""),
+                                    "port": port, "protocol": perm.get("IpProtocol","-1")})
+                results["open_security_groups"] = open_sgs[:20]
+            except Exception as e:
+                results["open_security_groups"] = {"error": str(e)}
+
+        # IAM users without MFA
+        if "iam_mfa" in checks:
+            try:
+                iam = boto3.client("iam", region_name="us-east-1")
+                users = iam.list_users()["Users"]
+                no_mfa = []
+                for u in users:
+                    mfa = iam.list_mfa_devices(UserName=u["UserName"])["MFADevices"]
+                    if not mfa:
+                        no_mfa.append({"user": u["UserName"], "created": str(u["CreateDate"])[:10]})
+                results["iam_users_without_mfa"] = no_mfa
+            except Exception as e:
+                results["iam_users_without_mfa"] = {"error": str(e)}
+
+        total_issues = sum(len(v) if isinstance(v, list) else 0 for v in results.values())
+        return {"total_issues": total_issues, **results}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _handle_get_secrets_rotation_status(args: dict) -> dict:
+    import boto3
+    from datetime import datetime, timezone, timedelta
+    region = os.environ.get("AWS_REGION", "ap-south-1")
+    threshold = args.get("days_threshold", 90)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=threshold)
+    results = {"stale_secrets": [], "threshold_days": threshold}
+    try:
+        sm = boto3.client("secretsmanager", region_name=region)
+        paginator = sm.get_paginator("list_secrets")
+        for page in paginator.paginate():
+            for s in page["SecretList"]:
+                last = s.get("LastRotatedDate") or s.get("LastChangedDate")
+                if last and last.replace(tzinfo=timezone.utc) < cutoff:
+                    results["stale_secrets"].append({
+                        "name": s["Name"],
+                        "last_rotated": str(last)[:10],
+                        "rotation_enabled": s.get("RotationEnabled", False),
+                    })
+    except Exception as e:
+        results["error"] = str(e)
+    results["stale_count"] = len(results["stale_secrets"])
+    return results
+
+
 def _handle_request_human_approval(args: dict) -> dict:
     # This is a sentinel — the agent_loop intercepts this and converts it to an ApprovalRequest
     # Returning the args lets agent_loop extract and create the actual approval
@@ -394,6 +666,12 @@ _HANDLERS = {
     "get_disk_usage": _handle_get_disk_usage,
     "get_server_info": _handle_get_server_info,
     "describe_aws_resource": _handle_describe_aws_resource,
+    # Phase F — Cost & Security
+    "get_cost_breakdown": _handle_get_cost_breakdown,
+    "get_cost_anomalies": _handle_get_cost_anomalies,
+    "flag_idle_resources": _handle_flag_idle_resources,
+    "get_security_findings": _handle_get_security_findings,
+    "get_secrets_rotation_status": _handle_get_secrets_rotation_status,
     "request_human_approval": _handle_request_human_approval,
 }
 

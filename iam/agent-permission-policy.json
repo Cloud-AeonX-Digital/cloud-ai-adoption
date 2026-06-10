@@ -81,6 +81,40 @@
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Resource": "arn:aws:iam::*:role/Aeonx-L2-Role"
+    },
+    {
+      "Sid": "CostExplorerReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "ce:GetCostAndUsage",
+        "ce:GetAnomalies",
+        "ce:GetAnomalyMonitors",
+        "ce:GetCostForecast"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "SecurityReadOnly",
+      "Effect": "Allow",
+      "Action": [
+        "securityhub:GetFindings",
+        "securityhub:ListFindings",
+        "guardduty:ListFindings",
+        "guardduty:GetFindings",
+        "guardduty:ListDetectors",
+        "s3:GetBucketAcl",
+        "s3:GetBucketPolicy",
+        "s3:GetBucketPolicyStatus",
+        "s3:GetBucketPublicAccessBlock",
+        "iam:ListUsers",
+        "iam:ListMFADevices",
+        "iam:ListVirtualMFADevices",
+        "secretsmanager:ListSecrets",
+        "secretsmanager:DescribeSecret",
+        "ec2:DescribeAddresses",
+        "ec2:DescribeSnapshots"
+      ],
+      "Resource": "*"
     }
   ]
 }

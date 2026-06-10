@@ -301,6 +301,65 @@
         "PostgreSQL: Service is down",
         "DB: Connection failed"
       ]
+    },
+    {
+      "id": "S013",
+      "pattern": "billing",
+      "match_type": "contains",
+      "category": "cost-anomaly",
+      "severity": "high",
+      "actionable": false,
+      "action": "notify_only",
+      "steps": [
+        "Query get_cost_anomalies to identify the spike",
+        "Query get_cost_breakdown to find top services",
+        "Notify finance + ops team with cost summary",
+        "Flag idle resources if overspend is confirmed"
+      ]
+    },
+    {
+      "id": "S014",
+      "pattern": "estimated charges",
+      "match_type": "contains",
+      "category": "cost-anomaly",
+      "severity": "high",
+      "actionable": false,
+      "action": "notify_only",
+      "steps": [
+        "Query get_cost_breakdown for current month spend by service",
+        "Check get_cost_anomalies for unexpected spikes",
+        "Send cost summary email to team"
+      ]
+    },
+    {
+      "id": "S015",
+      "pattern": "security hub",
+      "match_type": "contains",
+      "category": "security",
+      "severity": "critical",
+      "actionable": false,
+      "action": "human_approval_required",
+      "steps": [
+        "Query get_security_findings for active HIGH/CRITICAL findings",
+        "Identify affected resources",
+        "Create ticket for security team review",
+        "Request human approval before any remediation"
+      ]
+    },
+    {
+      "id": "S016",
+      "pattern": "guardduty",
+      "match_type": "contains",
+      "category": "security",
+      "severity": "critical",
+      "actionable": false,
+      "action": "human_approval_required",
+      "steps": [
+        "Query get_security_findings for GuardDuty threats",
+        "Identify affected resources and threat type",
+        "Escalate to security team immediately",
+        "Request human approval before isolating any resource"
+      ]
     }
   ]
 }

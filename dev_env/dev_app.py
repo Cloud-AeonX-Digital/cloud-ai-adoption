@@ -120,20 +120,23 @@ async def handle_alert(request: Request):
     send_email(incident, decision, approval_id=approval_id)
     log_incident(incident, decision, ticket_id=ticket_id)
 
-    # Phase D: write to persistent FTS5 memory
-    is_fp = (decision.action == "create_ticket" and decision.actionable)  # actionable KB match but chose not to restart = false positive
-    write_incident(
-        incident_id=incident.incident_id,
-        host=incident.host.name,
-        client=incident.client.name,
-        alert_name=incident.alert.name,
-        category=decision.category,
-        severity=decision.severity,
-        action=decision.action,
-        solution_id=decision.solution_id or "",
-        confidence=decision.confidence,
-        false_positive=is_fp,
-    )
+    # Phase D: write high-signal incidents to FTS5 memory (skip low/medium noise)
+    _MEMORY_CATEGORIES = {"website-down", "service-down", "disk-space", "ec2-terminated", "agent-unavailable"}
+    _MEMORY_SEVERITIES = {"critical", "high"}
+    is_fp = (decision.action == "create_ticket" and decision.actionable)
+    if decision.severity in _MEMORY_SEVERITIES or decision.category in _MEMORY_CATEGORIES:
+        write_incident(
+            incident_id=incident.incident_id,
+            host=incident.host.name,
+            client=incident.client.name,
+            alert_name=incident.alert.name,
+            category=decision.category,
+            severity=decision.severity,
+            action=decision.action,
+            solution_id=decision.solution_id or "",
+            confidence=decision.confidence,
+            false_positive=is_fp,
+        )
 
     return IncidentResponse(
         incident_id=incident.incident_id,

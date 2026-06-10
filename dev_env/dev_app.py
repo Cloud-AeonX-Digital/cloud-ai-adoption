@@ -222,3 +222,28 @@ def reject_via_email(approval_id: str):
 @app.get("/health")
 def health():
     return {"status": "ok", "mode": "dev", "model": os.environ.get("BEDROCK_MODEL_ID", "not set")}
+
+
+# Phase E — Developer Self-Service Chat
+@app.post("/chat")
+async def chat_endpoint(request: Request):
+    body = await request.json()
+    question = body.get("question", "").strip()
+    if not question:
+        raise HTTPException(400, "question required")
+    context = body.get("context", {})  # optional: {host, instance_id, account_id}
+
+    from agent.app.chat_loop import chat
+    result = chat(question, context)
+
+    # Sync approval to Express if one was created
+    if result.get("approval_id"):
+        try:
+            from dev_env.logger_dev import sync_approval_to_express
+            sync_approval_to_express(get_approval(result["approval_id"]))
+        except Exception:
+            pass
+
+    log.info("[CHAT] Q: %s | tools=%s | approval=%s",
+             question[:60], result["tools_used"], result.get("approval_id", "")[:8] if result.get("approval_id") else "-")
+    return result

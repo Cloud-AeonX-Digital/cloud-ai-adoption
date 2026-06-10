@@ -61,8 +61,8 @@ def init_db():
                 VALUES (new.id, new.incident_id, new.host, new.alert_name, new.category, new.action);
             END;
         """)
-        # Purge incidents older than 30 days
-        cutoff = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        # Purge incidents older than 15 days
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=15)).isoformat()
         db.execute("DELETE FROM incidents WHERE created_at < ?", (cutoff,))
         db.commit()
         db.close()

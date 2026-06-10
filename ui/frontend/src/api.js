@@ -1,4 +1,5 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const BASE  = import.meta.env.VITE_API_URL  || 'http://localhost:3001';
+const AGENT = import.meta.env.VITE_AGENT_URL || 'http://172.25.29.253:8000';
 
 async function get(path, params = {}) {
   const url = new URL(BASE + path);
@@ -23,4 +24,10 @@ export const api = {
       body: JSON.stringify({ status, decided_by, decision_note }),
     }).then(r => r.json());
   },
+  chat: (question, context = {}) =>
+    fetch(`${AGENT}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, context }),
+    }).then(r => r.json()),
 };

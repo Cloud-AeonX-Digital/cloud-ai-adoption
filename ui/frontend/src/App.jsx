@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, List, ShieldCheck, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, List, ShieldCheck, MessageSquare, Sun, Moon } from 'lucide-react';
 import Dashboard from './pages/Dashboard';
 import Alerts from './pages/Alerts';
 import Approvals from './pages/Approvals';
+import Chat from './pages/Chat';
 import { api } from './api';
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
     { id: 'dashboard', label: 'Dashboard',  icon: <LayoutDashboard size={14} /> },
     { id: 'alerts',    label: 'All Alerts',  icon: <List size={14} /> },
     { id: 'approvals', label: 'Approvals',   icon: <ShieldCheck size={14} />, badge: pendingCount },
+    { id: 'chat',      label: 'Assistant',   icon: <MessageSquare size={14} /> },
   ];
 
   return (
@@ -74,7 +76,7 @@ export default function App() {
       </nav>
 
       <div className="flex flex-1 overflow-hidden bg-app">
-        {page === 'dashboard' ? <Dashboard /> : page === 'alerts' ? <Alerts /> : <Approvals />}
+        {page === 'dashboard' ? <Dashboard /> : page === 'alerts' ? <Alerts /> : page === 'chat' ? <Chat /> : <Approvals />}
       </div>
     </div>
   );

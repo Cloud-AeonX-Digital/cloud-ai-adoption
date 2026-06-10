@@ -62,7 +62,7 @@ RULES:
 def _system_prompt(incident: AlertPayload) -> str:
     # Inject host memory context
     from agent.app.memory import get_host_history
-    history = get_host_history(incident.host.name, days=7)
+    history = get_host_history(incident.host.name, days=3)
 
     mem_ctx = ""
     if history["total"] > 0:

@@ -27,7 +27,7 @@ def _conn() -> sqlite3.Connection:
 
 
 def init_db():
-    """Create tables if not exist. Called at agent startup."""
+    """Create tables if not exist and purge records older than 30 days. Called at agent startup."""
     with _lock:
         db = _conn()
         db.executescript("""
@@ -61,6 +61,9 @@ def init_db():
                 VALUES (new.id, new.incident_id, new.host, new.alert_name, new.category, new.action);
             END;
         """)
+        # Purge incidents older than 15 days
+        cutoff = (datetime.now(timezone.utc) - timedelta(days=15)).isoformat()
+        db.execute("DELETE FROM incidents WHERE created_at < ?", (cutoff,))
         db.commit()
         db.close()
 
@@ -86,10 +89,10 @@ def write_incident(incident_id: str, host: str, client: str, alert_name: str,
             db.close()
 
 
-def get_host_history(host: str, days: int = 7) -> dict:
+def get_host_history(host: str, days: int = 3) -> dict:
     """
     Return incident summary for a host over the last N days.
-    Used by agent loop for context injection.
+    Default window: 3 days. Used by agent loop for context injection.
     """
     since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat()
     db = _conn()

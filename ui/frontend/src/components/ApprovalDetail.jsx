@@ -1,5 +1,7 @@
-import { X, CheckCircle, XCircle, Mail, Terminal, RefreshCw, AlertTriangle, HardDrive } from 'lucide-react';
+import { X, CheckCircle, XCircle, Mail, Terminal, RefreshCw, AlertTriangle, HardDrive, MessageSquare, Send, Bot, Loader2 } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import { SEV_CLASS, SEV_ICON, ACT_CLASS, Badge, fmtDT } from '../utils';
+import { api } from '../api';
 
 const STATUS_STYLE = {
   pending:  { bg: 'var(--yellow-bg)', color: 'var(--yellow)', border: 'var(--yellow)', label: 'Pending Approval' },
@@ -138,6 +140,105 @@ function SectionHeader({ children }) {
   );
 }
 
+function AivexMiniChat({ approval }) {
+  const meta = approval?.metadata || {};
+  const context = {
+    host: meta.host?.name,
+    instance_id: meta.host?.instance_id,
+    account_id: meta.client?.aws_account,
+  };
+  const alertName = meta.alert?.name || approval?.description || '';
+  const initialQ = alertName
+    ? `What do you know about this alert on ${meta.host?.name || 'this host'}: "${alertName}"?`
+    : '';
+
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const bottomRef = useRef(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+
+  // Auto-fetch history when opened
+  useEffect(() => {
+    if (initialQ && messages.length === 0) sendMsg(initialQ, true);
+  }, []); // eslint-disable-line
+
+  async function sendMsg(question, silent = false) {
+    const q = (question || input).trim();
+    if (!q || loading) return;
+    setInput('');
+    if (!silent) setMessages(m => [...m, { role: 'user', text: q }]);
+    setLoading(true);
+    try {
+      const res = await api.chat(q, context);
+      setMessages(m => [...m, {
+        role: 'assistant',
+        text: res.answer,
+        meta: res.tools_used?.length ? `— ${res.tools_used.join(', ')}` : '',
+      }]);
+    } catch (e) {
+      setMessages(m => [...m, { role: 'assistant', text: `Error: ${e.message}`, error: true }]);
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{ border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+      {/* Message area */}
+      <div style={{ maxHeight: 260, overflowY: 'auto', padding: '12px 14px',
+        display: 'flex', flexDirection: 'column', gap: 10, background: 'var(--surface2)' }}>
+        {loading && messages.length === 0 && (
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', color: 'var(--text3)', fontSize: 12 }}>
+            <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} />
+            Fetching alert history…
+          </div>
+        )}
+        {messages.map((m, i) => (
+          <div key={i}>
+            {m.role === 'user' && (
+              <div style={{ fontSize: 11, color: 'var(--text3)', marginBottom: 2 }}>You</div>
+            )}
+            <div style={{
+              fontSize: 12, lineHeight: 1.65, color: m.error ? 'var(--red)' : 'var(--text)',
+              whiteSpace: 'pre-wrap', padding: m.role === 'assistant' ? '8px 12px' : '0',
+              background: m.role === 'assistant' ? 'var(--surface)' : 'transparent',
+              borderRadius: 8, border: m.role === 'assistant' ? '1px solid var(--border)' : 'none',
+            }}>{m.text}</div>
+            {m.meta && <div style={{ fontSize: 10, color: 'var(--text3)', marginTop: 3, paddingLeft: 2 }}>{m.meta}</div>}
+          </div>
+        ))}
+        {loading && messages.length > 0 && (
+          <Loader2 size={13} style={{ color: 'var(--text3)', animation: 'spin 1s linear infinite' }} />
+        )}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div style={{ display: 'flex', gap: 0, borderTop: '1px solid var(--border)' }}>
+        <input
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMsg()}
+          disabled={loading}
+          placeholder="Ask Aivex about this alert…"
+          style={{
+            flex: 1, padding: '9px 12px', fontSize: 12, background: 'var(--surface)',
+            border: 'none', outline: 'none', color: 'var(--text)',
+          }}
+        />
+        <button onClick={() => sendMsg()} disabled={!input.trim() || loading}
+          style={{
+            padding: '0 14px', background: 'var(--blue)', border: 'none', cursor: 'pointer',
+            color: '#fff', opacity: (!input.trim() || loading) ? 0.4 : 1,
+          }}>
+          <Send size={13} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ApprovalDetail({ approval, onClose, onDecide, deciding }) {
   if (!approval) return null;
 
@@ -256,6 +357,12 @@ export default function ApprovalDetail({ approval, onClose, onDecide, deciding }
               {approval.decision_note && <KV label="Note" value={approval.decision_note} />}
             </section>
           )}
+
+          {/* Aivex mini-chat */}
+          <section>
+            <SectionHeader>Ask Aivex</SectionHeader>
+            <AivexMiniChat approval={approval} />
+          </section>
         </div>
 
         {/* Approve/Reject footer */}

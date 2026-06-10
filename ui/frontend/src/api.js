@@ -25,7 +25,7 @@ export const api = {
     }).then(r => r.json());
   },
   chat: (question, context = {}) =>
-    fetch(`${AGENT}/chat`, {
+    fetch(`${BASE}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, context }),

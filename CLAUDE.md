@@ -23,7 +23,7 @@
 | Monitoring | Zabbix (self-hosted) | AWS, 706 hosts, ~90 client groups, ap-south-1 |
 | Alert ingestor | AWS Lambda | Lambda 1 — thin normalizer, ap-south-1 |
 | AI Decision Engine | EC2 t3.small | FastAPI/Python, ap-south-1, persistent service |
-| AI/LLM | GCP Vertex AI (Gemini) | Called over HTTPS from EC2 |
+| AI/LLM | AWS Bedrock (gpt-oss-120b) | `openai.gpt-oss-120b-1:0`, ap-south-1, account 719395381450 |
 | Ticketing | ManageEngine ServiceDesk Plus | Self-hosted AWS, REST API |
 | Notifications | AWS SES | email-smtp.ap-south-1.amazonaws.com → awsalerts@aeonx.digital |
 | Secrets | AWS SSM Parameter Store | /aeonx/ai-agent/* |

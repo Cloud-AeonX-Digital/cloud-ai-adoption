@@ -4,6 +4,8 @@
 > Account: 761685920937 | Region: ap-south-1
 > Path prefix: `/aeonx/ai-agent/`
 
+> **Note:** GCP service account key NOT needed. Production classifier uses AWS Bedrock (gpt-oss-120b-1:0) — IAM auth only.
+
 ---
 
 ## How to store a secret

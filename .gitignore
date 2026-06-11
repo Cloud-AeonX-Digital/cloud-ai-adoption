@@ -5,3 +5,10 @@ __pycache__/
 .env
 *.egg-info/
 dist/
+
+# Runtime output
+output/incidents/
+output/emails.log
+output/agent.log
+dev_env/output/memory.db
+.vite/

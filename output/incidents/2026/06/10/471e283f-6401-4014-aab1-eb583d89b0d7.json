@@ -1,0 +1,64 @@
+{
+  "incident_id": "471e283f-6401-4014-aab1-eb583d89b0d7",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T10:07:57.852422+00:00",
+  "logged_at": "2026-06-10T10:08:06.368275+00:00",
+  "alert": {
+    "name": "Linux: Zabbix agent is not available (or nodata for 30m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "55001",
+    "event_id": "7868006",
+    "item_value": ""
+  },
+  "host": {
+    "name": "Rahman - Web App Server",
+    "ip": "10.0.6.15",
+    "zabbix_host_id": "13001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "Rahman - Web App Server",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "average",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.0,
+    "solution_id": null,
+    "summary": "Agent loop failed \u2014 manual review required."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T10:07:57.852422+00:00",
+      "detail": "Zabbix alert: Linux: Zabbix agent is not available (or nodata for 30m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T10:08:06.368275+00:00",
+      "detail": "Non-actionable | AVERAGE | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T10:08:06.368275+00:00",
+      "detail": "Action: escalate | Confidence: 0%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T10:08:06.368275+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T10:08:06.368275+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

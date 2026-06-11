@@ -3569,3 +3569,605 @@ REJECT:  http://172.25.29.253:8000/approvals/5cc84382-dffe-4105-8030-a9816626ba9
 Expires in 24 hours.
 
 ============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T04:12:48.321735+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 7c8ad419-690b-4507-92b1-7be1545bac5e
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : T
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : test
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S012): Linux: postgresql service is not running
+
+SUGGESTED:
+Restart PostgreSQL via SSM Run Command: sudo systemctl restart postgresql
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/5817044c-e072-462e-bf09-7fbb91036679/approve
+REJECT:  http://172.25.29.253:8000/approvals/5817044c-e072-462e-bf09-7fbb91036679/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T04:14:03.257177+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : c6434fc7-a5ae-415a-8bac-83f7a77707a4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : T
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : test
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S012): Linux: postgresql service is not running
+
+SUGGESTED:
+Restart PostgreSQL via SSM Run Command: sudo systemctl restart postgresql
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/741346d6-8fd0-4bcd-867e-799d0ea30d02/approve
+REJECT:  http://172.25.29.253:8000/approvals/741346d6-8fd0-4bcd-867e-799d0ea30d02/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T04:14:43.067104+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Frontend: health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 40f38dd1-9e1f-42fd-b1e4-8cca50a85581
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Frontend: health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Frontend: health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/1c9f0e41-56e1-4ddb-9b42-6bb19e0c53f0/approve
+REJECT:  http://172.25.29.253:8000/approvals/1c9f0e41-56e1-4ddb-9b42-6bb19e0c53f0/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T04:14:43.670431+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 703db38e-6b69-4dce-8c2a-8656272aaf97
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : website-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S001b): CMT Backend API: Backend health check failed
+
+SUGGESTED:
+Service health check failed — web scenario detected unreachable endpoint
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/c92ecb9f-ff34-472c-96f8-a85592beb0fa/approve
+REJECT:  http://172.25.29.253:8000/approvals/c92ecb9f-ff34-472c-96f8-a85592beb0fa/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T04:14:44.374679+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : cd081b54-1e36-4f9f-8c1f-783b78302bd9
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 99%
+ACTION      : human-approval-required
+
+SUMMARY:
+Known pattern matched (S012): Linux: postgresql service is not running
+
+SUGGESTED:
+Restart PostgreSQL via SSM Run Command: sudo systemctl restart postgresql
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/6e5e53be-af4e-4499-9f53-a08deb79bd90/approve
+REJECT:  http://172.25.29.253:8000/approvals/6e5e53be-af4e-4499-9f53-a08deb79bd90/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T06:31:40.755763+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : 445459fc-c35c-40d8-a7ce-e3afcc477dd4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : down
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Agent loop failed: Parameter validation failed:
+Invalid type for parameter messages[0].content, value: You are an expert SRE AI agent for AeonX Digital Technology.
+You monitor cloud infrastructure and respond to alerts across many client accounts.
+
+Your job when receiving an alert:
+1. ALWAYS call search_runbook first — check if a known solution exists
+2. Optionally call get_service_status to confirm the service is actually down
+3. Optionally call get_recent_alerts to detect recurring patterns
+4. Once you have enough context, call request_human_approval with your recommendation
+
+Rules:
+- NEVER execute actions directly — always use request_human_approval
+- If search_runbook returns a known solution, use it (high confidence)
+- If no known solution, use your SRE expertise to diagnose
+- Be concise in your reasoning field — one sentence max
+- Always set confidence: 0.95+ for known KB matches, 0.6-0.8 for LLM inference
+
+ALERT CONTEXT:
+  Alert: Linux: postgresql service is not running
+  Severity: high
+  Status: problem
+  Host: Cloud Monitoring Tool (9.210.2.110)
+  Instance: i-00902943a502495a5
+  Value: down
+  Client: Aeonx Sandbox (account: 719395381450)
+
+Start by calling search_runbook., type: <class 'str'>, valid types: <class 'list'>, <class 'tuple'> — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/53e015c9-9755-4350-8cd0-d992fb1ac344/approve
+REJECT:  http://172.25.29.253:8000/approvals/53e015c9-9755-4350-8cd0-d992fb1ac344/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T06:34:39.976101+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] Linux: postgresql service is not running — Cloud Monitoring Tool
+
+INCIDENT ID : c20b31b2-bd79-4d30-999a-c558d6d03e7f
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : Linux: postgresql service is not running
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 73%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+PostgreSQL service is reported stopped but is active; likely monitoring false positive; create ticket to investigate alert source and potential flapping.
+
+SUGGESTED:
+Restart service: postgresql on i-00902943a502495a5
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/f9647fa5-5f4c-4aa5-86d1-03dfd02b220a/approve
+REJECT:  http://172.25.29.253:8000/approvals/f9647fa5-5f4c-4aa5-86d1-03dfd02b220a/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T06:35:26.451465+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 6b975891-d145-44ec-b0be-17bb707c0596
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : stopped
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 96%
+ACTION      : human-approval-required
+
+SUMMARY:
+CMT Backend health check failed; service cmt-backend is not running on instance i-00902943a502495a5; known runbook S001b recommends restart.
+
+SUGGESTED:
+sudo systemctl restart cmt-backend
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e62cec16-ddea-4b34-acad-504b4ce00984/approve
+REJECT:  http://172.25.29.253:8000/approvals/e62cec16-ddea-4b34-acad-504b4ce00984/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T07:18:28.937004+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 7fb79280-adc4-42b2-9544-0cc65621d083
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : 503
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 93%
+ACTION      : human-approval-required
+
+SUMMARY:
+CMT Backend API health check failed (503). Service cmt-backend is not running on instance i-00902943a502495a5. First occurrence; recommended to restart the service.
+
+SUGGESTED:
+systemctl restart cmt-backend
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e2057a0e-365b-44b6-9e9f-2b12d66f2794/approve
+REJECT:  http://172.25.29.253:8000/approvals/e2057a0e-365b-44b6-9e9f-2b12d66f2794/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T07:18:40.568394+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 4d221ce0-0a55-4750-95b7-1529453b97f4
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : 503
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 95%
+ACTION      : human-approval-required
+
+SUMMARY:
+CMT Backend API health check failed; service cmt-backend is confirmed down on instance i-00902943a502495a5. First occurrence; recommended restart.
+
+SUGGESTED:
+systemctl restart cmt-backend
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e82f4576-8486-4df3-9b62-d3483534b7d2/approve
+REJECT:  http://172.25.29.253:8000/approvals/e82f4576-8486-4df3-9b62-d3483534b7d2/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T07:18:52.460592+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 1caeebec-6f54-4265-8083-b6ada0509cef
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : 503
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 92%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Confirmed cmt-backend service is down on i-00902943a502495a5 and alert pattern indicates recurring health check failures; restart unlikely to resolve underlying issue, escalation required.
+
+SUGGESTED:
+Restart service: cmt-backend (i-00902943a502495a5)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/895e8a43-c737-4e36-8c96-f0a9904bdbbb/approve
+REJECT:  http://172.25.29.253:8000/approvals/895e8a43-c737-4e36-8c96-f0a9904bdbbb/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T07:19:03.532480+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] CMT Backend API: Backend health check failed — Cloud Monitoring Tool
+
+INCIDENT ID : 13af06bd-a821-4abe-a54e-80d5c69385df
+HOST        : Cloud Monitoring Tool (9.210.2.110)
+CLIENT      : Aeonx Sandbox
+ALERT       : CMT Backend API: Backend health check failed
+SEVERITY    : HIGH
+VALUE       : 503
+
+AI CATEGORY : unknown
+AI SEVERITY : HIGH
+CONFIDENCE  : 96%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Recurring failure of CMT Backend API health check (3 incidents in 24h). Restart unlikely to resolve root cause; escalation required.
+
+SUGGESTED:
+Restart service: cmt-backend (i-00902943a502495a5)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/6daa3f64-d3e0-4772-a2a2-ca98751eb626/approve
+REJECT:  http://172.25.29.253:8000/approvals/6daa3f64-d3e0-4772-a2a2-ca98751eb626/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:07:38.075974+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟠 [HIGH] This Website is Down — Biostadt - Website SAP PRD
+
+INCIDENT ID : b0fe0ef7-0523-4583-a8fa-a6cfc1f847f9
+HOST        : Biostadt - Website SAP PRD (10.0.1.50)
+CLIENT      : Biostadt - Website SAP PRD
+ALERT       : This Website is Down
+SEVERITY    : HIGH
+VALUE       : Connection refused
+
+AI CATEGORY : service-down
+AI SEVERITY : HIGH
+CONFIDENCE  : 95%
+ACTION      : human-approval-required
+
+SUMMARY:
+Website down alert confirmed via runbook; unable to auto-verify service status due to missing instance ID. Recommend restarting web service.
+
+SUGGESTED:
+systemctl restart httpd
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/e649f036-19e7-4526-bb98-3ba1bb3a81e9/approve
+REJECT:  http://172.25.29.253:8000/approvals/e649f036-19e7-4526-bb98-3ba1bb3a81e9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:07:42.990866+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Linux: High memory utilization (>90% for 5m) — BioStadt - SAP PRD APP 1
+
+INCIDENT ID : 2b81a631-5e95-4adf-aebe-412b7681f448
+HOST        : BioStadt - SAP PRD APP 1 (10.0.2.10)
+CLIENT      : BioStadt - SAP PRD APP 1
+ALERT       : Linux: High memory utilization (>90% for 5m)
+SEVERITY    : AVERAGE
+VALUE       : 94.2 %
+
+AI CATEGORY : client-notify
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 96%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+High memory utilization (94.2%) on host BioStadt - SAP PRD APP 1 for >5 minutes. First occurrence. Runbook S002 recommends notifying client.
+
+SUGGESTED:
+Restart service: BioStadt - SAP PRD APP 1
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/fbb73e57-ebf4-4c46-acad-d1bc97d58076/approve
+REJECT:  http://172.25.29.253:8000/approvals/fbb73e57-ebf4-4c46-acad-d1bc97d58076/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:07:47.436578+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🟡 [MEDIUM] Windows: CPU queue length is too high — Kairish - PROD SAP Router DMZ (Jump Server)
+
+INCIDENT ID : f6f7d78f-0b2c-4857-ac74-0ad47cb4fc47
+HOST        : Kairish - PROD SAP Router DMZ (Jump Server) (10.0.3.20)
+CLIENT      : Kairish - PROD SAP Router DMZ (Jump Server)
+ALERT       : Windows: CPU queue length is too high
+SEVERITY    : WARNING
+VALUE       : 12 items/sec
+
+AI CATEGORY : client-notify
+AI SEVERITY : MEDIUM
+CONFIDENCE  : 96%
+ACTION      : 🎫 Ticket Created
+
+SUMMARY:
+CPU queue length high (12 items/sec) on Windows host Kairish - PROD SAP Router DMZ (Jump Server). No prior alerts. Recommend notifying client per KB.
+
+SUGGESTED:
+Restart service: Kairish - PROD SAP Router DMZ (Jump Server)
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/1dc28079-3f26-4fc8-9583-dcfba415d1b8/approve
+REJECT:  http://172.25.29.253:8000/approvals/1dc28079-3f26-4fc8-9583-dcfba415d1b8/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:07:51.527165+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: ⚪ [AVERAGE] Windows: "AwsReplicationVolumeUpdaterService" is not running — Ashapura - SAP PROD APP
+
+INCIDENT ID : 92ee4097-8b83-4696-ae5c-1da8248dbb8d
+HOST        : Ashapura - SAP PROD APP (10.0.4.5)
+CLIENT      : Ashapura - SAP PROD APP
+ALERT       : Windows: "AwsReplicationVolumeUpdaterService" is not running
+SEVERITY    : AVERAGE
+VALUE       : stopped
+
+AI CATEGORY : unknown
+AI SEVERITY : AVERAGE
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Agent loop failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/375f49c7-069f-47c5-b9ca-be21542c99b9/approve
+REJECT:  http://172.25.29.253:8000/approvals/375f49c7-069f-47c5-b9ca-be21542c99b9/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:07:57.817330+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: 🔴 [CRITICAL] AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated — ECS Instance - Microservice-Nexus-UAT
+
+INCIDENT ID : 5ebbe1e6-1725-4181-a528-aabe859a0d2e
+HOST        : ECS Instance - Microservice-Nexus-UAT (10.0.5.100)
+CLIENT      : ECS Instance - Microservice-Nexus-UAT
+ALERT       : AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated
+SEVERITY    : DISASTER
+VALUE       : terminated
+
+AI CATEGORY : unknown
+AI SEVERITY : CRITICAL
+CONFIDENCE  : 70%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+EC2 instance for Microservice-Nexus-UAT reported terminated. Runbook requires checking Auto Scaling Group membership, but instance ID is unknown. Need human investigation and possible escalation.
+
+SUGGESTED:
+Restart service: Microservice-Nexus-UAT
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/779a9d4c-1ce2-4e2c-bac0-a467c82e0d72/approve
+REJECT:  http://172.25.29.253:8000/approvals/779a9d4c-1ce2-4e2c-bac0-a467c82e0d72/reject
+Expires in 24 hours.
+
+============================================================
+
+============================================================
+[DEV] EMAIL — 2026-06-10T10:08:06.367601+00:00
+TO: awsalerts@aeonx.digital
+SUBJECT: ⚪ [AVERAGE] Linux: Zabbix agent is not available (or nodata for 30m) — Rahman - Web App Server
+
+INCIDENT ID : 471e283f-6401-4014-aab1-eb583d89b0d7
+HOST        : Rahman - Web App Server (10.0.6.15)
+CLIENT      : Rahman - Web App Server
+ALERT       : Linux: Zabbix agent is not available (or nodata for 30m)
+SEVERITY    : AVERAGE
+VALUE       : N/A
+
+AI CATEGORY : unknown
+AI SEVERITY : AVERAGE
+CONFIDENCE  : 0%
+ACTION      : 🚨 Escalated to Team
+
+SUMMARY:
+Agent loop failed — manual review required.
+
+SUGGESTED:
+Review alert manually.
+
+============================================================
+⚠️  HUMAN APPROVAL REQUIRED
+============================================================
+APPROVE: http://172.25.29.253:8000/approvals/ecd8492e-cb84-4b51-a33a-c0821cbd3ab8/approve
+REJECT:  http://172.25.29.253:8000/approvals/ecd8492e-cb84-4b51-a33a-c0821cbd3ab8/reject
+Expires in 24 hours.
+
+============================================================

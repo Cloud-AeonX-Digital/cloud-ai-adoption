@@ -1,0 +1,64 @@
+{
+  "incident_id": "00fc4700-b8e5-40bf-a878-ee88cf5bc9df",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T04:14:03.586347+00:00",
+  "logged_at": "2026-06-10T04:14:03.589662+00:00",
+  "alert": {
+    "name": "CMT Backend API: Backend health check failed",
+    "severity": "high",
+    "status": "resolved",
+    "trigger_id": "5b2db502",
+    "event_id": "6f86447d",
+    "item_value": "test"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "T",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "resolved",
+    "action": "resolved",
+    "confidence": 1.0,
+    "solution_id": null,
+    "summary": "Alert resolved: CMT Backend API: Backend health check failed"
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T04:14:03.586347+00:00",
+      "detail": "Zabbix alert: CMT Backend API: Backend health check failed"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T04:14:03.589662+00:00",
+      "detail": "Non-actionable | HIGH | resolved"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T04:14:03.589662+00:00",
+      "detail": "Action: resolved | Confidence: 100%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T04:14:03.589662+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T04:14:03.589662+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

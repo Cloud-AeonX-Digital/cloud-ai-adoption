@@ -1,0 +1,66 @@
+{
+  "incident_id": "1caeebec-6f54-4265-8083-b6ada0509cef",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T07:18:42.622370+00:00",
+  "logged_at": "2026-06-10T07:18:52.461236+00:00",
+  "alert": {
+    "name": "CMT Backend API: Backend health check failed",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "e1e0535b",
+    "event_id": "e1e0535b",
+    "item_value": "503"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.92,
+    "solution_id": null,
+    "summary": "Confirmed cmt-backend service is down on i-00902943a502495a5 and alert pattern indicates recurring health check failures; restart unlikely to resolve underlying issue, escalation required."
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Restart service: cmt-backend (i-00902943a502495a5)"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T07:18:42.622370+00:00",
+      "detail": "Zabbix alert: CMT Backend API: Backend health check failed"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T07:18:52.461236+00:00",
+      "detail": "Non-actionable | HIGH | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T07:18:52.461236+00:00",
+      "detail": "Action: escalate | Confidence: 92%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T07:18:52.461236+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T07:18:52.461236+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

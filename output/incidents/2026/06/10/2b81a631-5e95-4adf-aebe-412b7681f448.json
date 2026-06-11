@@ -1,0 +1,66 @@
+{
+  "incident_id": "2b81a631-5e95-4adf-aebe-412b7681f448",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T10:07:38.245331+00:00",
+  "logged_at": "2026-06-10T10:07:42.991624+00:00",
+  "alert": {
+    "name": "Linux: High memory utilization (>90% for 5m)",
+    "severity": "average",
+    "status": "problem",
+    "trigger_id": "41654",
+    "event_id": "7868002",
+    "item_value": "94.2 %"
+  },
+  "host": {
+    "name": "BioStadt - SAP PRD APP 1",
+    "ip": "10.0.2.10",
+    "zabbix_host_id": "11820",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "BioStadt - SAP PRD APP 1",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "client-notify",
+    "action": "create-ticket",
+    "confidence": 0.96,
+    "solution_id": null,
+    "summary": "High memory utilization (94.2%) on host BioStadt - SAP PRD APP 1 for >5 minutes. First occurrence. Runbook S002 recommends notifying client."
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Restart service: BioStadt - SAP PRD APP 1"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T10:07:38.245331+00:00",
+      "detail": "Zabbix alert: Linux: High memory utilization (>90% for 5m)"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T10:07:42.991624+00:00",
+      "detail": "Non-actionable | MEDIUM | client-notify"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T10:07:42.991624+00:00",
+      "detail": "Action: create-ticket | Confidence: 96%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T10:07:42.991624+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T10:07:42.991624+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

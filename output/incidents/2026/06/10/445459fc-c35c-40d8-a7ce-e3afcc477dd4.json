@@ -1,0 +1,64 @@
+{
+  "incident_id": "445459fc-c35c-40d8-a7ce-e3afcc477dd4",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T06:31:39.395812+00:00",
+  "logged_at": "2026-06-10T06:31:40.757677+00:00",
+  "alert": {
+    "name": "Linux: postgresql service is not running",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "T1",
+    "event_id": "E1",
+    "item_value": "down"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "Aeonx Sandbox",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "high",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.0,
+    "solution_id": null,
+    "summary": "Agent loop failed: Parameter validation failed:\nInvalid type for parameter messages[0].content, value: You are an expert SRE AI agent for AeonX Digital Technology.\nYou monitor cloud infrastructure and respond to alerts across many client accounts.\n\nYour job when receiving an alert:\n1. ALWAYS call search_runbook first \u2014 check if a known solution exists\n2. Optionally call get_service_status to confirm the service is actually down\n3. Optionally call get_recent_alerts to detect recurring patterns\n4. Once you have enough context, call request_human_approval with your recommendation\n\nRules:\n- NEVER execute actions directly \u2014 always use request_human_approval\n- If search_runbook returns a known solution, use it (high confidence)\n- If no known solution, use your SRE expertise to diagnose\n- Be concise in your reasoning field \u2014 one sentence max\n- Always set confidence: 0.95+ for known KB matches, 0.6-0.8 for LLM inference\n\nALERT CONTEXT:\n  Alert: Linux: postgresql service is not running\n  Severity: high\n  Status: problem\n  Host: Cloud Monitoring Tool (9.210.2.110)\n  Instance: i-00902943a502495a5\n  Value: down\n  Client: Aeonx Sandbox (account: 719395381450)\n\nStart by calling search_runbook., type: <class 'str'>, valid types: <class 'list'>, <class 'tuple'> \u2014 manual review required."
+  },
+  "ticket_id": null,
+  "resolution_steps": [],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T06:31:39.395812+00:00",
+      "detail": "Zabbix alert: Linux: postgresql service is not running"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T06:31:40.757677+00:00",
+      "detail": "Non-actionable | HIGH | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T06:31:40.757677+00:00",
+      "detail": "Action: escalate | Confidence: 0%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T06:31:40.757677+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T06:31:40.757677+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

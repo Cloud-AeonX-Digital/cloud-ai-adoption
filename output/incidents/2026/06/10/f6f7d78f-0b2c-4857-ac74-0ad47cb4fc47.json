@@ -1,0 +1,66 @@
+{
+  "incident_id": "f6f7d78f-0b2c-4857-ac74-0ad47cb4fc47",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T10:07:43.023137+00:00",
+  "logged_at": "2026-06-10T10:07:47.437353+00:00",
+  "alert": {
+    "name": "Windows: CPU queue length is too high",
+    "severity": "warning",
+    "status": "problem",
+    "trigger_id": "49299",
+    "event_id": "7868003",
+    "item_value": "12 items/sec"
+  },
+  "host": {
+    "name": "Kairish - PROD SAP Router DMZ (Jump Server)",
+    "ip": "10.0.3.20",
+    "zabbix_host_id": "15001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "Kairish - PROD SAP Router DMZ (Jump Server)",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "medium",
+    "category": "client-notify",
+    "action": "create-ticket",
+    "confidence": 0.96,
+    "solution_id": null,
+    "summary": "CPU queue length high (12 items/sec) on Windows host Kairish - PROD SAP Router DMZ (Jump Server). No prior alerts. Recommend notifying client per KB."
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Restart service: Kairish - PROD SAP Router DMZ (Jump Server)"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T10:07:43.023137+00:00",
+      "detail": "Zabbix alert: Windows: CPU queue length is too high"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T10:07:47.437353+00:00",
+      "detail": "Non-actionable | MEDIUM | client-notify"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T10:07:47.437353+00:00",
+      "detail": "Action: create-ticket | Confidence: 96%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T10:07:47.437353+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T10:07:47.437353+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

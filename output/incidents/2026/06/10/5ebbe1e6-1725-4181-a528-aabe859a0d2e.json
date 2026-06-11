@@ -1,0 +1,66 @@
+{
+  "incident_id": "5ebbe1e6-1725-4181-a528-aabe859a0d2e",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T10:07:51.545172+00:00",
+  "logged_at": "2026-06-10T10:07:57.818196+00:00",
+  "alert": {
+    "name": "AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated",
+    "severity": "disaster",
+    "status": "problem",
+    "trigger_id": "101612",
+    "event_id": "7868005",
+    "item_value": "terminated"
+  },
+  "host": {
+    "name": "ECS Instance - Microservice-Nexus-UAT",
+    "ip": "10.0.5.100",
+    "zabbix_host_id": "20001",
+    "cloud": "aws",
+    "instance_id": ""
+  },
+  "client": {
+    "name": "ECS Instance - Microservice-Nexus-UAT",
+    "aws_account": "",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": false,
+    "severity": "critical",
+    "category": "unknown",
+    "action": "escalate",
+    "confidence": 0.7,
+    "solution_id": null,
+    "summary": "EC2 instance for Microservice-Nexus-UAT reported terminated. Runbook requires checking Auto Scaling Group membership, but instance ID is unknown. Need human investigation and possible escalation."
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Restart service: Microservice-Nexus-UAT"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T10:07:51.545172+00:00",
+      "detail": "Zabbix alert: AWS EC2: ECS Instance - Microservice-Nexus-UAT is terminated"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T10:07:57.818196+00:00",
+      "detail": "Non-actionable | CRITICAL | unknown"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T10:07:57.818196+00:00",
+      "detail": "Action: escalate | Confidence: 70%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T10:07:57.818196+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T10:07:57.818196+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

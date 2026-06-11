@@ -1,0 +1,70 @@
+{
+  "incident_id": "7c8ad419-690b-4507-92b1-7be1545bac5e",
+  "source": "zabbix",
+  "alert_triggered_at": "2026-06-10T04:12:46.586050+00:00",
+  "logged_at": "2026-06-10T04:12:48.370354+00:00",
+  "alert": {
+    "name": "Linux: postgresql service is not running",
+    "severity": "high",
+    "status": "problem",
+    "trigger_id": "d214b900",
+    "event_id": "eb26f59b",
+    "item_value": "test"
+  },
+  "host": {
+    "name": "Cloud Monitoring Tool",
+    "ip": "9.210.2.110",
+    "zabbix_host_id": "15451",
+    "cloud": "aws",
+    "instance_id": "i-00902943a502495a5"
+  },
+  "client": {
+    "name": "T",
+    "aws_account": "719395381450",
+    "host_group_id": ""
+  },
+  "classification": {
+    "actionable": true,
+    "severity": "high",
+    "category": "service-down",
+    "action": "human-approval-required",
+    "confidence": 0.99,
+    "solution_id": "S012",
+    "summary": "Known pattern matched (S012): Linux: postgresql service is not running"
+  },
+  "ticket_id": null,
+  "resolution_steps": [
+    "Restart PostgreSQL via SSM Run Command: sudo systemctl restart postgresql",
+    "Wait 10 seconds and verify service status",
+    "Check DB connectivity: pg_isready -h localhost",
+    "Restart dependent services (backend) after DB is up",
+    "If restart fails: escalate to human \u2014 do not retry DB restarts automatically"
+  ],
+  "workflow": [
+    {
+      "step": "alert_received",
+      "ts": "2026-06-10T04:12:46.586050+00:00",
+      "detail": "Zabbix alert: Linux: postgresql service is not running"
+    },
+    {
+      "step": "ai_classified",
+      "ts": "2026-06-10T04:12:48.370354+00:00",
+      "detail": "Actionable | HIGH | service-down"
+    },
+    {
+      "step": "action_decided",
+      "ts": "2026-06-10T04:12:48.370354+00:00",
+      "detail": "Action: human-approval-required | Confidence: 99%"
+    },
+    {
+      "step": "ticket_created",
+      "ts": "2026-06-10T04:12:48.370354+00:00",
+      "detail": "No ticket created"
+    },
+    {
+      "step": "email_sent",
+      "ts": "2026-06-10T04:12:48.370354+00:00",
+      "detail": "Summary email sent to awsalerts@aeonx.digital"
+    }
+  ]
+}

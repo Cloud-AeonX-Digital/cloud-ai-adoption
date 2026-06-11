@@ -73,11 +73,11 @@ TOOL_SPECS = [
             "inputSchema": {"json": {
                 "type": "object",
                 "properties": {
-                    "host_name": {"type": "string", "description": "Zabbix host name or instance ID"},
+                    "host_name": {"type": "string", "description": "Host name to filter by. Pass empty string to search all hosts."},
                     "hours": {"type": "integer", "description": "Look back N hours (default: 24)", "default": 24},
-                    "alert_query": {"type": "string", "description": "Optional: keyword search across all incident history (e.g. 'postgresql', 'health check')"}
+                    "alert_query": {"type": "string", "description": "Keyword search across all incident history (e.g. 'postgresql', 'health check', 'disk')"}
                 },
-                "required": ["host_name"]
+                "required": []
             }}
         }
     },
@@ -319,24 +319,25 @@ def _handle_query_cloudwatch_metric(args: dict) -> dict:
 def _handle_get_recent_alerts(args: dict) -> dict:
     """Query FTS5 memory store for recent alerts on this host."""
     from agent.app.memory import get_host_history, search_incidents
-    host = args["host_name"]
+    host = args.get("host_name", "")
     hours = args.get("hours", 24)
     days = max(1, hours // 24)
-
-    history = get_host_history(host, days=max(days, 1))
-
-    # Also do FTS search for similar alert names across all hosts
     alert_query = args.get("alert_query", "")
-    similar = search_incidents(alert_query, limit=3) if alert_query else []
+
+    history = get_host_history(host, days=max(days, 1)) if host else {"total": 0, "false_positives": 0, "recurring": [], "incidents": []}
+
+    # FTS search — use alert_query if provided, else use host as keyword
+    query_term = alert_query or host
+    similar = search_incidents(query_term, host=host if host else "", limit=5) if query_term else []
 
     return {
-        "host": host,
+        "host": host or "all",
         "total_incidents": history["total"],
         "false_positives": history["false_positives"],
-        "recurring_alerts": history["recurring"],   # alerts that fired 2+ times
+        "recurring_alerts": history["recurring"],
         "is_recurring": len(history["recurring"]) > 0,
         "recent": history["incidents"],
-        "similar_on_other_hosts": similar,
+        "search_results": similar,
     }
 
 

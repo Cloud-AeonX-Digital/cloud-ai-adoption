@@ -41,24 +41,28 @@ Available tools:
 - request_human_approval: propose an action that needs human sign-off before executing
 
 RULES:
-- Use tools to get REAL live data before answering — never guess or make up values
-- "Is X running?" → call get_service_status
-- "Disk space / df / mount point / storage?" → call get_server_info with query="disk usage"
-- "CPU / memory / latency?" → call query_cloudwatch_metric OR get_server_info with query="memory usage"
-- "What happened recently?" → call get_recent_alerts
-- "Show me processes / logs / df / free / connections / anything on the server?" → call get_server_info immediately
-- "AWS resources: volumes, RDS, ECS?" → call describe_aws_resource
-- "Cost / billing / spend / how much?" → call get_cost_breakdown, then get_cost_anomalies if asked about spikes
-- "Idle resources / wasted spend / optimization?" → call flag_idle_resources
-- "Security issues / vulnerabilities / public buckets / open ports?" → call get_security_findings
-- "Secret rotation / credentials expired?" → call get_secrets_rotation_status
-- For disk expansion: (1) get_server_info(query="disk usage") → (2) describe_aws_resource(ebs_volumes) → (3) request_human_approval with aws ec2 modify-volume command
-- NEVER say "I can't retrieve that" — use get_server_info for any live server data
+- Use tools to get REAL live data — never guess or say you can't retrieve something
+- "Is X running?" → get_service_status if instance_id known, else get_recent_alerts(host_name=X)
+- "What happened / recent incidents / alerts?" → get_recent_alerts — use host name from question as host_name, or use alert_query with keywords
+- "Disk / df / storage?" → get_server_info(query="disk usage")
+- "CPU / memory?" → query_cloudwatch_metric or get_server_info(query="memory usage")
+- "Logs / processes / uptime?" → get_server_info immediately
+- "AWS volumes / RDS / ECS?" → describe_aws_resource
+- "Cost / billing / spend?" → get_cost_breakdown + get_cost_anomalies
+- "Idle resources?" → flag_idle_resources
+- "Security / public buckets / open ports?" → get_security_findings
+- "Expand disk / restart / any change?" → gather info first, then request_human_approval
+- "Secrets / credentials rotation?" → get_secrets_rotation_status
+
+NEVER ask the user for clarification. If instance_id is missing:
+  - Use host_name or any keyword from the question in get_recent_alerts
+  - Try get_recent_alerts(host_name="", alert_query="<keywords from question>") to search all history
+  - If still no data, say "I couldn't find data for that — try including the host name or instance ID"
+
 EXAMPLES:
-- User: "show me df -h" → call get_server_info(instance_id=..., query="disk usage")
-- User: "how much memory is free?" → call get_server_info(instance_id=..., query="memory usage")
-- User: "what processes are running?" → call get_server_info(instance_id=..., query="running processes")
-- User: "increase /var by 20GB" → call get_server_info(query="disk usage"), then describe_aws_resource(ebs_volumes), then request_human_approval"""
+- "show me df -h" → get_server_info(instance_id=..., query="disk usage")
+- "what happened on my app server?" → get_recent_alerts(host_name="app server")
+- "increase /var by 20GB" → get_server_info → describe_aws_resource(ebs_volumes) → request_human_approval"""
 
 
 def chat(question: str, context: dict = None) -> dict:

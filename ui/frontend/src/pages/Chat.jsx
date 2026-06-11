@@ -5,17 +5,18 @@ import { api } from '../api';
 const BOT_NAME = 'Aivex';
 
 const SUGGESTIONS = [
-  'Is cmt-backend running on Cloud Monitoring Tool?',
-  'What happened to Cloud Monitoring Tool in the last 3 days?',
-  'What is the CPU utilization on i-00902943a502495a5?',
-  'Show me recent postgresql incidents on Aeonx Sandbox (account 719395381450)',
+  'Is the backend service running on my app server?',
+  'What incidents happened on my servers in the last 3 days?',
+  'What are the top AWS services by cost this week?',
+  'Are there any idle or wasted resources in my account?',
+  'Any open security groups or public S3 buckets?',
 ];
 
 const HINT = `💡 Tip — for accurate answers include:
-  • Server name (e.g. "Cloud Monitoring Tool")
-  • Instance ID (e.g. "i-00902943a502495a5")
-  • AWS account name or ID (e.g. "Aeonx Sandbox / 719395381450")
-  • Service name (e.g. "cmt-backend", "postgresql")`;
+  • Server / host name
+  • Instance ID (e.g. "i-0abc1234...")
+  • AWS account name or ID
+  • Service name (e.g. "backend", "database", "nginx")`;
 
 export default function Chat({ initialQuestion = '', initialContext = {} }) {
   const [messages, setMessages] = useState([

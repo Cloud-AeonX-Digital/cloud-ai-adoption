@@ -100,6 +100,11 @@ export default function Chat({ initialQuestion = '', initialContext = {} }) {
     setLoading(true);
     try {
       const res = await api.chat(q, context);
+      if (res.creds_expired) {
+        setMessages(m => [...m, { role: 'assistant', text: '⚠️ AWS session expired. Run `aws login` in your terminal, then retry.', error: true }]);
+        setLoading(false);
+        return;
+      }
       const toolsNote = res.tools_used?.length
         ? `\n\n— Tools: ${res.tools_used.join(', ')}` : '';
       const approvalNote = res.approval_id

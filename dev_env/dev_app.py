@@ -223,6 +223,11 @@ def reject_via_email(approval_id: str):
 def health():
     return {"status": "ok", "mode": "dev", "model": os.environ.get("BEDROCK_MODEL_ID", "not set")}
 
+@app.get("/health/creds")
+def health_creds():
+    from agent.app.cred_check import check_credentials
+    return check_credentials()
+
 
 # Phase E — Developer Self-Service Chat
 @app.post("/chat")
@@ -234,7 +239,13 @@ async def chat_endpoint(request: Request):
     context = body.get("context", {})  # optional: {host, instance_id, account_id}
 
     from agent.app.chat_loop import chat
-    result = chat(question, context)
+    from agent.app.cred_check import is_expired_error
+    try:
+        result = chat(question, context)
+    except Exception as e:
+        if is_expired_error(e):
+            return {"answer": "⚠️ AWS session expired. Run `aws login` in your terminal, then retry.", "tools_used": [], "approval_id": None, "creds_expired": True}
+        raise
 
     # Sync approval to Express if one was created
     if result.get("approval_id"):

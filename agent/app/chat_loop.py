@@ -146,7 +146,6 @@ def chat(question: str, context: dict = None) -> dict:
             tools_used.append(name)
 
             if name == "request_human_approval":
-                # Create approval via approval_manager and return its ID
                 from agent.app.approval_manager import request_approval
                 approval_id = request_approval(
                     incident_id=f"chat-{use_id[:8]}",
@@ -170,7 +169,13 @@ def chat(question: str, context: dict = None) -> dict:
                 result = {"status": "approval_created", "approval_id": approval_id,
                           "message": "Action queued for human approval. Check the Approvals tab."}
             else:
-                result = execute_tool(name, args)
+                try:
+                    result = execute_tool(name, args)
+                except Exception as e:
+                    from agent.app.cred_check import is_expired_error
+                    if is_expired_error(e):
+                        return {"answer": "⚠️ AWS session expired. Run `aws login` in your terminal, then retry.", "tools_used": tools_used, "approval_id": None, "creds_expired": True}
+                    result = {"error": str(e)}
 
             tool_results.append({
                 "toolResult": {

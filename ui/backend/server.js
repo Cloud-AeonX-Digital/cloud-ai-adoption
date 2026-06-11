@@ -257,6 +257,17 @@ app.get('/live-problems', async (req, res) => {
 
 app.get('/health', (_, res) => res.json({ status: 'ok', db: 'sqlite', incidents: db.prepare('SELECT COUNT(*) as n FROM incidents').get().n }));
 
+// Proxy credential health check to agent
+app.get('/health/creds', async (req, res) => {
+  const agentBase = process.env.AGENT_URL || 'http://172.25.29.253:8000';
+  try {
+    const r = await fetch(`${agentBase}/health/creds`);
+    res.json(await r.json());
+  } catch (e) {
+    res.json({ valid: false, error: 'agent_unreachable', message: 'Agent not running' });
+  }
+});
+
 // POST /chat — proxy to Python agent (fixes browser CORS)
 app.post('/chat', async (req, res) => {
   const agentBase = process.env.AGENT_URL || 'http://172.25.29.253:8000';

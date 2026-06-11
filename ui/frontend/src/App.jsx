@@ -11,6 +11,7 @@ export default function App() {
   const [light, setLight] = useState(true);
   const [model, setModel] = useState('');
   const [pendingCount, setPendingCount] = useState(0);
+  const [credsExpired, setCredsExpired] = useState(false);
 
   useEffect(() => {
     api.health().then(h => setModel(h.model || '')).catch(() => {});
@@ -20,6 +21,13 @@ export default function App() {
     const poll = () => api.approvals('pending').then(a => setPendingCount(a.length)).catch(() => {});
     poll();
     const t = setInterval(poll, 4000);
+    return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    const check = () => api.checkCreds().then(r => setCredsExpired(!r.valid)).catch(() => {});
+    check();
+    const t = setInterval(check, 5 * 60 * 1000);
     return () => clearInterval(t);
   }, []);
 
@@ -74,6 +82,13 @@ export default function App() {
           </button>
         </div>
       </nav>
+      {credsExpired && (
+        <div style={{ background: '#f59e0b', color: '#000', fontSize: 12, fontWeight: 600,
+          padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          ⚠️ AWS session expired — AI tools and live data are unavailable.
+          Run <code style={{ background: 'rgba(0,0,0,0.15)', padding: '1px 6px', borderRadius: 4 }}>aws login</code> in your terminal to refresh.
+        </div>
+      )}
 
       <div className="flex flex-1 overflow-hidden bg-app">
         {page === 'dashboard' ? <Dashboard /> : page === 'alerts' ? <Alerts /> : page === 'chat' ? <Chat /> : <Approvals />}

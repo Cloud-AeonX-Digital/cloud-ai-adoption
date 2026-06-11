@@ -30,4 +30,5 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, context }),
     }).then(r => r.json()),
+  checkCreds: () => get('/health/creds'),
 };

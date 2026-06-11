@@ -62,8 +62,6 @@ function MdText({ text }) {
   return <div className="space-y-0.5">{elements}</div>;
 }
 
-const BOT_NAME = 'Aivex';
-
 const SUGGESTIONS = [
   'Is the backend service running on my app server?',
   'What incidents happened on my servers in the last 3 days?',

@@ -1,6 +1,66 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Info } from 'lucide-react';
+import { Send, Bot, User, Loader2 } from 'lucide-react';
 import { api } from '../api';
+
+const BOT_NAME = 'Aivex';
+
+// Minimal markdown → JSX: bold, tables, bullet lists
+function MdText({ text }) {
+  if (!text) return null;
+
+  const lines = text.split('\n');
+  const elements = [];
+  let tableRows = [];
+  let inTable = false;
+
+  const flushTable = () => {
+    if (!tableRows.length) return;
+    const [header, , ...body] = tableRows;
+    const cols = header.split('|').map(c => c.trim()).filter(Boolean);
+    elements.push(
+      <div key={elements.length} className="overflow-x-auto my-1">
+        <table className="text-xs border-collapse w-full">
+          <thead>
+            <tr>{cols.map((c, i) => <th key={i} className="border border-app px-2 py-1 bg-surface2 text-left font-semibold">{renderInline(c)}</th>)}</tr>
+          </thead>
+          <tbody>
+            {body.map((row, ri) => {
+              const cells = row.split('|').map(c => c.trim()).filter(Boolean);
+              return <tr key={ri}>{cells.map((c, ci) => <td key={ci} className="border border-app px-2 py-1">{renderInline(c)}</td>)}</tr>;
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+    tableRows = [];
+    inTable = false;
+  };
+
+  const renderInline = (s) => {
+    const parts = s.split(/(\*\*[^*]+\*\*)/g);
+    return parts.map((p, i) => p.startsWith('**') && p.endsWith('**')
+      ? <strong key={i}>{p.slice(2, -2)}</strong> : p);
+  };
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.includes('|') && line.trim().startsWith('|')) {
+      inTable = true;
+      tableRows.push(line);
+      continue;
+    }
+    if (inTable) flushTable();
+
+    if (!line.trim()) { elements.push(<br key={i} />); continue; }
+    if (line.startsWith('- ') || line.startsWith('• ')) {
+      elements.push(<div key={i} className="ml-3">• {renderInline(line.slice(2))}</div>);
+    } else {
+      elements.push(<div key={i}>{renderInline(line)}</div>);
+    }
+  }
+  if (inTable) flushTable();
+  return <div className="space-y-0.5">{elements}</div>;
+}
 
 const BOT_NAME = 'Aivex';
 
@@ -15,8 +75,8 @@ const SUGGESTIONS = [
 const HINT = `💡 Tip — for accurate answers include:
   • Server / host name
   • Instance ID (e.g. "i-0abc1234...")
-  • AWS account name or ID
-  • Service name (e.g. "backend", "database", "nginx")`;
+  • AWS account name or ID (e.g. "Aeonx Sandbox" or "719395381450")
+  • Service name (e.g. "backend", "database", "Bedrock")`;
 
 export default function Chat({ initialQuestion = '', initialContext = {} }) {
   const [messages, setMessages] = useState([
@@ -81,13 +141,13 @@ export default function Chat({ initialQuestion = '', initialContext = {} }) {
                 : <Bot size={14} className="text-muted" />}
             </div>
             <div className="flex flex-col gap-1 max-w-[80%]">
-              <div className={`rounded-xl px-4 py-2.5 text-sm whitespace-pre-wrap ${
+              <div className={`rounded-xl px-4 py-2.5 text-sm ${
                 m.role === 'user'
-                  ? 'bg-blue-500 text-white rounded-tr-none'
+                  ? 'bg-blue-500 text-white rounded-tr-none whitespace-pre-wrap'
                   : m.error
-                    ? 'bg-red-50 text-red-700 border border-red-200 rounded-tl-none'
+                    ? 'bg-red-50 text-red-700 border border-red-200 rounded-tl-none whitespace-pre-wrap'
                     : 'bg-surface border border-app rounded-tl-none'
-              }`}>{m.text}</div>
+              }`}>{m.role === 'user' || m.error ? m.text : <MdText text={m.text} />}</div>
               {m.meta && (
                 <span className="text-[10px] text-muted px-1">{m.meta}</span>
               )}

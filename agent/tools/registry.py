@@ -133,13 +133,16 @@ TOOL_SPECS = [
     {
         "toolSpec": {
             "name": "get_cost_breakdown",
-            "description": "Get AWS cost breakdown for the current or past month by service. Use to answer 'what is costing the most?', 'how much did EC2 cost this week?', or 'show me costs for this account'. Also supports filtering by specific service name.",
+            "description": "Get AWS cost breakdown by service. Use for any cost/billing question. Supports filtering by service name (partial match), specific month (e.g. 'June', '2026-06'), or custom date range.",
             "inputSchema": {"json": {
                 "type": "object",
                 "properties": {
-                    "days": {"type": "integer", "description": "Number of past days to look back (default: 7)", "default": 7},
-                    "service_filter": {"type": "string", "description": "Optional: filter to a specific AWS service name, e.g. 'Amazon EC2', 'Amazon RDS'"},
-                    "granularity": {"type": "string", "enum": ["DAILY", "MONTHLY"], "default": "DAILY"}
+                    "days": {"type": "integer", "description": "Number of past days to look back (default: 30 for monthly view)", "default": 30},
+                    "month": {"type": "string", "description": "Specific month to query, e.g. '2026-06' or 'June'. If provided, overrides days."},
+                    "start_date": {"type": "string", "description": "Start date YYYY-MM-DD (optional, overrides days/month)"},
+                    "end_date": {"type": "string", "description": "End date YYYY-MM-DD (optional)"},
+                    "service_filter": {"type": "string", "description": "Filter to a specific service by keyword, e.g. 'Bedrock', 'EC2', 'RDS', 'S3'"},
+                    "granularity": {"type": "string", "enum": ["DAILY", "MONTHLY"], "default": "MONTHLY"}
                 },
                 "required": []
             }}
@@ -449,12 +452,40 @@ def _ssm_run_simple(instance_id: str, commands: list) -> str:
 
 def _handle_get_cost_breakdown(args: dict) -> dict:
     import boto3
-    from datetime import datetime, timezone, timedelta
-    days = args.get("days", 7)
-    granularity = args.get("granularity", "DAILY")
+    from datetime import datetime, timezone, timedelta, date
+    import calendar
+
+    granularity = args.get("granularity", "MONTHLY")
     service_filter = args.get("service_filter", "")
-    end = datetime.now(timezone.utc).date()
-    start = end - timedelta(days=days)
+    today = datetime.now(timezone.utc).date()
+
+    # Resolve date range — month > start_date/end_date > days
+    if args.get("month"):
+        m = args["month"].strip()
+        # Accept "June", "june", "2026-06", "06"
+        month_map = {"january":"01","february":"02","march":"03","april":"04","may":"05","june":"06",
+                     "july":"07","august":"08","september":"09","october":"10","november":"11","december":"12"}
+        if m.lower() in month_map:
+            m = f"{today.year}-{month_map[m.lower()]}"
+        try:
+            y, mo = int(m[:4]), int(m[5:7])
+            start = date(y, mo, 1)
+            last_day = calendar.monthrange(y, mo)[1]
+            end = min(date(y, mo, last_day) + timedelta(days=1), today + timedelta(days=1))
+        except Exception:
+            start = today.replace(day=1)
+            end = today + timedelta(days=1)
+    elif args.get("start_date") and args.get("end_date"):
+        start = date.fromisoformat(args["start_date"])
+        end = date.fromisoformat(args["end_date"]) + timedelta(days=1)
+    else:
+        days = args.get("days", 30)
+        start = today - timedelta(days=days)
+        end = today + timedelta(days=1)
+
+    # Clamp end to today+1 (CE doesn't accept future dates)
+    end = min(end, today + timedelta(days=1))
+
     try:
         ce = boto3.client("ce", region_name="us-east-1")
         params = dict(
@@ -464,21 +495,41 @@ def _handle_get_cost_breakdown(args: dict) -> dict:
             GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}],
         )
         if service_filter:
-            params["Filter"] = {"Dimensions": {"Key": "SERVICE", "Values": [service_filter], "MatchOptions": ["CONTAINS"]}}
+            # CE SERVICE dimension only supports EQUALS — do client-side filter instead
+            params.pop("GroupBy", None)
+            params["GroupBy"] = [{"Type": "DIMENSION", "Key": "SERVICE"}]
+            # Remove filter from params and apply post-query
+            pass
+
         resp = ce.get_cost_and_usage(**params)
-        # Aggregate by service across all days
+
         totals = {}
-        for day in resp["ResultsByTime"]:
-            for g in day["Groups"]:
+        for period in resp["ResultsByTime"]:
+            for g in period["Groups"]:
                 svc = g["Keys"][0]
                 amt = float(g["Metrics"]["UnblendedCost"]["Amount"])
-                totals[svc] = totals.get(svc, 0) + amt
-        top = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:10]
-        total_usd = sum(v for _, v in top)
+                if amt > 0:
+                    # Client-side partial match for service_filter
+                    if service_filter and service_filter.lower() not in svc.lower():
+                        continue
+                    totals[svc] = totals.get(svc, 0) + amt
+
+        top = sorted(totals.items(), key=lambda x: x[1], reverse=True)[:15]
+
+        if not top and service_filter:
+            return {
+                "period": f"{start} to {end - timedelta(days=1)}",
+                "service_filter": service_filter,
+                "total_usd": 0.0,
+                "services": [],
+                "note": f"No costs found for '{service_filter}' in this period. It may not be used in this account."
+            }
+
         return {
-            "period": f"{start} to {end}",
-            "total_usd": round(total_usd, 4),
-            "top_services": [{"service": k, "cost_usd": round(v, 4)} for k, v in top],
+            "period": f"{start} to {end - timedelta(days=1)}",
+            "service_filter": service_filter or "all",
+            "total_usd": round(sum(v for _, v in top), 4),
+            "services": [{"service": k, "cost_usd": round(v, 4)} for k, v in top],
         }
     except Exception as e:
         return {"error": str(e)}

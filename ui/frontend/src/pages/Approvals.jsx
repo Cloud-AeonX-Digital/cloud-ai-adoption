@@ -108,11 +108,6 @@ export default function Approvals() {
                     {alertSev && <Badge cls={`sev-${alertSev}`}>{SEV_ICON[alertSev]} {alertSev}</Badge>}
                     {aiAction && <Badge cls={ACT_CLASS[aiAction] || ''}>{aiAction}</Badge>}
                     {meta.solution_id && <span style={{ fontSize: 10, color: 'var(--blue)' }}>{meta.solution_id}</span>}
-                    {isPending && a.expires_at && (
-                      <span className="text-[10px] text-faint ml-auto">
-                        expires {fmtAgo(new Date(a.expires_at).getTime()/1000 - now)}
-                      </span>
-                    )}
                   </div>
                   <p className="text-xs text-muted mt-2 line-clamp-2">{a.description}</p>
                 </div>
